@@ -1,4 +1,4 @@
-<%- include ('../../include/header.ejs') %>
+{%- include ('../../include/header.ejs') %}
 
 <link href="/plugins/datepicker/datepicker3.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="/plugins/datepicker/bootstrap-datepicker.js"></script>
@@ -46,7 +46,7 @@
         })
         makeOption();
         $("div option").each(function(i,obj){
-            var location = "<%=tourVO.tlocation%>";
+            var location = "{%=tourVO.tlocation%}";
             if($(obj).val()==location) {
                 $(obj).prop("selected",true);
             }
@@ -120,21 +120,21 @@
                     <h3 class="box-title">현지 투어 등록</h3>
                 </div>
                 <form>
-                    <input type="hidden" value="<%=cri.page%>" name="page">
-                    <input type="hidden" value="<%=cri.searchType%>" name="searchType">
-                    <input type="hidden" value="<%=cri.searchType2%>" name="searchType2">
-                    <input type="hidden" value="<%=cri.keyword%>" name="keyword">
+                    <input type="hidden" value="{%=cri.page%}" name="page">
+                    <input type="hidden" value="{%=cri.searchType%}" name="searchType">
+                    <input type="hidden" value="{%=cri.searchType2%}" name="searchType2">
+                    <input type="hidden" value="{%=cri.keyword%}" name="keyword">
                     <div class="box-body">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label>번호</label> <input type="text" value="<%=tourVO.id%>" name="id" id="id"
+                                <label>번호</label> <input type="text" value="{%=tourVO.id%}" name="id" id="id"
                                                          class="form-control" readonly="readonly">
                             </div>
                             <div class="form-group">
                                 <label>지역구분</label> <select class="form-control" name="ldiv"
                                                             id="ldiv">
-                                    <option value='1' <%=tourVO.ldiv?'selected':''%>>해외</option>
-                                    <option value='0' <%=!tourVO.ldiv?'selected':''%>>국내</option>
+                                    <option value='1' {%=tourVO.ldiv?'selected':''%}>해외</option>
+                                    <option value='0' {%=!tourVO.ldiv?'selected':''%}>국내</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -145,33 +145,33 @@
                             <div class="form-group">
                                 <label>투어 제목</label> <input type="text" name="tname" id="tname"
                                                             class="form-control" placeholder="제목을 입력하세요"
-                                                            required="required" value="<%=tourVO.tname%>">
+                                                            required="required" value="{%=tourVO.tname%}">
                             </div>
                             <div class="form-group">
                                 <label>시작일자</label> <input type="text" name="startDate"
-                                                           class="form-control" required="required" id="startDate" value="<%=moment(tourVO.startDate).format('YYYY-MM-DD')%>">
+                                                           class="form-control" required="required" id="startDate" value="{%=moment(tourVO.startDate).format('YYYY-MM-DD')%}">
                             </div>
                             <div class="form-group">
                                 <label>종료일자</label> <input type="text" name="endDate"
-                                                           class="form-control" required="required" id="endDate" value="<%=moment(tourVO.endDate).format('YYYY-MM-DD')%>">
+                                                           class="form-control" required="required" id="endDate" value="{%=moment(tourVO.endDate).format('YYYY-MM-DD')%}">
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>주소</label> <input type="text" name="taddr" id="taddr"
-                                                         class="form-control" required="required" value="<%=tourVO.taddr%>">
+                                                         class="form-control" required="required" value="{%=tourVO.taddr%}">
                             </div>
                             <div class="form-group">
                                 <label>소요시간</label> <input type="text" name="etime"
-                                                           class="form-control" required="required" id="etime" value="<%=tourVO.etime%>">
+                                                           class="form-control" required="required" id="etime" value="{%=tourVO.etime%}">
                             </div>
                             <div class="form-group">
                                 <label>인원수</label>
-                                <input type="text" name="capacity" id="capacity" class="form-control" required="required" id="capacity" data-slider-min="0" data-slider-max="40" data-slider-step="1" data-slider-value="<%=tourVO.capacity%>">
+                                <input type="text" name="capacity" id="capacity" class="form-control" required="required" id="capacity" data-slider-min="0" data-slider-max="40" data-slider-step="1" data-slider-value="{%=tourVO.capacity%}">
                             </div>
                             <div class="form-group">
                                 <label>가격</label> <input type="text" name="tprice"
-                                                         class="form-control" required="required" id="tprice" value="<%=tourVO.tprice%>">
+                                                         class="form-control" required="required" id="tprice" value="{%=tourVO.tprice%}">
                             </div>
                         </div>
                     </div>
@@ -183,4 +183,4 @@
         </div>
     </div>
 </div>
-<%- include ('../../include/footer.ejs') %>
+{%- include ('../../include/footer.ejs') %}

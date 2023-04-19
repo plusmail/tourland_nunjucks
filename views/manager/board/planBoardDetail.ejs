@@ -1,4 +1,4 @@
-<%- include("../../include/header.ejs")%>
+{%- include("../../include/header.ejs")%}
 <style>
     .form-group input{
         background-color: lightgray;
@@ -46,7 +46,7 @@
             if(!confirm("삭제하시겠습니까?")) {
                 return false;
             }
-            fetch("deletePlanBoard?id=<%=plan.id%>", {method : "delete"})
+            fetch("deletePlanBoard?id={%=plan.id%}", {method : "delete"})
                 .then((res) => {
                     alert('삭제되었습니다.');
                     location.href = "planBoardList";
@@ -68,26 +68,26 @@
                 </div>
                 <div class="box-body">
                     <div class="form-group">
-                        <input type="hidden" name="id" value="<%=plan.id%>" class="form-control" id="dataNo">
+                        <input type="hidden" name="id" value="{%=plan.id%}" class="form-control" id="dataNo">
                         <label>제목</label>
-                        <input type="text" name="title" class="form-control" value="<%=plan.title%>" readonly="readonly">
+                        <input type="text" name="title" class="form-control" value="{%=plan.title%}" readonly="readonly">
                     </div>
                     <div class="form-group">
                         <label>내용</label>
-                        <textarea rows="15" cols="30" name="content" class="form-control" readonly="readonly"><%=plan.content%></textarea>
+                        <textarea rows="15" cols="30" name="content" class="form-control" readonly="readonly">{%=plan.content%}</textarea>
                     </div>
                     <div id="small">
                         <div class="form-group">
                             <label>작성자</label>
-                            <input type="text" readonly="readonly" value="<%=plan.writer%>" class="form-control" style="width:200px;">
+                            <input type="text" readonly="readonly" value="{%=plan.writer%}" class="form-control" style="width:200px;">
                         </div>
                         <div class="form-group">
                             <label>작성일자</label>
-                            <input type="text" readonly="readonly" value="<%=plan.regdate%>" class="form-control" style="width:200px;">
+                            <input type="text" readonly="readonly" value="{%=plan.regdate%}" class="form-control" style="width:200px;">
                         </div>
                         <div class="form-group">
                             <label>답변여부</label>
-                            <input type="text" readonly="readonly" value="<%=plan.answer=='0'? '답변미완료':'답변완료'%>" class="form-control" style="width:200px;">
+                            <input type="text" readonly="readonly" value="{%=plan.answer=='0'? '답변미완료':'답변완료'%}" class="form-control" style="width:200px;">
                         </div>
                     </div>
                 </div>
@@ -106,12 +106,12 @@
                 </div>
                 <div class="box-body point">
                     <label>작성자</label>
-                    <input type="text" class="form-control" value="<%=Manager.name%>" id="respondWriter" name="respondWriter" readonly="readonly">
+                    <input type="text" class="form-control" value="{%=Manager.name%}" id="respondWriter" name="respondWriter" readonly="readonly">
                     <label>답변</label>
-                    <textarea rows="5" cols="30" class="form-control" id="respondcontent" name="respondcontent" readonly><%=plan.respond%></textarea>
+                    <textarea rows="5" cols="30" class="form-control" id="respondcontent" name="respondcontent" readonly>{%=plan.respond%}</textarea>
                 </div>
                 <div class="box-footer point">
-                    <button class="btn btn-primary"><a href="/manager/planBoardModify?id=<%=plan.id%>">수정하기</a></button>
+                    <button class="btn btn-primary"><a href="/manager/planBoardModify?id={%=plan.id%}">수정하기</a></button>
                     <button class="btn btn-danger" id="btnDelete">삭제</button>
                 </div>
             </div>
@@ -121,4 +121,4 @@
 
 
 
-<%- include("../../include/footer.ejs")%>
+{%- include("../../include/footer.ejs")%}

@@ -1,4 +1,4 @@
-<%- include ("../../include/header.ejs") %>
+{%- include ("../../include/header.ejs") %}
 <style>
     table th, td {
         text-align: center;
@@ -69,8 +69,8 @@
     //국내 항공편만 검색하는 ajax
     //page를 넣으면 해당 페이지 출력
     function getDomList(page) {
-        var searchType = "<%= cri.searchType %>";
-        var keyword = "<%= cri.keyword %>";
+        var searchType = "{%= cri.searchType %>";
+        var keyword = "{%= cri.keyword %>";
         $.ajax({
             url: "flightDomList/" + page,
             type: "get",
@@ -129,14 +129,14 @@
 
                 if (rs.pagingData.currentPage == 1) {
                     var $li1 = $("<li>");
-                    var $a1 = $("<a>").attr("href", "flightMngList?page=<%= pagingData.pnStart -1 %>&searchType=<%= cri.searchType %>&keyword=<%= cri.keyword %>").html("&laquo");
+                    var $a1 = $("<a>").attr("href", "flightMngList?page={%= pagingData.pnStart -1 %>&searchType={%= cri.searchType %>&keyword={%= cri.keyword %>").html("&laquo");
                     $li1.append($a1);
                 }
 
 
                 if (rs.pagingData.currentPage == rs.pagingData.totalPages) {
                     var $li3 = $("<li>");
-                    var $a3 = $("<a>").attr("href", "flightMngList?page=<%= pagingData.pnStart -1 %>&searchType=<%= cri.searchType %>&keyword=<%= cri.keyword %>").html("&laquo");
+                    var $a3 = $("<a>").attr("href", "flightMngList?page={%= pagingData.pnStart -1 %>&searchType={%= cri.searchType %>&keyword={%= cri.keyword %>").html("&laquo");
 
                     $li3.append($a3);
                 }
@@ -162,8 +162,8 @@
     //해외 항공편만 검색하는 ajax
     //page를 넣으면 해당 페이지 출력
     function getAbroadList(page) {
-        var searchType = "<%= cri.searchType %>";
-        var keyword = "<%= cri.keyword %>";
+        var searchType = "{%= cri.searchType %>";
+        var keyword = "{%= cri.keyword %>";
         $.ajax({
             url: "flightAbroadList/" + page,
             type: "get",
@@ -222,13 +222,13 @@
 
                 if (rs.pagingData.currentPage == 1) {
                     var $li1 = $("<li>");
-                    var $a1 = $("<a>").attr("href", "flightMngList?page=<%= pagingData.pnStart -1 %>&searchType=<%= cri.searchType %>&keyword=<%= cri.keyword %>").html("&laquo");
+                    var $a1 = $("<a>").attr("href", "flightMngList?page={%= pagingData.pnStart -1 %>&searchType={%= cri.searchType %>&keyword={%= cri.keyword %>").html("&laquo");
                     $li1.append($a1);
                 }
 
                 if (rs.pagingData.currentPage == rs.pagingData.totalPages) {
                     var $li3 = $("<li>");
-                    var $a3 = $("<a>").attr("href", "flightMngList?page=<%= pagingData.pnStart -1 %>&searchType=<%= cri.searchType %>&keyword=<%= cri.keyword %>").html("&laquo");
+                    var $a3 = $("<a>").attr("href", "flightMngList?page={%= pagingData.pnStart -1 %>&searchType={%= cri.searchType %>&keyword={%= cri.keyword %>").html("&laquo");
 
                     $li3.append($a3);
                 }
@@ -268,10 +268,10 @@
                         4. 검색의 키워드
                      -->
                     <select name="searchType" id="searchType">
-                        <option value="n" <%= (cri.searchType ==null)?'selected':'' %>>선택하세요</option>
-                        <option value="id" <%= (cri.searchType =='id')?'selected':'' %>>번호</option>
-                        <option value="ano" <%= (cri.searchType =='ano')?'selected':'' %>>항공기 번호</option>
-                        <option value="rloca" <%= (cri.searchType =='rloca')?'selected':'' %>>도착 지역</option>
+                        <option value="n" {%= (cri.searchType ==null)?'selected':'' %>>선택하세요</option>
+                        <option value="id" {%= (cri.searchType =='id')?'selected':'' %>>번호</option>
+                        <option value="ano" {%= (cri.searchType =='ano')?'selected':'' %>>항공기 번호</option>
+                        <option value="rloca" {%= (cri.searchType =='rloca')?'selected':'' %>>도착 지역</option>
                     </select>
                     <input type="text" name="keyword" id="keywordInput" placeholder="검색어를 입력하세요">
                     <button id="btnSearch">Search</button>
@@ -305,59 +305,59 @@
                             <th>좌석</th>
                             <th>가격</th>
                         </tr>
-                        <% flightList.forEach( f => { %>
+                        {% flightList.forEach( f => { %>
                         <tr class="forEachTr">
-                            <td><%= f.id %></td>
-                            <td><a href="/manager/flightDetail?no=<%= f.id %>&page=<%= pagingData.currentPage %>"><%= f.ano %></a>
+                            <td>{%= f.id %></td>
+                            <td><a href="/manager/flightDetail?no={%= f.id %>&page={%= pagingData.currentPage %>">{%= f.ano %></a>
                             </td>
-                            <td><%= f.dlocation %></td>
-                            <td><%= f.rlocation %></td>
-                            <td><%= moment(f.ddate).format('YYYY-MM-DD') %></td>
-                            <td><%= moment(f.rdate).format('YYYY-MM-DD') %></td>
-                            <% if(f.ldiv == 0) { %>
+                            <td>{%= f.dlocation %></td>
+                            <td>{%= f.rlocation %></td>
+                            <td>{%= moment(f.ddate).format('YYYY-MM-DD') %></td>
+                            <td>{%= moment(f.rdate).format('YYYY-MM-DD') %></td>
+                            {% if(f.ldiv == 0) { %>
                                 <td>해외</td>
-                            <% } %>
-                            <% if(f.ldiv == 1) { %>
+                            {% } %>
+                            {% if(f.ldiv == 1) { %>
                                 <td>국내</td>
-                            <% } %>
-                            <td><%= f.capacity %></td>
-                            <% if(f.seat == 'F') { %>
+                            {% } %>
+                            <td>{%= f.capacity %></td>
+                            {% if(f.seat == 'F') { %>
                                 <td class="first">First-Class</td>
-                            <% } %>
-                            <% if(f.seat == 'B') { %>
+                            {% } %>
+                            {% if(f.seat == 'B') { %>
                                 <td class="bus">Business-Class</td>
-                            <% } %>
-                            <% if(f.seat == 'E') { %>
+                            {% } %>
+                            {% if(f.seat == 'E') { %>
                                 <td class="eco">Economy-Class</td>
-                            <% } %>
-                            <td><%= f.price %></td>
+                            {% } %>
+                            <td>{%= f.price %></td>
                         </tr>
-                        <% }) %>
+                        {% }) %>
                     </table>
                 </div>
                 <div class="box-footer">
                     <!--  부트 스트랩으로 사용  -->
                     <div class='text-center'>
                         <ul class="pagination">
-                            <% if (pagingData.totalPages != 0) { %>
+                            {% if (pagingData.totalPages != 0) { %>
                             <div class="" style="text-align:center;">
                                 <ul class="pagination">
-                                    <li <%if(pagingData.currentPage == 1){%> class="disabled" <%}else{%>class="waves-effect" <%}%> >
-                                        <a <%if(pagingData.currentPage > 1){%> href="?currentPage=<%=pagingData.currentPage-1%>" <%}%>>
+                                    <li {%if(pagingData.currentPage == 1){%> class="disabled" {%}else{%>class="waves-effect" {%}%> >
+                                        <a {%if(pagingData.currentPage > 1){%> href="?currentPage={%=pagingData.currentPage-1%>" {%}%>>
                                             <i class="material-icons">prev</i>
                                         </a>
                                     </li>
-                                    <% for(var i=pagingData.pnStart; i<=pagingData.pnEnd; i++){ %> <li <%if(i===pagingData.currentPage){%> class="active"
-                                            <%}%>><a href="?currentPage=<%=i%>"><%=i%></a></li>
-                                    <% } %>
-                                    <li <%if(pagingData.currentPage == pagingData.totalPages){%> class="disabled" <%}else{%> class="waves-effect" <%}%>>
-                                        <a <%if(pagingData.currentPage < pagingData.totalPages){%> href="?currentPage=<%=pagingData.currentPage+1%>" <%}%> class="waves-effect">
+                                    {% for(var i=pagingData.pnStart; i<=pagingData.pnEnd; i++){ %> <li {%if(i===pagingData.currentPage){%> class="active"
+                                            {%}%>><a href="?currentPage={%=i%>">{%=i%></a></li>
+                                    {% } %>
+                                    <li {%if(pagingData.currentPage == pagingData.totalPages){%> class="disabled" {%}else{%> class="waves-effect" {%}%>>
+                                        <a {%if(pagingData.currentPage < pagingData.totalPages){%> href="?currentPage={%=pagingData.currentPage+1%>" {%}%> class="waves-effect">
                                             <i class="material-icons">next</i>
                                         </a>
                                     </li>
                                 </ul>
                             </div>
-                            <% } %>
+                            {% } %>
 
                         </ul>
                     </div>
@@ -452,4 +452,4 @@
 </script>
 
 
-<%- include ("../../include/footer.ejs") %>
+{%- include ("../../include/footer.ejs") %>

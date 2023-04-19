@@ -18,7 +18,7 @@
 </style>
 </head>
 <body>
-	<%- include("../../include/userHeader.ejs")%>
+	{%- include("../../include/userHeader.ejs")%}
 		<section>
 		    <div id="detailCustBoard">
 				<div>
@@ -32,24 +32,24 @@
 
 							  <p>
                                   <label>작성자</label>
-                                  <% if(mypage === 'mypageuser') { %>
-                                  <%=Auth.username%><br>
-								  <input type="hidden" name="id"  value="<%=toUpdate.id%>">
-                                  <input type="hidden" name="writer"  value="<%-Auth.username%>">
-                                  <% } %>
+                                  {% if(mypage === 'mypageuser') { %}
+                                  {%=Auth.username%}<br>
+								  <input type="hidden" name="id"  value="{%=toUpdate.id%}">
+                                  <input type="hidden" name="writer"  value="{%-Auth.username%}">
+                                  {% } %}
 
-                                  <% if(mypage === 'mypageemp') { %>
-                                  <%=Auth.empname%>
-                                  <input type="text" name="writer"  value="<%-Auth.empname%>">
-                                  <% } %>
+                                  {% if(mypage === 'mypageemp') { %}
+                                  {%=Auth.empname%}
+                                  <input type="text" name="writer"  value="{%-Auth.empname%}">
+                                  {% } %}
 							  </p>
 							  <p>
 								<label>제목</label>
-								<input type="text" name="title" class="form-control" value="<%=toUpdate.title%>" required="required" style="border:none; border-bottom:1px solid black; width:400px;">
+								<input type="text" name="title" class="form-control" value="{%=toUpdate.title%}" required="required" style="border:none; border-bottom:1px solid black; width:400px;">
 						      </p>
 							  <p>
 								<label>내용</label>
-								<textarea rows="15" cols="100" style="margin-top:10px;" name="content" class="form-control" required="required"><%=toUpdate.content%></textarea>
+								<textarea rows="15" cols="100" style="margin-top:10px;" name="content" class="form-control" required="required">{%=toUpdate.content%}</textarea>
 							  </p>
 						      <!-- <p>
 								<label>비밀번호 설정</label>
@@ -57,7 +57,7 @@
 							  </p> -->
 							  <br>
 					   <label>이미지 첨부하기</label><br>
-					   <input type="file" name="image" value="<%=toUpdate.image%>"/>
+					   <input type="file" name="image" value="{%=toUpdate.image%}"/>
 					   <br>
 							<div>
 								 <button type="submit" class="btn btn-primary" id="boardRegister">수정하기</button>
@@ -82,6 +82,6 @@
 	}
 
 </script>
-	<%- include("../../include/userFooter.ejs")%>
+	{%- include("../../include/userFooter.ejs")%}
 </body>
 </html>

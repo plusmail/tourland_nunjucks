@@ -6,7 +6,7 @@
 	<link href="/stylesheets/eventList.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<%- include("../../include/userHeader.ejs") %>
+{%- include("../../include/userHeader.ejs") %}
 
 <!--이벤트 배너 -->
 <!--<div id="eventPageDiv">-->
@@ -18,23 +18,23 @@
 	<p class="event3" id="inging">진행중 이벤트</p>
 	<p class="event3" id="donedone" onclick="location.href='/customer/tourlandEventList/expiredEvent';" style="text-decoration:none">종료된 이벤트</p>
 	<div id="eventMainDiv">
-		<% eventList.forEach( eventList => { %>
-		<div class="eventBox" data-click="<%=eventList.id%>">
-			<img src="/displayFile/event<%=eventList.pic%>" class="eventImgs">
-			<p><%=eventList.title%></p>
+		{% eventList.forEach( eventList => { %}
+		<div class="eventBox" data-click="{%=eventList.id%}">
+			<img src="/displayFile/event{%=eventList.pic%}" class="eventImgs">
+			<p>{%=eventList.title%}</p>
 		</div>
-		<% }) %>
+		{% }) %}
 	</div>
 
 </section>
-<%- include("../../include/userFooter.ejs") %>
+{%- include("../../include/userFooter.ejs") %}
 </body>
 <script>
 	$(function(){
 
 		// $('html, body').animate({ scrollTop : 700 }, 200); //이벤트 사진 전까지 이동 스르륵
 		//보내는 값에 따라 css변경
-		var eventSentence = "<%=mistyrose%>";
+		var eventSentence = "{%=mistyrose%}";
 		if(eventSentence == "inging"){
 			$("#inging").css("background","mistyrose");
 		}

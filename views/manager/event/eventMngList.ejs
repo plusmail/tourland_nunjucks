@@ -1,4 +1,4 @@
-<%- include("../../include/header.ejs")%>
+{%- include("../../include/header.ejs")%}
 <style>
 	/* #opa { width: 100%; height: 100%; background: gray; opacity: 0.2; } */
 	
@@ -46,45 +46,45 @@
 					        <th>상세보기</th>
 						</tr>
 						<!-- 반복 돌면서 list가져오기 -->
-						<% list.forEach( eventList => { %>
-						<tr data-click="<%=eventList.id%>" class="eventList">
-							<td><%=eventList.id%></td>
-							<td><img src="/displayFile/event?filename=<%=eventList.pic%>" style="width:95px; height:95px;" ></td>
-							<td><%=eventList.title%></td>
+						{% list.forEach( eventList => { %}
+						<tr data-click="{%=eventList.id%}" class="eventList">
+							<td>{%=eventList.id%}</td>
+							<td><img src="/displayFile/event?filename={%=eventList.pic%}" style="width:95px; height:95px;" ></td>
+							<td>{%=eventList.title%}</td>
 							<td>상세보기에서 확인하세요</td>
-							<td><%=eventList.startdate%></td>
-							<td><%=eventList.enddate%></td>
-							<td><button style="background:lightskyblue; border:none;" class="toEventDetail" data-click="<%=eventList.id%>">상세보기</button></td>
+							<td>{%=eventList.startdate%}</td>
+							<td>{%=eventList.enddate%}</td>
+							<td><button style="background:lightskyblue; border:none;" class="toEventDetail" data-click="{%=eventList.id%}">상세보기</button></td>
 						</tr>
-						<% }) %>
+						{% }) %}
 					</table>      
 				</div>
 		        <div class="box-footer">
 	              <!--  부트 스트랩으로 사용  -->
 					<div class='text-center'>
 						<ul class="pagination">
-							<% if (pagingData.totalPages != 0) { %>
+							{% if (pagingData.totalPages != 0) { %}
 							<div class="" style="text-align:center;">
 								<ul class="pagination">
-									<li <%if(pagingData.currentPage == 1){%> class="disabled" <%}else{%>class="waves-effect" <%}%> >
-										<a <%if(pagingData.currentPage > 1){%> href="?currentPage=<%=pagingData.currentPage-1%>" <%}%>>
+									<li {%if(pagingData.currentPage == 1){%} class="disabled" {%}else{%}class="waves-effect" {%}%} >
+										<a {%if(pagingData.currentPage > 1){%} href="?currentPage={%=pagingData.currentPage-1%}" {%}%}>
 											<i class="material-icons">prev</i>
 										</a>
 									</li>
-									<% for(var i=pagingData.pnStart; i<=pagingData.pnEnd; i++){ %>
-									<li <%if(i===pagingData.currentPage){%> class="active"
-											<%}%>>
-										<a href="?currentPage=<%=i%>"><%=i%></a>
+									{% for(var i=pagingData.pnStart; i<=pagingData.pnEnd; i++){ %}
+									<li {%if(i===pagingData.currentPage){%} class="active"
+											{%}%}>
+										<a href="?currentPage={%=i%}">{%=i%}</a>
 									</li>
-									<% } %>
-									<li <%if(pagingData.currentPage == pagingData.totalPages){%> class="disabled" <%}else{%> class="waves-effect" <%}%>>
-										<a <%if(pagingData.currentPage < pagingData.totalPages){%> href="?currentPage=<%=pagingData.currentPage+1%>" <%}%> class="waves-effect">
+									{% } %}
+									<li {%if(pagingData.currentPage == pagingData.totalPages){%} class="disabled" {%}else{%} class="waves-effect" {%}%}>
+										<a {%if(pagingData.currentPage < pagingData.totalPages){%} href="?currentPage={%=pagingData.currentPage+1%}" {%}%} class="waves-effect">
 											<i class="material-icons">next</i>
 										</a>
 									</li>
 								</ul>
 							</div>
-							<% } %>
+							{% } %}
 						</ul>
 					</div>
 	      
@@ -107,4 +107,4 @@
 	
 </script>
 
-<%- include("../../include/footer.ejs")%>
+<%- include("../../include/footer.ejs")%}

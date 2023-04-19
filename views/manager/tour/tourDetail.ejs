@@ -1,8 +1,8 @@
-<%- include ('../../include/header.ejs') %>
+{%- include ('../../include/header.ejs') %}
 <script>
     $(function () {
         $("#mod").click(function () {
-            var id = "<%= tourVO.id %>";
+            var id = "{%= tourVO.id %}";
             location.href = "tourModify?id=" + id;
         })
         $("#del").click(function () {
@@ -10,7 +10,7 @@
                 alert("삭제가 취소되었습니다");
                 return false;
             }
-            var id = "<%= tourVO.id %>";
+            var id = "{%= tourVO.id %}";
             location.href = "tourDelete?id=" + id;
         })
         $("#return").click(function () {
@@ -28,30 +28,30 @@
                 <div class="box-body">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label>번호</label> <input type="text" value="<%= tourVO.id %>"
+                            <label>번호</label> <input type="text" value="{%= tourVO.id %}"
                                                      class="form-control" readonly="readonly" name="id">
                         </div>
                         <div class="form-group">
                             <label>지역구분</label>
-                            <input type="text" value="<%= tourVO.ldiv? '해외':'국내' %>"
+                            <input type="text" value="{%= tourVO.ldiv? '해외':'국내' %}"
                                    class="form-control" readonly="readonly" name="ldiv">
                         </div>
                         <div class="form-group">
                             <label>투어지역</label>
-                            <input type="text" value="<%= tourVO.tlocation %>"
+                            <input type="text" value="{%= tourVO.tlocation %}"
                                    class="form-control" readonly="readonly" name="tlocation">
                         </div>
                         <div class="form-group">
                             <label>투어 제목</label> <input type="text"
-                                                        class="form-control" value="<%= tourVO.tname %>"
+                                                        class="form-control" value="{%= tourVO.tname %}"
                                                         readonly="readonly" name="tname">
                         </div>
                         <div class="form-group">
-                            <label>시작일자</label> <input type="text" value="<%= moment(tourVO.startDate).format('YYYY-MM-DD') %>"
+                            <label>시작일자</label> <input type="text" value="{%= moment(tourVO.startDate).format('YYYY-MM-DD') %}"
                                                        class="form-control" readonly="readonly" name="startDate">
                         </div>
                         <div class="form-group">
-                            <label>종료일자</label> <input type="text" value="<%= moment(tourVO.endDate).format('YYYY-MM-DD') %>"
+                            <label>종료일자</label> <input type="text" value="{%= moment(tourVO.endDate).format('YYYY-MM-DD') %}"
                                                        class="form-control" readonly="readonly" name="endDate">
                         </div>
                     </div>
@@ -59,20 +59,20 @@
                         <div class="form-group">
                             <label>주소</label> <input type="text"
                                                      class="form-control" readonly="readonly"
-                                                     value="<%= tourVO.taddr %>" name="taddr">
+                                                     value="{%= tourVO.taddr %}" name="taddr">
                         </div>
                         <div class="form-group">
                             <label>소요시간</label> <input type="text"
                                                        class="form-control" readonly="readonly"
-                                                       value="<%= tourVO.etime %>" name="etime">
+                                                       value="{%= tourVO.etime %}" name="etime">
                         </div>
                         <div class="form-group">
                             <label>인원수</label>
-                            <input type="text" value="<%= tourVO.capacity %>" readonly="readonly" class="form-control"
+                            <input type="text" value="{%= tourVO.capacity %}" readonly="readonly" class="form-control"
                                    name="capacity">
                         </div>
                         <div class="form-group">
-                            <label>가격</label> <input type="text" value='<%= tourVO.tprice %>'
+                            <label>가격</label> <input type="text" value='{%= tourVO.tprice %}'
                                                      class="form-control" readonly="readonly" name="tprice">
                         </div>
                     </div>
@@ -86,4 +86,4 @@
         </div>
     </div>
 </div>
-<%- include ('../../include/footer.ejs') %>
+{%- include ('../../include/footer.ejs') %}

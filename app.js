@@ -8,7 +8,8 @@ const cors = require('cors');
 const { sequelize } = require('./models/index'); // 시퀄라이즈
 const session = require('express-session');
 const MemoryStore = require('memorystore')(session);
-
+const passport = require('passport');
+const nunjucks = require('nunjucks');
 
 const indexRouter = require('./routes/index');
 const apiRouter = require('./routes/indexApi');
@@ -16,12 +17,17 @@ const userRoutes = require('./routes/userRoutes/userRoutes');
 const managerRoutes = require('./routes/managerRoutes/managerRoutes');
 const bodyParser = require("express");
 const FileStore = require('session-file-store')(session);
+const passportConfig = require('./passport');
 
 const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'html');
+nunjucks.configure('views', {
+    express: app,
+    watch : true,
+})
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -30,14 +36,20 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser("1234"));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser(process.env.COOKIE_SECRET));
 
 app.use(session({
-    // secret: 'keyboard cat',
-    // resave: false,
-    // saveUninitialized: true,
-    // cookie: { secure: true },
-    // store : new FileStore(),
-}))
+    resave : false,
+    saveUninitialized : false,
+    secret: process.env.COOKIE_SECRET,
+    cookie:{
+        httpOnly: true,
+        secure : false,
+    },
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // sequelize.sync({ force: false }) // 서버 실행시마다 테이블을 재생성할건지에 대한 여부
 //     .then(() => {

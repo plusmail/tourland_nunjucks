@@ -1,4 +1,4 @@
-<%- include("../../include/userHeader.ejs")%>
+{%- include("../../include/userHeader.ejs")%}
 
 <style>
     /* 본문 */
@@ -88,7 +88,7 @@
 <body>
 
 <section>
-    <%- include("../../include/userMyPageMenu.ejs")%>
+    {%- include("../../include/userMyPageMenu.ejs")%}
 
     <div id="writeReview">
         <h1>리뷰 작성</h1>
@@ -96,25 +96,25 @@
         <form action="tourlandAddMyReview" method="post">
             <p>
                 <label>번호</label>
-                <span>RV00<%=review.rno%></span>
+                <span>RV00{%=review.rno%}</span>
             </p>
             <p>
                 <label>고객명</label>
-                <input type="text" value="<%=user.username%>" readonly="readonly">
+                <input type="text" value="{%=user.username%}" readonly="readonly">
             </p>
             <p>
                 <label>상품명</label>
             <div id="proImgBox">
-                <p id="proTitle"><%=product.pname%></p>
+                <p id="proTitle">{%=product.pname%}</p>
             </div>
             </p>
             <p>
                 <label><span class="red">*</span> 리뷰 제목</label>
-                <input type="text" readonly="readonly" name="reviewTitle" value="<%=review.reviewTitle%>" >
+                <input type="text" readonly="readonly" name="reviewTitle" value="{%=review.reviewTitle%}" >
             </p>
             <p id="long">
                 <label><span class="red">*</span> 리뷰 내용</label>
-                <textarea rows="10" cols="60" readonly="readonly" name="reviewContent"><%=review.reviewContent%></textarea>
+                <textarea rows="10" cols="60" readonly="readonly" name="reviewContent">{%=review.reviewContent%}</textarea>
             </p>
             <p>
                 <label><span class="red">*</span> 별점</label>
@@ -124,7 +124,7 @@
                 <i class="far fa-star s4"></i>
                 <i class="far fa-star s5"></i>
             </p>
-            <input type="hidden" name="starpoint" id="star" value="<%=review.starpoint%>">
+            <input type="hidden" name="starpoint" id="star" value="{%=review.starpoint%}">
             <p id="inputs">
                 <input type="reset" id="cancel" value="돌아가기"  style="cursor:pointer">
             </p>
@@ -133,6 +133,6 @@
 
 </section>
 
-<%- include ("../../include/userFooter.ejs")%>
+{%- include ("../../include/userFooter.ejs")%}
 </body>
 </html>

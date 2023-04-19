@@ -1,4 +1,4 @@
-<%- include ("../../include/header.ejs") %>
+{%- include ("../../include/header.ejs") %}
 <style>
     .table th, td {
         text-align: center;
@@ -31,12 +31,12 @@
                 </div>
                 <div class="box-body">
                     <select name="searchType" id="searchType">
-                        <option value="N" <%= (cri.searchType=='N')?'selected':'' %>>----------</option>
-                        <option value="name" <%= (cri.searchType=='name')?'selected':'' %>>상품제목</option>
-                        <option value="expire" <%= (cri.searchType=='expire')?'selected':'' %>>유효기간</option>
-                        <option value="location" <%= (cri.searchType=='location')?'selected':'' %>>지역</option>
+                        <option value="N" {%= (cri.searchType=='N')?'selected':'' %}>----------</option>
+                        <option value="name" {%= (cri.searchType=='name')?'selected':'' %}>상품제목</option>
+                        <option value="expire" {%= (cri.searchType=='expire')?'selected':'' %}>유효기간</option>
+                        <option value="location" {%= (cri.searchType=='location')?'selected':'' %}>지역</option>
                     </select>
-                    <input type="text" name="keyword" id="keywordInput" value="<%= cri.keyword %>">
+                    <input type="text" name="keyword" id="keywordInput" value="{%= cri.keyword %}">
                     <button id="btnSearch">Search</button>
                 </div>
                 <div class="box-body">
@@ -54,72 +54,72 @@
                             <th>상품유효기간</th>
                             <th>가격</th>
                         </tr>
-                        <% list.forEach(product => { %>
-                        <tr class="productList" data-no="<%= product.id %>">
-                            <td><%= product.id %></td>
-                            <td><%= product.pname %></td>
+                        {% list.forEach(product => { %}
+                        <tr class="productList" data-no="{%= product.id %}">
+                            <td>{%= product.id %}</td>
+                            <td>{%= product.pname %}</td>
                             <td>
-                                <% product.airplaneId_airplanes.forEach( air => { %>
-                                    <%= air.ano %>
-                                <% }) %>
+                                {% product.airplaneId_airplanes.forEach( air => { %}
+                                    {%= air.ano %}
+                                {% }) %}
                             </td>
                             <td>
-                                <% product.hotelId_hotels.forEach( hotel => { %>
+                                {% product.hotelId_hotels.forEach( hotel => { %}
                                     <p>
-                                        <%= hotel.hname %>
+                                        {%= hotel.hname %}
                                     </p>
-                                <% }) %>
+                                {% }) %}
                             </td>
                             <td>
-                                <% product.tourId_tours.forEach( tour => { %>
+                                {% product.tourId_tours.forEach( tour => { %}
                                     <p>
-                                        <%= tour.tname %>
+                                        {%= tour.tname %}
                                     </p>
-                                <% }) %>
+                                {% }) %}
                             </td>
                             <td>
-                                <% product.rentcarId_rentcars.forEach( rentcar => { %>
+                                {% product.rentcarId_rentcars.forEach( rentcar => { %}
                                     <p>
-                                        <% rentcar.cdiv === 'L'?'경차':rentcar.cdiv === 'S'?'세단':rentcar.cdiv === 'U'?'SUV':
-                                        rentcar.cdiv === 'V'?'밴':'버스'%>
+                                        {% rentcar.cdiv === 'L'?'경차':rentcar.cdiv === 'S'?'세단':rentcar.cdiv === 'U'?'SUV':
+                                        rentcar.cdiv === 'V'?'밴':'버스'%}
                                     </p>
-                                <% }) %>
+                                {% }) %}
                             </td>
                             <td>
-                                <%= product.pexpire%>
+                                {%= product.pexpire%}
 <!--                                <fmt:formatDate value="${product.pexpire}" pattern="yyyy-MM-dd"/>-->
                             </td>
                             <td>
-                                <%= product.pprice%>
+                                {%= product.pprice%}
 <!--                                <fmt:formatNumber value="${product.pprice}" pattern="###,###"/>-->
                             </td>
                         </tr>
-                        <% }) %>
+                        {% }) %}
                     </table>
                 </div>
                 <div class="box-footer">
                     <!--  부트 스트랩으로 사용  -->
                     <div class='text-center'>
                         <ul class="pagination">
-                            <% if (pagingData.totalPages != 0) { %>
+                            {% if (pagingData.totalPages != 0) { %}
                             <div class="" style="text-align:center;">
                                 <ul class="pagination">
-                                    <li <%if(pagingData.currentPage == 1){%> class="disabled" <%}else{%>class="waves-effect" <%}%> >
-                                        <a <%if(pagingData.currentPage > 1){%> href="?currentPage=<%=pagingData.currentPage-1%>" <%}%>>
+                                    <li {%if(pagingData.currentPage == 1){%} class="disabled" {%}else{%}class="waves-effect" {%}%} >
+                                        <a {%if(pagingData.currentPage > 1){%} href="?currentPage={%=pagingData.currentPage-1%}" {%}%}>
                                             <i class="material-icons">prev</i>
                                         </a>
                                     </li>
-                                    <% for(var i=pagingData.pnStart; i<=pagingData.pnEnd; i++){ %> <li <%if(i===pagingData.currentPage){%> class="active"
-                                            <%}%>><a href="?currentPage=<%=i%>"><%=i%></a></li>
-                                    <% } %>
-                                    <li <%if(pagingData.currentPage == pagingData.totalPages){%> class="disabled" <%}else{%> class="waves-effect" <%}%>>
-                                        <a <%if(pagingData.currentPage < pagingData.totalPages){%> href="?currentPage=<%=pagingData.currentPage+1%>" <%}%> class="waves-effect">
+                                    {% for(var i=pagingData.pnStart; i<=pagingData.pnEnd; i++){ %} <li {%if(i===pagingData.currentPage){%} class="active"
+                                            {%}%}><a href="?currentPage={%=i%}">{%=i%}</a></li>
+                                    {% } %}
+                                    <li {%if(pagingData.currentPage == pagingData.totalPages){%} class="disabled" {%}else{%} class="waves-effect" {%}%}>
+                                        <a {%if(pagingData.currentPage < pagingData.totalPages){%} href="?currentPage={%=pagingData.currentPage+1%}" {%}%} class="waves-effect">
                                             <i class="material-icons">next</i>
                                         </a>
                                     </li>
                                 </ul>
                             </div>
-                            <% } %>
+                            {% } %}
 
                         </ul>
                     </div>
@@ -130,8 +130,8 @@
 </div>
 <script>
     var fixSearchTypeAndKeyword = function () {
-        var searchType = "<%=cri.searchType%>";
-        var keyword = "<%=cri.keyword%>";
+        var searchType = "{%=cri.searchType%}";
+        var keyword = "{%=cri.keyword%}";
         $("#searchType option").each(function (i, obj) {
             var value = $(this).val();
             if (value == searchType) {
@@ -158,4 +158,4 @@
 
 </script>
 
-<%- include ("../../include/footer.ejs") %>
+{%- include ("../../include/footer.ejs") %}

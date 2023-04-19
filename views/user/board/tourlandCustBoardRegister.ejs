@@ -18,7 +18,7 @@
 </style>
 </head>
 <body>
-	<%- include("../../include/userHeader.ejs")%>
+	{%- include("../../include/userHeader.ejs")%}
 		<section>
 		    <div id="detailDiv">
 				<div>
@@ -32,15 +32,15 @@
 
 							  <p>
                                   <label>작성자</label>
-                                  <% if(mypage === 'mypageuser') { %>
-                                  <%=Auth.username%><br>
-                                  <input type="hidden" name="writer"  value="<%-Auth.username%>" readonly="readonly">
-                                  <% } %>
+                                  {% if(mypage === 'mypageuser') { %}
+                                  {%=Auth.username%}<br>
+                                  <input type="hidden" name="writer"  value="{%-Auth.username%}" readonly="readonly">
+                                  {% } %}
 
-                                  <% if(mypage === 'mypageemp') { %>
-                                  <%=Auth.empname%>
-                                  <input type="hidden" name="writer"  value="<%-Auth.empname%>" readonly="readonly">
-                                  <% } %>
+                                  {% if(mypage === 'mypageemp') { %}
+                                  {%=Auth.empname%}
+                                  <input type="hidden" name="writer"  value="{%-Auth.empname%}" readonly="readonly">
+                                  {% } %}
 							  </p>
 							  <p>
 								<label>제목</label>
@@ -48,7 +48,7 @@
 						      </p>
 							  <p>
 								<label>내용</label>
-								<textarea rows="15" cols="100" style="margin-top:10px;" placeholder="  내용을 입력하세요" name="content" class="form-control" required="required"><%=custBoardVO.content%></textarea>
+								<textarea rows="15" cols="100" style="margin-top:10px;" placeholder="  내용을 입력하세요" name="content" class="form-control" required="required">{%=custBoardVO.content%}</textarea>
 							  </p>
 						      <!-- <p>
 								<label>비밀번호 설정</label>
@@ -81,6 +81,6 @@
 	}
 
 </script>
-	<%- include("../../include/userFooter.ejs")%>
+	{%- include("../../include/userFooter.ejs")%}
 </body>
 </html>

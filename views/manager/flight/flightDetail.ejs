@@ -1,4 +1,4 @@
-<%- include ('../../include/header.ejs') %>
+{%- include ('../../include/header.ejs') %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -81,10 +81,10 @@
         $("#mod").click(function () {
             var no_d = $("#noData_d").val();
             var no_r = $("#noData_r").val();
-            var page = "<%= cri.page %>";
-            var searchType = "<%= cri.searchType %>" == "" ? "N" : "<%= cri.searchType %>";
-            var searchType2 = "<%= cri.searchType2 %>" == "" ? "N" : "<%= cri.searchType2 %>";
-            var keyword = "<%= cri.keyword %>";
+            var page = "{%= cri.page %}";
+            var searchType = "{%= cri.searchType %}" == "" ? "N" : "{%= cri.searchType %}";
+            var searchType2 = "{%= cri.searchType2 %}" == "" ? "N" : "{%= cri.searchType2 %}";
+            var keyword = "{%= cri.keyword %}";
             //location.href = "editNotice?no="+no+"&page="+page+"&searchType="+searchType+"&searchType2="+searchType2+"&keyword="+keyword;
             location.href = "editFlight?no_d=" + no_d + "&no_r=" + no_r;
         })
@@ -94,17 +94,17 @@
             }
             var d_no = $("#noData_d").val();
             var r_no = $("#noData_r").val();
-            var page = "<%= cri.page %>";
-            var searchType = "<%= cri.searchType %>" == "" ? "N" : "<%= cri.searchType %>";
-            var searchType2 = "<%= cri.searchType2 %>" == "" ? "N" : "<%= cri.searchType2 %>";
-            var keyword = "<%= cri.keyword %>";
+            var page = "{%= cri.page %}";
+            var searchType = "{%= cri.searchType %}" == "" ? "N" : "{%= cri.searchType %}";
+            var searchType2 = "{%= cri.searchType2 %}" == "" ? "N" : "{%= cri.searchType2 %}";
+            var keyword = "{%= cri.keyword %}";
             location.href = "removeFlight?d_no=" + d_no + "&r_no=" + r_no + "&page=" + page + "&searchType=" + searchType + "&searchType2=" + searchType2 + "&keyword=" + keyword;
         })
         $("#return").click(function () {
-            var page = "<%= cri.page %>";
-            var searchType = "<%= cri.searchType %>" == "" ? "N" : "<%= cri.searchType %>";
-            var searchType2 = "<%= cri.searchType2 %>" == "" ? "N" : "<%= cri.searchType2 %>";
-            var keyword = "<%= cri.keyword %>";
+            var page = "{%= cri.page %}";
+            var searchType = "{%= cri.searchType %}" == "" ? "N" : "{%= cri.searchType %}";
+            var searchType2 = "{%= cri.searchType2 %}" == "" ? "N" : "{%= cri.searchType2 %}";
+            var keyword = "{%= cri.keyword %}";
             location.href = "flightMngList?page=" + page + "&searchType=" + searchType + "&searchType2=" + searchType2 + "&keyword=" + keyword;
         })
     })
@@ -125,70 +125,70 @@
                         <div class="form-group">
                             <label><span class="red">*</span>출발지</label>
                             <div class="container">
-                                <% if(noDiv == 0) { %>
+                                {% if(noDiv == 0) { %}
                                     <input type="text" id="dlocaData_d" class="form-control"
-                                           value="<%= prevAir.dlocation %>" readonly="readonly">
-                                <% } %>
-                                <% if(noDiv == 1) { %>
+                                           value="{%= prevAir.dlocation %}" readonly="readonly">
+                                {% } %}
+                                {% if(noDiv == 1) { %}
                                     <input type="text" id="dlocaData_d" class="form-control"
-                                           value="<%= selectedAir.dlocation %>" readonly="readonly">
-                                <% } %>
+                                           value="{%= selectedAir.dlocation %}" readonly="readonly">
+                                {% } %}
                             </div>
                         </div>
                         <div class="form-group">
                             <label><span class="red">*</span>도착지</label>
                             <div class="container">
 
-                                <% if(noDiv == 0) { %>
+                                {% if(noDiv == 0) { %}
                                     <input type="text" id="rlocaData_d" class="form-control"
-                                           value="<%= prevAir.rlocation %>" readonly="readonly">
-                                <% } %>
-                                <% if(noDiv == 1) { %>
+                                           value="{%= prevAir.rlocation %}" readonly="readonly">
+                                {% } %}
+                                {% if(noDiv == 1) { %}
                                     <input type="text" id="rlocaData_d" class="form-control"
-                                           value="<%= selectedAir.rlocation %>" readonly="readonly">
-                                <% } %>
+                                           value="{%= selectedAir.rlocation %>" readonly="readonly">
+                                {% } %>
                             </div>
                         </div>
                         <div class="form-group">
                             <label><span class="red">*</span>좌석</label>
                             <div class="container">
 
-                                <% if(noDiv == 0) { %>
-                                <% if(prevAir.seat == 'E') { %>
+                                {% if(noDiv == 0) { %>
+                                {% if(prevAir.seat == 'E') { %>
 < input type = "text" class= "form-control" value = "Economy-Class" readonly = "readonly" >
-                                    <% } %>
-                                    <% if(prevAir.seat=='B') { %>
+                                    {% } %>
+                                    {% if(prevAir.seat=='B') { %>
     <input type="text" class="form-control" value="Business-Class" readonly="readonly">
-        <% } %>
-                                    <% if(prevAir.seat=='F') { %>
+        {% } %>
+                                    {% if(prevAir.seat=='F') { %>
     <input type="text" class="form-control" value="First-Class" readonly="readonly">
-                                    <% } %>
+                                    {% } %>
 
-                                    <% } %>
-                                    <% if(noDiv==1) { %>
-                                    <% if(selectedAir.seat=='E') { %>
+                                    {% } %>
+                                    {% if(noDiv==1) { %>
+                                    {% if(selectedAir.seat=='E') { %>
     <input type="text" class="form-control" value="Economy-Class" readonly="readonly">
-        <% } %>
-                                    <% if(selectedAir.seat=='B') { %>
+        {% } %>
+                                    {% if(selectedAir.seat=='B') { %>
     <input type="text" class="form-control" value="Business-Class" readonly="readonly">
-                                    <% } %>
-                                    <% if(selectedAir.seat=='F') { %>
+                                    {% } %>
+                                    {% if(selectedAir.seat=='F') { %>
     <input type="text" class="form-control" value="First-Class" readonly="readonly">
-        <% } %>
+        {% } %>
 
-<% } %>
+{% } %>
 </div>
 </div>
 
 <div class="form-group">
     <label>최대 인원 수</label>
 <div class="container">
-<% if(noDiv==0) { %>
-        <input type="text" class="form-control" id="capacity_d" value="<%=prevAir.capacity%>" readonly="readonly">
-        <% } %>
-<% if(noDiv==1) { %>
-        <input type="text" class="form-control" id="capacity_d" value="<%=selectedAir.capacity%>" readonly="readonly">
-        <% } %>
+{% if(noDiv==0) { %>
+        <input type="text" class="form-control" id="capacity_d" value="{%=prevAir.capacity%>" readonly="readonly">
+        {% } %>
+{% if(noDiv==1) { %>
+        <input type="text" class="form-control" id="capacity_d" value="{%=selectedAir.capacity%>" readonly="readonly">
+        {% } %>
 </div>
 </div>
 </div>
@@ -199,12 +199,12 @@
     </label>
 <div class="container">
 <div class='input-group date dateTimePicker' id='datetimepicker1'>
-<% if(noDiv==0) { %>
-    <input type='text' class="form-control" id="ddate_d" name="ddateData_d" value="<%=prevAir.ddate%>" readonly="readonly"/>
-<% } %>
-<% if(noDiv==1) { %>
-    <input type='text' class="form-control" id="ddate_d" name="ddateData_d" value="<%=selectedAir.ddate%>" readonly="readonly"/>
-<% } %>
+{% if(noDiv==0) { %>
+    <input type='text' class="form-control" id="ddate_d" name="ddateData_d" value="{%=prevAir.ddate%>" readonly="readonly"/>
+{% } %>
+{% if(noDiv==1) { %>
+    <input type='text' class="form-control" id="ddate_d" name="ddateData_d" value="{%=selectedAir.ddate%>" readonly="readonly"/>
+{% } %>
     <span class="input-group-addon">
         <span class="glyphicon glyphicon-calendar"></span>
     </span>
@@ -216,28 +216,28 @@
 <div class="form-group">
     <label>출발 시간</label>
 <div class="container">
-<% if(noDiv==0) { %>
+{% if(noDiv==0) { %>
         <input type="text" class="form-control" id="dtime_d" name="dtimeData_d"
-               readonly="readonly" value="<%=prev_dtime%>">
-<% } %>
-<% if(noDiv==1) { %>
+               readonly="readonly" value="{%=prev_dtime%>">
+{% } %>
+{% if(noDiv==1) { %>
         <input type="text" class="form-control" id="dtime_d" name="dtimeData_d"
-               readonly="readonly" value="<%=selected_dtime%>">
-<% } %>
+               readonly="readonly" value="{%=selected_dtime%>">
+{% } %>
 
 </div>
 </div>
 <div class="form-group">
     <label>도착 시간</label>
 <div class="container">
-<% if(noDiv==0) { %>
+{% if(noDiv==0) { %>
         <input type="text" class="form-control" id="rtime_d" name="rtimeData_d"
-               readonly="readonly" value="<%=prev_rtime%>">
-<% } %>
-<% if(noDiv==1) { %>
+               readonly="readonly" value="{%=prev_rtime%>">
+{% } %>
+{% if(noDiv==1) { %>
         <input type="text" class="form-control" id="rtime_d" name="rtimeData_d"
-               readonly="readonly" value="<%=selected_rtime%>">
-<% } %>
+               readonly="readonly" value="{%=selected_rtime%>">
+{% } %>
     <!-- <input type="hidden" class="form-control" id="rdate_d" name="rdateData_d"> -->
 </div>
 </div>
@@ -246,14 +246,14 @@
 <div class="form-group">
     <label>항공사 코드</label>
 <div class="container">
-<% if(noDiv==0) { %>
+{% if(noDiv==0) { %>
         <input type="text" class="form-control" id="FCode_d" name="FCodeData_d"
-               readonly="readonly" value="<%=prevAir.ano%>">
-<% } %>
-<% if(noDiv==1) { %>
+               readonly="readonly" value="{%=prevAir.ano%>">
+{% } %>
+{% if(noDiv==1) { %>
         <input type="text" class="form-control" id="FCode_d" name="FCodeData_d"
-               readonly="readonly" value="<%=selectedAir.ano%>">
-<% } %>
+               readonly="readonly" value="{%=selectedAir.ano%>">
+{% } %>
 </div>
 </div>
 </div>
@@ -263,24 +263,24 @@
     <label><span class="red">*</span>가격
     </label>
 <div class="container">
-<% if(noDiv==0) { %>
-        <input type="text" class="form-control" id="price_d" value="<%=prevAir.price%>" readonly="readonly">
-<% } %>
-<% if(noDiv==1) { %>
-        <input type="text" class="form-control" id="price_d" value="<%=  selectedAir.price %>" readonly="readonly">
-<% } %>
+{% if(noDiv==0) { %>
+        <input type="text" class="form-control" id="price_d" value="{%=prevAir.price%>" readonly="readonly">
+{% } %>
+{% if(noDiv==1) { %>
+        <input type="text" class="form-control" id="price_d" value="{%=  selectedAir.price %>" readonly="readonly">
+{% } %>
 
 <input type="hidden" name="list[0].seat" id="seatData_d">
 <input type="hidden" name="list[0].ddate" id="ddateData_d">
 <input type="hidden" name="list[0].rdate" id="rdateData_d">
 <input type="hidden" name="list[0].ano" id="anoData_d">
 <input type="hidden" name="list[0].ldiv" id="ldivData_d">
-<% if(noDiv==0) { %>
-        <input type="hidden"  id="noData_d" value="<%=  prevAir.no %>">
-<% } %>
-<% if(noDiv==1) { %>
-        <input type="hidden"  id="noData_d" value="<%=  selectedAir.no %>">
-<% } %>
+{% if(noDiv==0) { %>
+        <input type="hidden"  id="noData_d" value="{%=  prevAir.no %>">
+{% } %>
+{% if(noDiv==1) { %>
+        <input type="hidden"  id="noData_d" value="{%=  selectedAir.no %>">
+{% } %>
 
 </div>
 </div>
@@ -300,65 +300,65 @@
     <label><span class="red">*</span>출발지
     </label>
 <div class="container">
-    <% if(noDiv==0) { %>
+    {% if(noDiv==0) { %>
         <input type="text" class="form-control" id="dlocation_r"
-               readonly="readonly" value="<%=  selectedAir.dlocation %>">
-        <% } %>
-    <% if(noDiv==1) { %>
-        <input type="text" class="form-control" id="dlocation_r"readonly="readonly" value="<%=  nextAir.dlocation %>">
-    <% } %>
+               readonly="readonly" value="{%=  selectedAir.dlocation %>">
+        {% } %>
+    {% if(noDiv==1) { %>
+        <input type="text" class="form-control" id="dlocation_r"readonly="readonly" value="{%=  nextAir.dlocation %>">
+    {% } %>
 </div>
 </div>
 <div class="form-group">
     <label><span class="red">*</span>도착지
     </label>
 <div class="container">
-<% if(noDiv==0) { %>
+{% if(noDiv==0) { %>
         <input type="text" class="form-control" id="rlocation_r"
-               readonly="readonly" value="<%=  selectedAir.rlocation %>">
-        <% } %>
-<% if(noDiv==1) { %>
-        <input type="text" class="form-control" id="rlocation_r"readonly="readonly" value="<%=  nextAir.rlocation %>">
-        <% } %>
+               readonly="readonly" value="{%=  selectedAir.rlocation %>">
+        {% } %>
+{% if(noDiv==1) { %>
+        <input type="text" class="form-control" id="rlocation_r"readonly="readonly" value="{%=  nextAir.rlocation %>">
+        {% } %>
 </div>
 </div>
 <div class="form-group">
     <label><span class="red">*</span>좌석
     </label>
 <div class="container">
-<% if(noDiv==0) { %>
-<% if(selectedAir.seat=='E') { %>
+{% if(noDiv==0) { %>
+{% if(selectedAir.seat=='E') { %>
     <input type="text" class="form-control" value="Economy-Class" readonly="readonly">
-<% } %>
-<% if(selectedAir.seat=='B') { %>
+{% } %>
+{% if(selectedAir.seat=='B') { %>
     <input type="text" class="form-control" value="Business-Class" readonly="readonly">
-<% } %>
-<% if(selectedAir.seat=='F') { %>
+{% } %>
+{% if(selectedAir.seat=='F') { %>
     <input type="text" class="form-control" value="First-Class" readonly="readonly">
-<% } %>
-    <% } %>
-<% if(noDiv==1) { %>
-<% if(nextAir.seat=='E') { %>
+{% } %>
+    {% } %>
+{% if(noDiv==1) { %>
+{% if(nextAir.seat=='E') { %>
     <input type="text" class="form-control" value="Economy-Class" readonly="readonly">
-<% } %>
-<% if(nextAir.seat=='B') { %>
+{% } %>
+{% if(nextAir.seat=='B') { %>
     <input type="text" class="form-control" value="Business-Class" readonly="readonly">
-<% } %>
-<% if(nextAir.seat=='F') { %>
+{% } %>
+{% if(nextAir.seat=='F') { %>
     <input type="text" class="form-control" value="First-Class" readonly="readonly">
-<% } %>
-    <% } %>
+{% } %>
+    {% } %>
 </div>
 </div>
 <div class="form-group">
     <label>최대 인원 수</label>
 <div class="container">
-<% if(noDiv==0) { %>
-        <input type="text" class="form-control" id="capacity_r" value="<%=  selectedAir.capacity %>" readonly="readonly">
-<% } %>
-<% if(noDiv==1) { %>
-        <input type="text" class="form-control" id="capacity_r" value="<%=  nextAir.capacity %>" readonly="readonly">
-<% } %>
+{% if(noDiv==0) { %>
+        <input type="text" class="form-control" id="capacity_r" value="{%=  selectedAir.capacity %>" readonly="readonly">
+{% } %>
+{% if(noDiv==1) { %>
+        <input type="text" class="form-control" id="capacity_r" value="{%=  nextAir.capacity %>" readonly="readonly">
+{% } %>
 </div>
 </div>
 </div>
@@ -367,12 +367,12 @@
     <label><span class="red">*</span>출발 일자
     </label>
 <div class="container">
-    <% if(noDiv==0) { %>
-    <input type='text' class="form-control" id="ddate_d" value="<%= selectedAir.ddate %>" pattern="yyyy-MM-dd" readonly="readonly"/>
-        <% } %>
-    <% if(noDiv==1) { %>
-    <input type='text' class="form-control" id="ddate_d" value="<%= nextAir.ddate %>" pattern="yyyy-MM-dd" readonly="readonly"/>
-    <% } %>
+    {% if(noDiv==0) { %>
+    <input type='text' class="form-control" id="ddate_d" value="{%= selectedAir.ddate %>" pattern="yyyy-MM-dd" readonly="readonly"/>
+        {% } %>
+    {% if(noDiv==1) { %>
+    <input type='text' class="form-control" id="ddate_d" value="{%= nextAir.ddate %>" pattern="yyyy-MM-dd" readonly="readonly"/>
+    {% } %>
 </div>
 </div>
 
@@ -382,23 +382,23 @@
 <div class="form-group">
     <label>출발 시간</label>
 <div class="container">
-    <% if(noDiv==0) { %>
-        <input type="text" class="form-control" id="dtime_r"  readonly="readonly" value="<%= selected_dtime %>">
-        <% } %>
-        <% if(noDiv==1) { %>
-        <input type="text" class="form-control" id="dtime_r"  readonly="readonly" value="<%= next_dtime %>">
-    <% } %>
+    {% if(noDiv==0) { %>
+        <input type="text" class="form-control" id="dtime_r"  readonly="readonly" value="{%= selected_dtime %>">
+        {% } %>
+        {% if(noDiv==1) { %>
+        <input type="text" class="form-control" id="dtime_r"  readonly="readonly" value="{%= next_dtime %>">
+    {% } %>
 </div>
 </div>
 <div class="form-group">
     <label>도착 시간</label>
 <div class="container">
-    <% if(noDiv==0) { %>
-        <input type="text" class="form-control" id="rtime_r"  readonly="readonly" value="<%= selected_rtime %>">
-        <% } %>
-        <% if(noDiv==1) { %>
-        <input type="text" class="form-control" id="rtime_r"  readonly="readonly" value="<%= next_rtime %>">
-    <% } %>
+    {% if(noDiv==0) { %>
+        <input type="text" class="form-control" id="rtime_r"  readonly="readonly" value="{%= selected_rtime %>">
+        {% } %>
+        {% if(noDiv==1) { %>
+        <input type="text" class="form-control" id="rtime_r"  readonly="readonly" value="{%= next_rtime %>">
+    {% } %>
 </div>
 </div>
 </div>
@@ -406,12 +406,12 @@
 <div class="form-group">
     <label>항공사 코드</label>
 <div class="container">
-    <% if(noDiv==0) { %>
-        <input type="text" class="form-control" id="FCode_r" name="FCodeData_r" readonly="readonly" value="<%= selectedAir.ano %>">
-        <% } %>
-        <% if(noDiv==1) { %>
-        <input type="text" class="form-control" id="FCode_r" name="FCodeData_r" readonly="readonly" value="<%= nextAir.ano %>">
-    <% } %>
+    {% if(noDiv==0) { %>
+        <input type="text" class="form-control" id="FCode_r" name="FCodeData_r" readonly="readonly" value="{%= selectedAir.ano %>">
+        {% } %>
+        {% if(noDiv==1) { %>
+        <input type="text" class="form-control" id="FCode_r" name="FCodeData_r" readonly="readonly" value="{%= nextAir.ano %>">
+    {% } %>
 </div>
 </div>
 </div>
@@ -420,23 +420,23 @@
     <label><span class="red">*</span>가격
     </label>
 <div class="container">
-    <% if(noDiv==0) { %>
-        <input type="text" class="form-control" id="price_r" value="<%= selectedAir.price%>" readonly="readonly">
-        <% } %>
-        <% if(noDiv==1) { %>
-        <input type="text" class="form-control" id="price_r" value="<%= nextAir.price%>" readonly="readonly">
-    <% } %>
+    {% if(noDiv==0) { %>
+        <input type="text" class="form-control" id="price_r" value="{%= selectedAir.price%>" readonly="readonly">
+        {% } %>
+        {% if(noDiv==1) { %>
+        <input type="text" class="form-control" id="price_r" value="{%= nextAir.price%>" readonly="readonly">
+    {% } %>
 <input type="hidden" name="list[1].seat" id="seatData_r">
 <input type="hidden" name="list[1].ddate" id="ddateData_r">
 <input type="hidden" name="list[1].rdate" id="rdateData_r">
 <input type="hidden" name="list[1].ano" id="anoData_r">
 <input type="hidden" name="list[1].ldiv" id="ldivData_r">
-    <% if(noDiv==0) { %>
-        <input type="hidden" name="list[1].no" id="noData_r" value="<%= selectedAir.no %>">
-        <% } %>
-        <% if(noDiv==1) { %>
-        <input type="hidden" name="list[1].no" id="noData_r" value="<%= nextAir.no %>">
-    <% } %>
+    {% if(noDiv==0) { %>
+        <input type="hidden" name="list[1].no" id="noData_r" value="{%= selectedAir.no %>">
+        {% } %>
+        {% if(noDiv==1) { %>
+        <input type="hidden" name="list[1].no" id="noData_r" value="{%= nextAir.no %>">
+    {% } %>
 </div>
 </div>
 </div>
@@ -455,4 +455,4 @@
 </div>
 </body>
 </html>
-<%- include ('../../include/footer.ejs') %>
+{%- include ('../../include/footer.ejs') %>

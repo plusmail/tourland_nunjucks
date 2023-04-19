@@ -1,4 +1,4 @@
-<%- include ("../../include/header.ejs")%>
+{%- include ("../../include/header.ejs")%}
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <style>
   label {
@@ -14,7 +14,7 @@
 </style>
 <script>
 
-	var userno = <%=userVO.userno%> ;
+	var userno = {%=userVO.userno%} ;
 //	var searchType = "${cri.searchType}";
 //	var keyword = "${cri.keyword}";
 
@@ -141,7 +141,7 @@
 					    <input type="hidden" value="" id="forSubmit">
 						<div class="form-group">
 							<label>고객 번호</label>
-							<input type="text" name="userno"  readonly="readonly" style="background:lavender;" value="<%=autoNo%>" >
+							<input type="text" name="userno"  readonly="readonly" style="background:lavender;" value="{%=autoNo%}" >
 						</div>
 						<div class="form-group">
 							<label>고객 이름</label>
@@ -196,4 +196,4 @@
 	</div>
 </div>
 
-<%- include ("../../include/footer.ejs") %>
+{%- include ("../../include/footer.ejs") %}

@@ -142,7 +142,7 @@
 </style>
 
 <body>
-<%- include("../../include/userHeader.ejs") %>
+{%- include("../../include/userHeader.ejs") %}
 <script>
     var uno = 0;
     var price = 0;
@@ -167,17 +167,17 @@
         $(".selAir").each(function (i, obj) {
             switch ($(obj).find("option:selected").val()) {
                 case "F":
-                    var airprice = <%= vo.airplaneId_airplanes[0].price %> *
+                    var airprice = {%= vo.airplaneId_airplanes[0].price %} *
                     2 * Number($(".airSelect").eq(i).find("option:selected").attr("data-capacity"));
                     price += airprice;
                     break;
                 case "B":
-                    var airprice = <%= vo.airplaneId_airplanes[2].price %> *
+                    var airprice = {%= vo.airplaneId_airplanes[2].price %} *
                     2 * Number($(".airSelect").eq(i).find("option:selected").attr("data-capacity"));
                     price += airprice;
                     break;
                 case "E":
-                    var airprice = <%= vo.airplaneId_airplanes[4].price %> *
+                    var airprice = {%= vo.airplaneId_airplanes[4].price %} *
                     2 * Number($(".airSelect").eq(i).find("option:selected").attr("data-capacity"));
                     price += airprice;
                     break;
@@ -186,18 +186,18 @@
         $(".selHotel").each(function (i, obj) {
             switch ($(obj).find("option:selected").val()) {
                 case "S":
-                    var hotelPrice = <%= vo.hotelId_hotels[0].price %>;
-                    var dateDiff = Number(calDateDiff("<%= vo.hotelId_hotels[0].checkin %>", "<%= vo.hotelId_hotels[0].checkout %>"));
+                    var hotelPrice = {%= vo.hotelId_hotels[0].price %};
+                    var dateDiff = Number(calDateDiff("{%= vo.hotelId_hotels[0].checkin %}", "{%= vo.hotelId_hotels[0].checkout %}"));
                     price += (hotelPrice * dateDiff * Number($(".hotelSelect").eq(i).find("option:selected").attr("data-capacity")));
                     break;
                 case "D":
-                    var hotelPrice = <%= vo.hotelId_hotels[1].price %>;
-                    var dateDiff = Number(calDateDiff("<%= vo.hotelId_hotels[1].checkin %>", "<%= vo.hotelId_hotels[1].checkout %>"));
+                    var hotelPrice = {%= vo.hotelId_hotels[1].price %};
+                    var dateDiff = Number(calDateDiff("{%= vo.hotelId_hotels[1].checkin %}", "{%= vo.hotelId_hotels[1].checkout %}"));
                     price += (hotelPrice * dateDiff * Number($(".hotelSelect").eq(i).find("option:selected").attr("data-capacity")));
                     break;
                 case "N":
-                    var hotelPrice = <%= vo.hotelId_hotels[2].price %>;
-                    var dateDiff = Number(calDateDiff("<%= vo.hotelId_hotels[2].checkin %>", "<%= vo.hotelId_hotels[2].checkout %>"));
+                    var hotelPrice = {%= vo.hotelId_hotels[2].price %};
+                    var dateDiff = Number(calDateDiff("{%= vo.hotelId_hotels[2].checkin %}", "{%= vo.hotelId_hotels[2].checkout %}"));
                     price += (hotelPrice * dateDiff * Number($(".hotelSelect").eq(i).find("option:selected").attr("data-capacity")));
                     break;
             }
@@ -207,7 +207,7 @@
             price += tourprice;
         })
         if ($("#selRentcar option:selected").val() == 'S') {
-            price += Math.ceil(<%= vo.rentcarId_rentcars[0].price/vo.rentcarId_rentcars[0].capacity %>* bookCapacity
+            price += Math.ceil({%= vo.rentcarId_rentcars[0].price/vo.rentcarId_rentcars[0].capacity %}* bookCapacity
         )
             ;
         }
@@ -241,7 +241,7 @@
             var p = $("<p>").html("탑승인원 ");
             switch (selOption) {
                 case "F":
-                    for (var i = 1; i <=<%= vo.airplaneId_airplanes[0].capacity %>; i++) {
+                    for (var i = 1; i <={%= vo.airplaneId_airplanes[0].capacity %}; i++) {
                         var option = $("<option data-capacity='" + i + "'>").html(i + "명");
                         airSelect.append(option);
                     }
@@ -249,7 +249,7 @@
                     $(this).parent().after(p);
                     break;
                 case "B":
-                    for (var i = 1; i <=<%= vo.airplaneId_airplanes[3].capacity %>; i++) {
+                    for (var i = 1; i <={%= vo.airplaneId_airplanes[3].capacity %}; i++) {
                         var option = $("<option data-capacity='" + i + "'>").html(i + "명");
                         airSelect.append(option);
                     }
@@ -257,7 +257,7 @@
                     $(this).parent().after(p);
                     break;
                 case "E":
-                    for (var i = 1; i <=<%= vo.airplaneId_airplanes[5].capacity %>; i++) {
+                    for (var i = 1; i <={%= vo.airplaneId_airplanes[5].capacity %}; i++) {
                         var option = $("<option data-capacity='" + i + "'>").html(i + "명");
                         airSelect.append(option);
                     }
@@ -301,7 +301,7 @@
             var p = $("<p>").html("투숙인원 ");
             switch (selOption) {
                 case "S":
-                    for (var i = 1; i <=<%= vo.hotelId_hotels[0].capacity %>*<%= vo.hotelId_hotels[0].roomcapacity %>; i++) {
+                    for (var i = 1; i <={%= vo.hotelId_hotels[0].capacity %}*{%= vo.hotelId_hotels[0].roomcapacity %}; i++) {
                         var option = $("<option data-capacity='" + i + "'>").html(i + "명");
                         hotelSelect.append(option);
                     }
@@ -309,7 +309,7 @@
                     $(this).parent().after(p);
                     break;
                 case "D":
-                    for (var i = 1; i <=<%= vo.hotelId_hotels[1].capacity %>*<%= vo.hotelId_hotels[1].roomcapacity %>; i++) {
+                    for (var i = 1; i <={%= vo.hotelId_hotels[1].capacity %}*{%= vo.hotelId_hotels[1].roomcapacity %}; i++) {
                         var option = $("<option data-capacity='" + i + "'>").html(i + "명");
                         hotelSelect.append(option);
                     }
@@ -317,7 +317,7 @@
                     $(this).parent().after(p);
                     break;
                 case "N":
-                    for (var i = 1; i <=<%= vo.hotelId_hotels[2].capacity %>*<%= vo.hotelId_hotels[2].roomcapacity %>; i++) {
+                    for (var i = 1; i <={%= vo.hotelId_hotels[2].capacity %}*{%= vo.hotelId_hotels[2].roomcapacity %}; i++) {
                         var option = $("<option data-capacity='" + i + "'>").html(i + "명");
                         hotelSelect.append(option);
                     }
@@ -540,9 +540,9 @@
         })
         $("#update").click(function () {
             if (confirm("수정하시겠습니까?")) {
-                var userno = <%= userno %>;
-                var rno = <%= rno %>;
-                var upno = <%= uvo.pno %>;
+                var userno = {%= userno %};
+                var rno = {%= rno %};
+                var upno = {%= uvo.pno %};
                 var price = replaceAll($("#price").text(), ",", "");
                 var ano = [];
                 var acapacity = [];
@@ -609,10 +609,10 @@
 </script>
 <section>
     <div id="proBox">
-        <h1><%= vo.pname %></h1>
+        <h1>{%= vo.pname %}</h1>
         <div id="imgBox">
             <div id="bigImgBox">
-                <img src="/displayFile/product<%= vo.ppic %>">
+                <img src="/displayFile/product{%= vo.ppic %}">
             </div>
             <div id="smallImgBox">
                 <ul>
@@ -680,18 +680,18 @@
 
         <div id="infoBox">
             <ul>
-                <li id="infoNo">상품 번호 : <span id="pno">P<%= uvo.pno %></span></li>
-                <li id="infoName"><span id="pname"><%= uvo.pname %></span></li>
-                <%
+                <li id="infoNo">상품 번호 : <span id="pno">P{%= uvo.pno %}</span></li>
+                <li id="infoName"><span id="pname">{%= uvo.pname %}</span></li>
+                {%
                 let air = vo.airplaneId_airplanes;
                 let ddate;
                 for (let i = 0; i < 1; i++) {
                     ddate = air[i].ddate;
                 }
-                %>
-                <li id="infoDate">출발일 : <span id="ddate"><%= moment(ddate).format('YYYY-MM-DD') %></span></li>
+                %}
+                <li id="infoDate">출발일 : <span id="ddate">{%= moment(ddate).format('YYYY-MM-DD') %}</span></li>
                 <li id="infoDays">여행 기간 : <span id="tourDays">
-                        <%
+                        {%
                         let start = vo.pname.indexOf("]") - 2;
                         let end = vo.pname.indexOf("]") - 1;
                         let substr = vo.pname.substring(start, end) - 1;
@@ -699,24 +699,24 @@
                         let start2 = vo.pname.indexOf("]") - 2;
                         let end2 = vo.pname.indexOf("]") - 1;
                         let substr2 = vo.pname.substring(start2, end2);
-                        %>
-                        <%= substr + "박" + substr2 + "일"; %>
+                        %}
+                        {%= substr + "박" + substr2 + "일"; %}
                     </span>
-                    <%
+                    {%
                     let t = vo.tourId_tours;
                     let capacity;
                     for (let i = 0; i < 1; i++) {
                         capacity = t[i].capacity;
                     }
-                    %>
+                    %}
                 <li class="selOption">
                     <p>
                         예약인원
                         <select id="capacity">
                             <option value="">선택</option>
-                            <% for(let i = 1; i < capacity;i++) { %>
-                            <option value="reservp" data-dano="<%= i %>"> <%= i %> </option>
-                            <% } %>
+                            {% for(let i = 1; i < capacity;i++) { %}
+                            <option value="reservp" data-dano="{%= i %}"> {%= i %} </option>
+                            {% } %}
                         </select>
                     </p>
                 </li>
@@ -724,17 +724,17 @@
                     <p class="airOption">
                         항공기옵션1
                         <select class="selAir">
-                            <option value="" data-seat="<%= uvo.airplaneId_airplanes[0].seat %>"
-                                    data-capacity="<%= uvo.airplaneId_airplanes[0].capacity %>">선택
+                            <option value="" data-seat="{%= uvo.airplaneId_airplanes[0].seat %}"
+                                    data-capacity="{%= uvo.airplaneId_airplanes[0].capacity %}">선택
                             </option>
-                            <option value="F" data-dano="<%= vo.airplaneId_airplanes[0].id %>"
-                                    data-rano="<%= vo.airplaneId_airplanes[1].id %>">First-Class
+                            <option value="F" data-dano="{%= vo.airplaneId_airplanes[0].id %}"
+                                    data-rano="{%= vo.airplaneId_airplanes[1].id %}">First-Class
                             </option>
-                            <option value="B" data-dano="<%= vo.airplaneId_airplanes[2].id %>"
-                                    data-rano="<%= vo.airplaneId_airplanes[3].id %>">Business
+                            <option value="B" data-dano="{%= vo.airplaneId_airplanes[2].id %}"
+                                    data-rano="{%= vo.airplaneId_airplanes[3].id %}">Business
                             </option>
-                            <option value="E" data-dano="<%= vo.airplaneId_airplanes[4].id %>"
-                                    data-rano="<%= vo.airplaneId_airplanes[5].id %>">Economy
+                            <option value="E" data-dano="{%= vo.airplaneId_airplanes[4].id %}"
+                                    data-rano="{%= vo.airplaneId_airplanes[5].id %}">Economy
                             </option>
                         </select>
                     </p>
@@ -743,17 +743,17 @@
                     <p class="airOption">
                         항공기옵션2
                         <select class="selAir">
-                            <option value="" data-seat="<%= uvo.airplaneId_airplanes[2].seat %>"
-                                    data-capacity="<%= uvo.airplaneId_airplanes[2].capacity %>">선택
+                            <option value="" data-seat="{%= uvo.airplaneId_airplanes[2].seat %}"
+                                    data-capacity="{%= uvo.airplaneId_airplanes[2].capacity %}">선택
                             </option>
-                            <option value="F" data-dano="<%= vo.airplaneId_airplanes[0].id %>"
-                                    data-rano="<%= vo.airplaneId_airplanes[1].id %>">First-Class
+                            <option value="F" data-dano="{%= vo.airplaneId_airplanes[0].id %}"
+                                    data-rano="{%= vo.airplaneId_airplanes[1].id %}">First-Class
                             </option>
-                            <option value="B" data-dano="<%= vo.airplaneId_airplanes[2].id %>"
-                                    data-rano="<%= vo.airplaneId_airplanes[3].id %>">Business
+                            <option value="B" data-dano="{%= vo.airplaneId_airplanes[2].id %}"
+                                    data-rano="{%= vo.airplaneId_airplanes[3].id %}">Business
                             </option>
-                            <option value="E" data-dano="<%= vo.airplaneId_airplanes[4].id %>"
-                                    data-rano="<%= vo.airplaneId_airplanes[5].id %>">Economy
+                            <option value="E" data-dano="{%= vo.airplaneId_airplanes[4].id %}"
+                                    data-rano="{%= vo.airplaneId_airplanes[5].id %}">Economy
                             </option>
                         </select>
                     </p>
@@ -762,17 +762,17 @@
                     <p class="airOption">
                         항공기옵션3
                         <select class="selAir">
-                            <option value="" data-seat="<%= uvo.airplaneId_airplanes[4].seat %>"
-                                    data-capacity="<%= uvo.airplaneId_airplanes[4].capacity %>">선택
+                            <option value="" data-seat="{%= uvo.airplaneId_airplanes[4].seat %}"
+                                    data-capacity="{%= uvo.airplaneId_airplanes[4].capacity %}">선택
                             </option>
-                            <option value="F" data-dano="<%= vo.airplaneId_airplanes[0].id %>"
-                                    data-rano="<%= vo.airplaneId_airplanes[1].id %>">First-Class
+                            <option value="F" data-dano="{%= vo.airplaneId_airplanes[0].id %}"
+                                    data-rano="{%= vo.airplaneId_airplanes[1].id %}">First-Class
                             </option>
-                            <option value="B" data-dano="<%= vo.airplaneId_airplanes[2].id %>"
-                                    data-rano="<%= vo.airplaneId_airplanes[3].id %>">Business
+                            <option value="B" data-dano="{%= vo.airplaneId_airplanes[2].id %}"
+                                    data-rano="{%= vo.airplaneId_airplanes[3].id %}">Business
                             </option>
-                            <option value="E" data-dano="<%= vo.airplaneId_airplanes[4].id %>"
-                                    data-rano="<%= vo.airplaneId_airplanes[5].id %>">Economy
+                            <option value="E" data-dano="{%= vo.airplaneId_airplanes[4].id %}"
+                                    data-rano="<%= vo.airplaneId_airplanes[5].id %}">Economy
                             </option>
                         </select>
                     </p>
@@ -781,12 +781,12 @@
                     <p class="hotelOption">
                         호텔옵션1
                         <select class="selHotel">
-                            <option value="" data-roomtype="<%= uvo.hotelId_hotels[0].roomtype %>"
-                                    data-capacity="<%= uvo.hotelId_hotels[0].totalcapacity %>">선택
+                            <option value="" data-roomtype="<%= uvo.hotelId_hotels[0].roomtype %}"
+                                    data-capacity="<%= uvo.hotelId_hotels[0].totalcapacity %}">선택
                             </option>
-                            <option value="S" data-hno="<%= vo.hotelId_hotels[0].id %>">스위트룸</option>
-                            <option value="D" data-hno="<%= vo.hotelId_hotels[1].id %>">디럭스룸</option>
-                            <option value="N" data-hno="<%= vo.hotelId_hotels[2].id %>">일반룸</option>
+                            <option value="S" data-hno="<%= vo.hotelId_hotels[0].id %}">스위트룸</option>
+                            <option value="D" data-hno="<%= vo.hotelId_hotels[1].id %}">디럭스룸</option>
+                            <option value="N" data-hno="<%= vo.hotelId_hotels[2].id %}">일반룸</option>
                             <option value="DS">선택안함</option>
                         </select>
                     </p>
@@ -795,12 +795,12 @@
                     <p class="hotelOption">
                         호텔옵션2
                         <select class="selHotel">
-                            <option value="" data-roomtype="<%= uvo.hotelId_hotels[1].roomtype %>"
-                                    data-capacity="<%= uvo.hotelId_hotels[1].totalcapacity %>">선택
+                            <option value="" data-roomtype="<%= uvo.hotelId_hotels[1].roomtype %}"
+                                    data-capacity="<%= uvo.hotelId_hotels[1].totalcapacity %}">선택
                             </option>
-                            <option value="S" data-hno="<%= vo.hotelId_hotels[0].id %>">스위트룸</option>
-                            <option value="D" data-hno="<%= vo.hotelId_hotels[1].id %>">디럭스룸</option>
-                            <option value="N" data-hno="<%= vo.hotelId_hotels[2].id %>">일반룸</option>
+                            <option value="S" data-hno="<%= vo.hotelId_hotels[0].id %}">스위트룸</option>
+                            <option value="D" data-hno="<%= vo.hotelId_hotels[1].id %}">디럭스룸</option>
+                            <option value="N" data-hno="<%= vo.hotelId_hotels[2].id %}">일반룸</option>
                             <option value="DS">선택안함</option>
                         </select>
                     </p>
@@ -809,12 +809,12 @@
                     <p class="hotelOption">
                         호텔옵션3
                         <select class="selHotel">
-                            <option value="" data-roomtype="<%= uvo.hotelId_hotels[2].roomtype %>"
-                                    data-capacity="<%= uvo.hotelId_hotels[2].totalcapacity %>">선택
+                            <option value="" data-roomtype="<%= uvo.hotelId_hotels[2].roomtype %}"
+                                    data-capacity="<%= uvo.hotelId_hotels[2].totalcapacity %}">선택
                             </option>
-                            <option value="S" data-hno="<%= vo.hotelId_hotels[0].id %>">스위트룸</option>
-                            <option value="D" data-hno="<%= vo.hotelId_hotels[1].id %>">디럭스룸</option>
-                            <option value="N" data-hno="<%= vo.hotelId_hotels[2].id %>">일반룸</option>
+                            <option value="S" data-hno="<%= vo.hotelId_hotels[0].id %}">스위트룸</option>
+                            <option value="D" data-hno="<%= vo.hotelId_hotels[1].id %}">디럭스룸</option>
+                            <option value="N" data-hno="<%= vo.hotelId_hotels[2].id %}">일반룸</option>
                             <option value="DS">선택안함</option>
                         </select>
                     </p>
@@ -822,21 +822,21 @@
                 <li class="selOption">
                     <p>
                         투어옵션<br>
-                        <% vo.tourId_tours.forEach( tour => { %>
-                        <input type="checkbox" name="tourChk" value="<%= tour.id %>" class="selTour"
-                               data-price="<%= tour.tprice %>"> <span><%= tour.tname %></span><br>
-                        <% }) %>
-                        <% uvo.tourId_tours.forEach( utour => { %>
-                        <input type="hidden" value="<%= utour.id %>" class="utour">
-                        <% }) %>
+                        <% vo.tourId_tours.forEach( tour => { %}
+                        <input type="checkbox" name="tourChk" value="<%= tour.id %}" class="selTour"
+                               data-price="<%= tour.tprice %}"> <span><%= tour.tname %}</span><br>
+                        <% }) %}
+                        <% uvo.tourId_tours.forEach( utour => { %}
+                        <input type="hidden" value="<%= utour.id %}" class="utour">
+                        <% }) %}
                     </p>
                 </li>
                 <li class="selOption">
                     <p>
                         렌터카옵션
                         <select id="selRentcar">
-                            <option value="" data-rno="<%= uvo.rentcarId_rentcars[0].id %>">선택</option>
-                            <option value="S" data-rentno="<%= vo.rentcarId_rentcars[0].id %>">선택함</option>
+                            <option value="" data-rno="<%= uvo.rentcarId_rentcars[0].id %}">선택</option>
+                            <option value="S" data-rentno="<%= vo.rentcarId_rentcars[0].id %}">선택함</option>
                             <option value="DS">선택안함</option>
                         </select>
                     </p>
@@ -853,9 +853,9 @@
     </div>
     <div id="proDetail">
         <h2>여행 세부 내용</h2>
-        <%= vo.pcontent %>
+        <%= vo.pcontent %}
     </div>
 </section>
-<%- include("../../include/userFooter.ejs") %>
+<%- include("../../include/userFooter.ejs") %}
 </body>
 </html>

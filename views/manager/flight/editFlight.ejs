@@ -1,4 +1,4 @@
-<%- include (../../include/header.ejs) %>
+{%- include (../../include/header.ejs) %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -112,34 +112,34 @@
                             <label><span class="red">*</span>출발지</label>
                             <div class="container">
                                 <input type="text" id="dlocaData_d" class="form-control" name="list[0].dlocation"
-                                       value="<%= depAir.dlocation %>" readonly="readonly">
+                                       value="{%= depAir.dlocation %}" readonly="readonly">
                             </div>
                         </div>
                         <div class="form-group">
                             <label><span class="red">*</span>도착지</label>
                             <div class="container">
                                 <input type="text" id="rlocaData_d" class="form-control" name="list[0].rlocation"
-                                       value="<%= depAir.rlocation %>" readonly="readonly">
+                                       value="{%= depAir.rlocation %}" readonly="readonly">
                             </div>
                         </div>
                         <div class="form-group">
                             <label><span class="red">*</span>좌석</label>
                             <div class="container">
-                                <% if(depAir.seat == 'E') { %>
+                                {% if(depAir.seat == 'E') { %}
                                     <input type="text" class="form-control" value="Economy-Class" readonly="readonly">
                                     <input type="hidden" class="form-control" value="E" name="list[0].seat"
                                            readonly="readonly">
-                                <% } %>
-                                <% if(depAir.seat == 'B') { %>
+                                {% } %}
+                                {% if(depAir.seat == 'B') { %}
                                     <input type="text" class="form-control" value="Business-Class" readonly="readonly">
                                     <input type="hidden" class="form-control" value="B" name="list[0].seat"
                                            readonly="readonly">
-                                <% } %>
-                                <% if(depAir.seat == 'F') { %>
+                                <% } %}
+                                <% if(depAir.seat == 'F') { %}
                                     <input type="text" class="form-control" value="First-Class" readonly="readonly">
                                     <input type="hidden" class="form-control" value="F" name="list[0].seat"
                                            readonly="readonly">
-                                <% } %>
+                                <% } %}
                             </div>
                         </div>
 
@@ -147,7 +147,7 @@
                             <label>최대 인원 수</label>
                             <div class="container">
                                 <input type="text" class="form-control" id="capacity_d" name="list[0].capacity"
-                                       value="<%=depAir.capacity%>" readonly="readonly">
+                                       value="<%=depAir.capacity%}" readonly="readonly">
                             </div>
                         </div>
                     </div>
@@ -158,7 +158,7 @@
                             <div class="container">
                                 <div class='input-group date dateTimePicker' id='datetimepicker1'>
                                     <input type='text' class="form-control" id="ddate_d" name="ddateData_d"
-                                           value="<%=depAir.ddate%>" pattern="yyyy-MM-dd"
+                                           value="<%=depAir.ddate%}" pattern="yyyy-MM-dd"
                                     readonly="readonly"/>
                                     <span class="input-group-addon">
 					                        <span class="glyphicon glyphicon-calendar"></span>
@@ -172,14 +172,14 @@
                             <label>출발 시간</label>
                             <div class="container">
                                 <input type="text" class="form-control" id="dtime_d" name="dtimeData_d"
-                                       readonly="readonly" value="<%=dep_dtime%>">
+                                       readonly="readonly" value="<%=dep_dtime%}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>도착 시간</label>
                             <div class="container">
                                 <input type="text" class="form-control" id="rtime_d" name="rtimeData_d"
-                                       readonly="readonly" value="<%=dep_rtime%>">
+                                       readonly="readonly" value="<%=dep_rtime%}">
                             </div>
                         </div>
                     </div>
@@ -188,7 +188,7 @@
                             <label>항공사 코드</label>
                             <div class="container">
                                 <input type="text" class="form-control" id="FCode_d" name="list[0].ano"
-                                       readonly="readonly" value="<%=depAir.ano%>">
+                                       readonly="readonly" value="<%=depAir.ano%}">
                             </div>
                         </div>
                     </div>
@@ -198,12 +198,12 @@
                             <label><span class="red">*</span>가격</label>
                             <div class="container">
                                 <input type="text" class="form-control" name="list[0].price" id="price_d"
-                                       value="<%=depAir.price%>">
+                                       value="<%=depAir.price%}">
                                 <input type="hidden" name="list[0].ddate" id="ddateData_d">
                                 <input type="hidden" name="list[0].rdate" id="rdateData_d">
-                                <input type="hidden" name="list[0].ldiv" id="ldivData_d" value="<%=depAir.ldiv%>">
+                                <input type="hidden" name="list[0].ldiv" id="ldivData_d" value="<%=depAir.ldiv%}">
                                 <input type="hidden" name="list[0].pdiv" id="pdivData_d" value="0">
-                                <input type="hidden" id="noData_d" name="list[0].no" value="<%=depAir.no%>">
+                                <input type="hidden" id="noData_d" name="list[0].no" value="<%=depAir.no%}">
                             </div>
                         </div>
                     </div>
@@ -216,41 +216,41 @@
                             <label><span class="red">*</span>출발지</label>
                             <div class="container">
                                 <input type="text" class="form-control" id="dlocation_r" readonly="readonly"
-                                       name="list[1].dlocation" value="<%=appAir.dlocation%>">
+                                       name="list[1].dlocation" value="<%=appAir.dlocation%}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label><span class="red">*</span>도착지</label>
                             <div class="container">
                                 <input type="text" class="form-control" id="rlocation_r" readonly="readonly"
-                                       name="list[1].rlocation" value="<%=appAir.rlocation%>">
+                                       name="list[1].rlocation" value="<%=appAir.rlocation%}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label><span class="red">*</span>좌석</label>
                             <div class="container">
-                                <% if(appAir.seat=='E') { %>
+                                <% if(appAir.seat=='E') { %}
                                     <input type="text" class="form-control" value="Economy-Class" readonly="readonly">
                                     <input type="hidden" class="form-control" value="E" name="list[1].seat"
                                            readonly="readonly">
-                                <% } %>
-                                    <% if(appAir.seat=='B') { %>
+                                <% } %}
+                                    <% if(appAir.seat=='B') { %}
                                     <input type="text" class="form-control" value="Business-Class" readonly="readonly">
                                     <input type="hidden" class="form-control" value="B" name="list[1].seat"
                                            readonly="readonly">
-                                    <% } %>
-                                    <% if(appAir.seat=='F') { %>
+                                    <% } %}
+                                    <% if(appAir.seat=='F') { %}
                                     <input type="text" class="form-control" value="First-Class" readonly="readonly">
                                     <input type="hidden" class="form-control" value="F" name="list[1].seat"
                                            readonly="readonly">
-                                    <% } %>
+                                    <% } %}
                             </div>
                         </div>
                         <div class="form-group">
                             <label>최대 인원 수</label>
                             <div class="container">
                                 <input type="text" class="form-control" id="capacity_r" name="list[1].capacity"
-                                       value="<%=appAir.capacity%>" readonly="readonly">
+                                       value="<%=appAir.capacity%}" readonly="readonly">
                             </div>
                         </div>
                     </div>

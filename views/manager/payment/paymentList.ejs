@@ -1,4 +1,4 @@
-<%- include("../../include/header.ejs")%>
+{%- include("../../include/header.ejs")%}
 <style>
 table th, td {
 	text-align: center;
@@ -38,19 +38,19 @@ h4 {
 				</div>
 				<div class="box-body">
 					<select name="searchType" id="searchType">
-						<option value="total" <%=cri.searchType == 'total'? 'selected':''%>>----------</option>
-						<option value="username" <%=cri.searchType == 'username'? 'selected':''%>>고객명</option>
-						<option value="pname" <%=cri.searchType == 'pname'? 'selected':'' %>>상품명</option>
-						<option value="rdate" <%=cri.searchType == 'rdate'? 'selected':''%>>결제일</option>
-						<option value="ano" <%=cri.searchType == 'ano'? 'selected':'' %>>항공편</option>
+						<option value="total" {%=cri.searchType == 'total'? 'selected':''%}>----------</option>
+						<option value="username" {%=cri.searchType == 'username'? 'selected':''%}>고객명</option>
+						<option value="pname" {%=cri.searchType == 'pname'? 'selected':'' %}>상품명</option>
+						<option value="rdate" {%=cri.searchType == 'rdate'? 'selected':''%}>결제일</option>
+						<option value="ano" {%=cri.searchType == 'ano'? 'selected':'' %}>항공편</option>
 					</select>
-					<input type="text" name="keyword" id="keyword" value="<%=cri.keyword%>">
+					<input type="text" name="keyword" id="keyword" value="{%=cri.keyword%}">
 					<button id="btnSearch">검색</button>
 				</div>
 				<div class="box-body">
 			<p id="datePick">
 				<span><i class="far fa-calendar-alt"></i> 출발일 </span> 
-				<span class="picker"><input type="date" class="datepicker" name="ddate" placeholder="날짜를 선택하려면 클릭." style="height:30px;" value="<%=cri.keyword2%>"></span>
+				<span class="picker"><input type="date" class="datepicker" name="ddate" placeholder="날짜를 선택하려면 클릭." style="height:30px;" value="{%=cri.keyword2%}"></span>
 				<span id="pickSearch"><a href="#"><i class="fas fa-search"></i></a></span>
 			</p>
 					<table class="table table-bordered" id="listTable">
@@ -82,4 +82,4 @@ $("i.fas.fa-search").click(function(){
 	location.href = "/manager/paymentList?searchType=checkDate"+"&keyword2="+ddate;
  })
 </script>
-<%- include("../../include/footer.ejs")%>
+{%- include("../../include/footer.ejs")%}

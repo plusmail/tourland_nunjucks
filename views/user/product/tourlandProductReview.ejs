@@ -1,23 +1,23 @@
 <link rel="stylesheet" type="text/css" href="/stylesheets/tourlandProductReview.css"/>
 <body>
-<%- include("../../include/userHeader.ejs") %>
+{%- include("../../include/userHeader.ejs") %}
 <script>
     $(function () {
         $("#smallImgBox li").each(function (i, obj) {
             $(this).find("img").attr("src", $("#content img").eq(i).attr("src"));
         })
         $("#detail").click(function () {
-            location.href = "/customer/tourlandProductDetail/<%=vo.id%>?price=<%=vo.pprice%>";
+            location.href = "/customer/tourlandProductDetail/{%=vo.id%}?price={%=vo.pprice%}";
 
         })
     })
 </script>
 <section>
     <div id="proBox">
-        <h1><%= vo.pname %></h1>
+        <h1>{%= vo.pname %}</h1>
         <div id="imgBox">
             <div id="bigImgBox">
-                <img src="/displayFile/product<%= vo.ppic %>">
+                <img src="/displayFile/product{%= vo.ppic %}">
             </div>
             <div id="smallImgBox">
                 <ul>
@@ -31,17 +31,17 @@
 
         <div id="infoBox">
             <ul>
-                <li id="infoNo">상품 번호 : <span id="pno">P<%= vo.id %></span></li>
-                <li id="infoName"><span id="pname"><%= vo.pname %></span></li>
-                <% let air = vo.airplaneId_airplanes;
+                <li id="infoNo">상품 번호 : <span id="pno">P{%= vo.id %}</span></li>
+                <li id="infoName"><span id="pname">{%= vo.pname %}</span></li>
+                {% let air = vo.airplaneId_airplanes;
                 let ddate;
                 for (let i = 0; i < 1; i++) {
                     ddate = air[i].ddate;
                 }
-                %>
-                <li id="infoDate">출발일 : <span id="ddate"><%=moment(ddate).format('YYYY-MM-DD') %></span></li>
+                %}
+                <li id="infoDate">출발일 : <span id="ddate">{%=moment(ddate).format('YYYY-MM-DD') %}</span></li>
                 <li id="infoDays">여행 기간 : <span id="tourDays">
-                        <%
+                        {%
                         let start = vo.pname.indexOf("]") - 2;
                         let end = vo.pname.indexOf("]") - 1;
                         let substr = vo.pname.substring(start, end) - 1;
@@ -49,10 +49,10 @@
                         let start2 = vo.pname.indexOf("]") - 2;
                         let end2 = vo.pname.indexOf("]") - 1;
                         let substr2 = vo.pname.substring(start2, end2) - 1;
-                        %>
-                        <%= substr+"박"+substr2+"일"; %>
+                        %}
+                        {%= substr+"박"+substr2+"일"; %}
                     </span></li>
-                <li id="infoPrice">가격 : <span id="price"><%= vo.pprice %></span>원
+                <li id="infoPrice">가격 : <span id="price">{%= vo.pprice %}</span>원
                 </li>
             </ul>
             <div id="btnsBox">
@@ -67,69 +67,69 @@
             <a href="#" id="review">리뷰</a>
         </div>
 
-        <h2>상품 리뷰 <span id="reviewCnt"><%= list.length %></span></h2>
+        <h2>상품 리뷰 <span id="reviewCnt">{%= list.length %}</span></h2>
         <div id="reviewWrap">
             <ul>
-                <% list.forEach( (review, s) => { %>
+                {% list.forEach( (review, s) => { %}
                     <!--                <c:forEach var="review" items="${list}" varStatus="s">-->
-                    <li class="realReview"><span class="reviewNo"><%= s + 1 %></span>
-                        <span class="reviewTitle"><%= review.reviewTitle %></span>
+                    <li class="realReview"><span class="reviewNo">{%= s + 1 %}</span>
+                        <span class="reviewTitle">{%= review.reviewTitle %}</span>
                         <span class="reviewDate">
-                            <% review.regdate %>
+                            {% review.regdate %}
                         </span>
-                        <span class="userId"><%=review.userno_user.userid%></span>
+                        <span class="userId">{%=review.userno_user.userid%}</span>
                         <span class="userStar">
-                            <% if (review.starpoint == 0) { %>
+                            {% if (review.starpoint == 0) { %}
                                 <i class="far fa-star"></i>
                                 <i class="far fa-star"></i>
                                 <i class="far fa-star"></i>
                                 <i class="far fa-star"></i>
                                 <i class="far fa-star"></i>
-                            <% } %>
-                            <% if (review.starpoint == 1) { %>
+                            {% } %}
+                            {% if (review.starpoint == 1) { %}
                                 <i class="fas fa-star"></i>
                                 <i class="far fa-star"></i>
                                 <i class="far fa-star"></i>
                                 <i class="far fa-star"></i>
                                 <i class="far fa-star"></i>
-                            <% } %>
-                            <% if (review.starpoint == 2) { %>
+                            {% } %}
+                            {% if (review.starpoint == 2) { %}
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                                 <i class="far fa-star"></i>
                                 <i class="far fa-star"></i>
                                 <i class="far fa-star"></i>
-                            <% } %>
-                            <% if (review.starpoint == 3) { %>
+                            {% } %}
+                            {% if (review.starpoint == 3) { %}
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                                 <i class="far fa-star"></i>
                                 <i class="far fa-star"></i>
-                            <% } %>
-                            <% if (review.starpoint == 4) { %>
+                            {% } %}
+                            {% if (review.starpoint == 4) { %}
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                                 <i class="far fa-star"></i>
-                            <% } %>
-                            <% if (review.starpoint == 5) { %>
+                            {% } %}
+                            {% if (review.starpoint == 5) { %}
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
-                            <% } %>
+                            {% } %}
                         </span>
-                    <li class="innerReview"><span class="reviewContent"><%= review.reviewContent %></span></li>
+                    <li class="innerReview"><span class="reviewContent">{%= review.reviewContent %}</span></li>
 
-                <% }) %>
+                {% }) %}
             </ul>
         </div>
     </div>
 
 </section>
-<%- include("../../include/userFooter.ejs") %>
+{%- include("../../include/userFooter.ejs") %}
 </body>
 </html>
