@@ -76,9 +76,9 @@
 
 </style>
 <body>
-<%- include("../../include/userHeader.ejs") %>
+{%- include("../../include/userHeader.ejs") %}
 <section>
-    <%- include("../../include/userMyPageMenu.ejs") %>
+    {%- include("../../include/userMyPageMenu.ejs") %}
     <div id="myreserv">
         <h1>쿠폰</h1>
         <span id="info">쿠폰을 활용해서 멀리 떠나보세요! </span>
@@ -95,22 +95,22 @@
                 <th>할인율</th>
             </tr>
 
-            <% available.forEach( c => { %>
+            {% available.forEach( c => { %}
             <tr>
-                <td><%= c.cno %></td>
-                <td><%= c.cname %></td>
-                <td><%= c.ccontent %></td>
+                <td>{%= c.cno %}</td>
+                <td>{%= c.cname %}</td>
+                <td>{%= c.ccontent %}</td>
                 <td>
                     <!-- 가입 축하 할인 쿠폰 (소멸되지 않는) 일 경우 -->
-                    <% if (c.cno == 1) { %>
+                    {% if (c.cno == 1) { %}
                         ~
-                    <% } else { %>
-                        <%= c.edate %>
-                    <% } %>
+                    {% } else { %}
+                        {%= c.edate %}
+                    {% } %}
                 </td>
-                <td><%= c.mrate %>%</td>
+                <td>{%= c.mrate %}%</td>
             </tr>
-            <% }) %>
+            {% }) %}
 
         </table>
     </div>
@@ -118,6 +118,6 @@
 
 </section>
 
-<%- include("../../include/userFooter.ejs") %>
+{%- include("../../include/userFooter.ejs") %}
 </body>
 </html>

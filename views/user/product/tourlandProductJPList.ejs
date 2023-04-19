@@ -1,4 +1,4 @@
-<%- include("../../include/userHeader.ejs") %>
+{%- include("../../include/userHeader.ejs") %}
 <link rel="stylesheet" type="text/css" href="/stylesheets/tourlandProductJPList.css"/>
 
 <script>
@@ -71,17 +71,17 @@
 </script>
 <body>
 <!-- 메인 검색 박스에서 검색한 내용을 들고와서 자동 검색 후 페이지 출력 -->
-<% if (tourDays != null) { %>
+{% if (tourDays != null) { %}
 <script>
     $(function () {
-        $(".datepicker").val("<%= date %>");
-        $("#rdate option[value='<%= tourDays %>']").attr("selected", "selected");
-        $("#cnt option[value='<%= capa %>']").attr("selected", "selected");
+        $(".datepicker").val("{%= date %}");
+        $("#rdate option[value='{%= tourDays %}']").attr("selected", "selected");
+        $("#cnt option[value='{%= capa %}']").attr("selected", "selected");
         $("#pkgSearchBtn").trigger("click");
     })
 
 </script>
-<% } %>
+{% } %}
 <section>
     <div id="pkgTitleBox">
         <h1>도쿄</h1>
@@ -134,21 +134,21 @@
 
         <div id="pkgListWrap">
             <p id="totalCnt">
-                도쿄 : 검색된 상품 <span id="totalCount"><%= countlist.count %></span>건
+                도쿄 : 검색된 상품 <span id="totalCount">{%= countlist.count %}</span>건
             </p>
             <div id="pkgOrderBy">
                 <button id="byPrice">낮은 가격 순</button>
                 <button id="listAll">전체 리스트 보기</button>
             </div>
             <div id="pkgListBoxWrap">
-                <% list.forEach( product => { %>
-                <input type="hidden" value="<%= product.pno %>" id="pno">
+                {% list.forEach( product => { %}
+                <input type="hidden" value="{%= product.pno %}" id="pno">
                 <div class="pkgInfoBox">
                     <div class="pkgImg">
-                        <img src="/displayFile/product?filename=<%= product.ppic %>">
+                        <img src="/displayFile/product?filename={%= product.ppic %}">
                     </div>
-                    <p class="pkgTitle"><%= product.pname %></p>
-                    <%
+                    <p class="pkgTitle">{%= product.pname %}</p>
+                    {%
                         let airPrice = 0;
                         let hotelPrice = 0;
                         let tourPrice = 0;
@@ -177,54 +177,54 @@
                         let N = airPrice + hotelPrice + tourPrice;
                         let price = N + (1 - (N % 1)) % 1;
                         let expire = product.pexpire;
-                    %>
-                    <p class="pkgPrice"><%= price %>원 부터~</p>
-                    <p class="pkgDate">~ <%= expire %>까지 예약 가능</p>
+                    %}
+                    <p class="pkgPrice">{%= price %}원 부터~</p>
+                    <p class="pkgDate">~ {%= expire %}까지 예약 가능</p>
                     <p class="pkgReserv">
-                        <button class="pkgReservBtn" data-price="<%= price %>" data-pno="<%= product.id %>">지금 바로 예약
+                        <button class="pkgReservBtn" data-price="{%= price %}" data-pno="{%= product.id %}">지금 바로 예약
                         </button>
                     </p>
                 </div>
-                <% }) %>
+                {% }) %}
             </div>
             <div class="box-footer">
                 <!--  부트 스트랩으로 사용  -->
                 <div class='text-center'>
                     <ul class="pagination">
-                        <% if (pagingData.totalPages != 0) { %>
+                        {% if (pagingData.totalPages != 0) { %}
                         <div class="" style="text-align:center;">
                             <ul class="pagination">
-                                <li <%if(pagingData.currentPage == 1){ %> class="disabled" <% }else{ %> class="waves-effect" <% } %> >
+                                <li {%if(pagingData.currentPage == 1){ %} class="disabled" {% }else{ %} class="waves-effect" {% } %} >
                                     <a
-                                            <% if(pagingData.currentPage > 1){ %>
-                                            href="?currentPage=<%= pagingData.currentPage-1 %>"
-                                            <% } %>
+                                            {% if(pagingData.currentPage > 1){ %}
+                                            href="?currentPage={%= pagingData.currentPage-1 %}"
+                                            {% } %}
                                     >
                                         <i class="material-icons">prev</i>
                                     </a>
                                 </li>
-                                <% for(var i = pagingData.pnStart; i <= pagingData.pnEnd; i++){ %>
+                                {% for(var i = pagingData.pnStart; i <= pagingData.pnEnd; i++){ %}
                                 <li
-                                <% if(i === pagingData.currentPage){ %> class="active"
-                                        <% } %>
-                                ><a href="?currentPage=<%= i %>"><%= i %></a></li>
-                                <% } %>
+                                {% if(i === pagingData.currentPage){ %} class="active"
+                                        {% } %}
+                                ><a href="?currentPage={%= i %}">{%= i %}</a></li>
+                                {% } %}
                                 <li
-                                <% if(pagingData.currentPage == pagingData.totalPages){ %> class="disabled"
-                                <% }else{ %> class="waves-effect"
-                                        <% } %>
+                                {% if(pagingData.currentPage == pagingData.totalPages){ %} class="disabled"
+                                {% }else{ %} class="waves-effect"
+                                        {% } %}
                                 >
                                     <a
-                                            <% if(pagingData.currentPage < pagingData.totalPages){ %>
-                                            href="?currentPage=<%= pagingData.currentPage+1 %>"
-                                            <% } %>
+                                            {% if(pagingData.currentPage < pagingData.totalPages){ %}
+                                            href="?currentPage={%= pagingData.currentPage+1 %}"
+                                            {% } %}
                                             class="waves-effect">
                                         <i class="material-icons">next</i>
                                     </a>
                                 </li>
                             </ul>
                         </div>
-                        <% } %>
+                        {% } %}
 
                     </ul>
                 </div>
@@ -232,4 +232,4 @@
         </div>
     </div>
 </section>
-<%- include("../../include/userFooter.ejs") %>
+{%- include("../../include/userFooter.ejs") %}

@@ -7,9 +7,9 @@
 
 </head>
 <body>   
-	<%- include("../../include/userHeader.ejs")%>
+	{%- include("../../include/userHeader.ejs")%}
 		<section>
-		<%- include("../../include/userBoardMenu.ejs")%>
+		{%- include("../../include/userBoardMenu.ejs")%}
 		    <div id="detailDiv">
 				<div>
 				  <br>
@@ -17,13 +17,13 @@
 				</div>
 				<div id="detailContent">
 				   <ul id="datailUl">
-				   <li> <%=notice.no%> </li>
-				   <li class="detailLi"> <%=notice.title%> </li>
-				   <li> <%=notice.writer%> </li>
-				   <li> <%=notice.regdate%> </li>
+				   <li> {%=notice.no%} </li>
+				   <li class="detailLi"> {%=notice.title%} </li>
+				   <li> {%=notice.writer%} </li>
+				   <li> {%=notice.regdate%} </li>
 				   </ul>
 				   <div id="datailRealContent">
-				       <%=notice.content%>
+				       {%=notice.content%}
 				   </div>
 				</div>
 				
@@ -40,6 +40,6 @@
 		
 	})
 </script>
-		<%- include("../../include/userFooter.ejs") %>
+		{%- include("../../include/userFooter.ejs") %}
 </body>
 </html>

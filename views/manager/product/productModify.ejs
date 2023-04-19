@@ -1,4 +1,4 @@
-<%- include ('../../include/header.ejs') %>
+{%- include ('../../include/header.ejs') %}
 
 <style>
     h2 {
@@ -81,7 +81,7 @@
         margin: 0;
     }
 </style>
-<%- include ('productModifyForm_script.ejs') %>
+{%- include ('productModifyForm_script.ejs') %}
 <body>
 <div class="container">
     <div class="row">
@@ -92,7 +92,7 @@
                 </div>
                 <p id="guide">아래의 폼을 작성하고 등록 버튼을 클릭하세요.</p>
                 <form class="form-inline"
-                      action="productModify?page=<%= cri.page %>&searchType=<%= searchType %>&keyword=<%= keyword %>"
+                      action="productModify?page={%= cri.page %}&searchType={%= searchType %}&keyword={%= keyword %}"
                       method="post"
                       enctype="multipart/form-data">
                     <input type="hidden" name="pdiv" value="false">
@@ -120,29 +120,29 @@
                                 <th>좌석</th>
                                 <th>가격</th>
                             </tr>
-                            <%= vo.airplaneId_airplanes.forEach(f => { %>
+                            {%= vo.airplaneId_airplanes.forEach(f => { %}
                             <tr class="flightList">
-                                <td><%= f.id %><input type="hidden" name="airNo" value="<%= f.id %>"></td>
-                                <td><%= f.ano %></td>
-                                <td><%= f.dlocation %></td>
-                                <td><%= f.rlocation %></td>
-                                <td id="ddate" data-ddate="<%= f.ddate %>" pattern="yyyy-MM-dd"><%= f.ddate %>
+                                <td>{%= f.id %}<input type="hidden" name="airNo" value="{%= f.id %}"></td>
+                                <td>{%= f.ano %}</td>
+                                <td>{%= f.dlocation %}</td>
+                                <td>{%= f.rlocation %}</td>
+                                <td id="ddate" data-ddate="{%= f.ddate %}" pattern="yyyy-MM-dd">{%= f.ddate %}
                                 </td>
-                                <td><%= f.rdate %></td>
-                                <td><%= f.ldiv==1?'국내':'해외' %></td>
-                                <td id="acapacity" data-capacity="<%= f.capacity %>"><%= f.capacity %></td>
-                                <% if (f.seat == 'F') { %>
+                                <td>{%= f.rdate %}</td>
+                                <td>{%= f.ldiv==1?'국내':'해외' %}</td>
+                                <td id="acapacity" data-capacity="{%= f.capacity %}">{%= f.capacity %}</td>
+                                {% if (f.seat == 'F') { %}
                                     <td id="first">First-Class</td>
-                                <% } %>
-                                <% if (f.seat == 'B') { %>
+                                {% } %}
+                                {% if (f.seat == 'B') { %}
                                     <td id="bus">Business-Class</td>
-                                <% } %>
-                                <% if (f.seat == 'E') { %>
+                                {% } %}
+                                {% if (f.seat == 'E') { %}
                                     <td id="eco">Economy-Class</td>
-                                <% } %>
-                                <td id="aprice" data-price="<%= f.price %>"><%= f.price %></td>
+                                {% } %}
+                                <td id="aprice" data-price="{%= f.price %}">{%= f.price %}</td>
                             </tr>
-                            <% }) %>
+                            {% }) %}
                         </table>
                     </div>
                     <div class="group">
@@ -172,45 +172,45 @@
                                 <th>장소구분</th>
                                 <th>예약 가능 여부</th>
                             </tr>
-                            <% vo.hotelId_hotels.forEach( hotel => { %>
+                            {% vo.hotelId_hotels.forEach( hotel => { %}
                             <tr class="hotelList">
-                                <td id="dateDiff"><%= hotel.id %><input type="hidden" name="hotelNo"
-                                                                        value="<%= hotel.id %>"></td>
-                                <td><%= hotel.hname %></td>
-                                <td><%= hotel.haddr %></td>
-                                <td id="checkin" data-checkin="<%= hotel.checkin %>"><%= hotel.checkin %>
+                                <td id="dateDiff">{%= hotel.id %}<input type="hidden" name="hotelNo"
+                                                                        value="{%= hotel.id %}"></td>
+                                <td>{%= hotel.hname %}</td>
+                                <td>{%= hotel.haddr %}</td>
+                                <td id="checkin" data-checkin="{%= hotel.checkin %}">{%= hotel.checkin %}
                                 </td>
-                                <td id="checkout" data-checkout="<%= hotel.checkout %>"><%= hotel.checkout %>
+                                <td id="checkout" data-checkout="{%= hotel.checkout %}">{%= hotel.checkout %}
                                 </td>
-                                <td id="hcapacity" data-capacity="<%= hotel.capacity %>"><%= hotel.capacity %>
+                                <td id="hcapacity" data-capacity="{%= hotel.capacity %}">{%= hotel.capacity %}
                                     <span>인</span></td>
-                                <td id="hprice" data-price="<%= hotel.price %>"><%= hotel.price %></td>
+                                <td id="hprice" data-price="{%= hotel.price %}">{%= hotel.price %}</td>
                                 <td id="hrcapacity"
-                                    data-roomcapacity="<%= hotel.roomcapacity %>"><%= hotel.roomcapacity %>
+                                    data-roomcapacity="{%= hotel.roomcapacity %}">{%= hotel.roomcapacity %}
                                     <span>실</span></td>
 
-                                <% if(hotel.roomtype == 'N') { %>
+                                {% if(hotel.roomtype == 'N') { %}
                                     <td style="color:#5D5D5D;" id="n">노말</td>
-                                <% } else if(hotel.roomtype == 'D') { %>
+                                {% } else if(hotel.roomtype == 'D') { %}
                                     <td style="color:#F29661;" id="d">디럭스</td>
-                                <% } else { %>
+                                {% } else { %}
                                     <td style="color:#D941C5;" id="s">스위트</td>
-                                <% } %>
+                                {% } %}
 
-                                <% if(hotel.ldiv == 0) { %>
+                                {% if(hotel.ldiv == 0) { %}
                                     <td>해외</td>
-                                <% } %>
-                                <% if (hotel.ldiv == 1) { %>
+                                {% } %}
+                                {% if (hotel.ldiv == 1) { %}
                                     <td>국내</td>
-                                <% } %>
+                                {% } %}
 
-                                <% if(hotel.bookedup == 0) { %>
+                                {% if(hotel.bookedup == 0) { %}
                                     <td><span class="badge bg-orange">예약가능</span></td>
-                                <% } else if(hotel.bookedup == 1) { %>
+                                {% } else if(hotel.bookedup == 1) { %}
                                     <td><span class="badge bg-blue">예약불가능</span></td>
-                                <% } %>
+                                {% } %}
                             </tr>
-                            <% }) %>
+                            {% }) %}
                         </table>
                     </div>
                     <div class="group">
@@ -235,20 +235,20 @@
                                 <th>가격</th>
                                 <th>장소구분</th>
                             </tr>
-                            <% vo.tourId_tours.forEach( tour => { %>
+                            {% vo.tourId_tours.forEach( tour => { %}
                             <tr class="tourList">
-                                <td><%= tour.id %><input type="hidden" name="tourNo" value="<%= tour.id %>"></td>
-                                <td><%= tour.tname %></td>
-                                <td><%= tour.tlocation %></td>
-                                <td><%= tour.startDate %></td>
-                                <td><%= tour.endDate %></td>
-                                <td><%= tour.taddr %></td>
-                                <td><%= tour.etime %></td>
-                                <td id="tcapacity" data-capacity="<%= tour.capacity %>"><%= tour.capacity %></td>
-                                <td id="tprice" data-price="<%= tour.tprice %>"><%= tour.tprice %></td>
-                                <td><%= tour.ldiv?'국내':'해외' %></td>
+                                <td>{%= tour.id %}<input type="hidden" name="tourNo" value="{%= tour.id %}"></td>
+                                <td>{%= tour.tname %}</td>
+                                <td>{%= tour.tlocation %}</td>
+                                <td>{%= tour.startDate %}</td>
+                                <td>{%= tour.endDate %}</td>
+                                <td>{%= tour.taddr %}</td>
+                                <td>{%= tour.etime %}</td>
+                                <td id="tcapacity" data-capacity="{%= tour.capacity %}">{%= tour.capacity %}</td>
+                                <td id="tprice" data-price="{%= tour.tprice %}">{%= tour.tprice %}</td>
+                                <td>{%= tour.ldiv?'국내':'해외' %}</td>
                             </tr>
-                            <% }) %>
+                            {% }) %}
                         </table>
                     </div>
                     <div class="group">
@@ -274,33 +274,33 @@
                                 <th>보험여부</th>
                                 <th>국내/해외</th>
                             </tr>
-                            <% vo.rentcarId_rentcars.forEach(rentcarList => { %>
+                            {% vo.rentcarId_rentcars.forEach(rentcarList => { %}
                             <tr class="rentcarList">
-                                <td><%= rentcarList.id %><input type="hidden" name="rentcarNo"
-                                                                value="<%= rentcarList.id %>"></td>
-                                <td><%= rentcarList.cdiv %></td>
-                                <td><%= rentcarList.cno %></td>
-                                <td><%= rentcarList.rentddate %></td>
-                                <td><%= rentcarList.returndate %></td>
-                                <td><%= rentcarList.rentaddr %></td>
-                                <td><%= rentcarList.returnaddr %></td>
-                                <td id="rprice" data-price="<%= rentcarList.price %>"><%= rentcarList.price %></td>
-                                <td><%= rentcarList.capacity %></td>
-                                <td><%= rentcarList.insurance %></td>
-                                <td><%= rentcarList.ldiv == 0?'해외':'국내' %></td>
+                                <td>{%= rentcarList.id %}<input type="hidden" name="rentcarNo"
+                                                                value="{%= rentcarList.id %}"></td>
+                                <td>{%= rentcarList.cdiv %}</td>
+                                <td>{%= rentcarList.cno %}</td>
+                                <td>{%= rentcarList.rentddate %}</td>
+                                <td>{%= rentcarList.returndate %}</td>
+                                <td>{%= rentcarList.rentaddr %}</td>
+                                <td>{%= rentcarList.returnaddr %}</td>
+                                <td id="rprice" data-price="{%= rentcarList.price %}">{%= rentcarList.price %}</td>
+                                <td>{%= rentcarList.capacity %}</td>
+                                <td>{%= rentcarList.insurance %}</td>
+                                <td>{%= rentcarList.ldiv == 0?'해외':'국내' %}</td>
                             </tr>
-                            <% }) %>
+                            {% }) %}
                         </table>
                     </div>
                     <div class="group">
                         <div class="form-group">
                             <label><span class="red">*</span>상품 번호</label>
-                            <input type="text" class="form-control" readonly="readonly" value="<%= vo.id %>"
+                            <input type="text" class="form-control" readonly="readonly" value="{%= vo.id %}"
                                    name="pno">
                         </div>
                         <div class="form-group">
                             <label><span class="red">*</span>상품 이름</label> <input
-                                    type="text" class="form-control" name="pname" value="<%= vo.pname %>"
+                                    type="text" class="form-control" name="pname" value="{%= vo.pname %}"
                                     required="required">
                         </div>
                     </div>
@@ -310,7 +310,7 @@
                         </div>
                     </div>
                     <div>
-                        <textarea name="pcontent" rows="80" id="detail"><%- vo.pcontent %></textarea>
+                        <textarea name="pcontent" rows="80" id="detail">{%- vo.pcontent %}</textarea>
                     </div>
                     <div class="group">
                         <div class="form-group">
@@ -321,7 +321,7 @@
                         <div class="form-group">
                             <label><span class="red">*</span>상품 유효기간</label> <input
                                     type="text" class="form-control" id="pexpire" name="pexpire"
-                                    value='<%= vo.pexpire %>' readonly="readonly">
+                                    value='{%= vo.pexpire %}' readonly="readonly">
                         </div>
                     </div>
                     <div class="group">
@@ -329,10 +329,10 @@
                             <label><span class="red">*</span>상품 사진</label> <input
                                     type="file" class="form-control" id="file" name="file">
                             <div id="preview" style="display : inline;">
-                                <% if(vo.ppic != null) { %>
-                                <img src="/displayFile/productSmall?filename=<%= vo.ppic %>" style="margin : 10px;">
-                                <input type="hidden" name="originalPic" value="<%= vo.ppic %>">
-                                <% } %>
+                                {% if(vo.ppic != null) { %}
+                                <img src="/displayFile/productSmall?filename={%= vo.ppic %}" style="margin : 10px;">
+                                <input type="hidden" name="originalPic" value="{%= vo.ppic %}">
+                                {% } %}
                             </div>
                         </div>
                     </div>
@@ -380,49 +380,49 @@
                                 <th>좌석</th>
                                 <th>가격</th>
                             </tr>
-                            <% flightListDepature.forEach( f => { %>
-                            <tr class='flightList' data-no="<%= f.id %>">
-                                <td><%= f.id %></td>
-                                <td><%= f.ano %></td>
-                                <td><%= f.dlocation %></td>
-                                <td><%= f.rlocation %></td>
-                                <td><%= f.ddate %></td>
-                                <td><%= f.rdate %></td>
-                                <% if (f.ldiv == 0) { %>
+                            {% flightListDepature.forEach( f => { %}
+                            <tr class='flightList' data-no="{%= f.id %}">
+                                <td>{%= f.id %}</td>
+                                <td>{%= f.ano %}</td>
+                                <td>{%= f.dlocation %}</td>
+                                <td>{%= f.rlocation %}</td>
+                                <td>{%= f.ddate %}</td>
+                                <td>{%= f.rdate %}</td>
+                                {% if (f.ldiv == 0) { %}
                                     <td>해외</td>
-                                <% } %>
-                                <% if(f.ldiv == 1) { %>
+                                {% } %}
+                                {% if(f.ldiv == 1) { %}
                                     <td>국내</td>
-                                <% } %>
-                                <td><%= f.capacity %></td>
-                                <% if(f.seat == 'F') { %>
+                                {% } %}
+                                <td>{%= f.capacity %}</td>
+                                {% if(f.seat == 'F') { %}
                                     <td id="first">First-Class</td>
-                                <% } %>
-                                <% if (f.seat == 'B') { %>
+                                {% } %}
+                                {% if (f.seat == 'B') { %}
                                     <td id="bus">Business-Class</td>
-                                <% } %>
-                                <% if(f.seat == 'E') { %>
+                                {% } %}
+                                {% if(f.seat == 'E') { %}
                                     <td id="eco">Economy-Class</td>
-                                <% } %>
-                                <td><%= f.price %></td>
+                                {% } %}
+                                <td>{%= f.price %}</td>
                             </tr>
-                            <% }) %>
+                            {% }) %}
                         </table>
                     </div>
                     <div class="box-footer">
                         <div class="text-center">
                             <ul class="pagination">
-                                <% if (pageMakerByFlightDepature.prev == true) { %>
+                                {% if (pageMakerByFlightDepature.prev == true) { %}
                                     <li><a id="prev">&laquo;</a></li>
-                                <% } %>
-                                <% for(idx = pageMakerByFlightDepature.startPage; idx <= pageMakerByFlightDepature.endPage; idx++){ %>
+                                {% } %}
+                                {% for(idx = pageMakerByFlightDepature.startPage; idx <= pageMakerByFlightDepature.endPage; idx++){ %}
                                 <li
-                                        class="<%= pageMakerByFlightDepature.cri.page == idx ?'active':'' %>"><a
-                                            class="index" data-index="<%= idx %>"><%= idx %></a></li>
-                                <% } %>
-                                <% if (pageMakerByFlightDepature.next == true) { %>
+                                        class="{%= pageMakerByFlightDepature.cri.page == idx ?'active':'' %}"><a
+                                            class="index" data-index="{%= idx %}">{%= idx %}</a></li>
+                                {% } %}
+                                {% if (pageMakerByFlightDepature.next == true) { %}
                                     <li><a id="next">&raquo;</a></li>
-                                <% } %>
+                                {% } %}
                             </ul>
                         </div>
                     </div>
@@ -459,33 +459,33 @@
                                 <th>좌석</th>
                                 <th>가격</th>
                             </tr>
-                            <% flightListRending.forEach( f => { %>
-                            <tr class='flightList' data-no="<%= f.id %>">
-                                <td><%= f.id %></td>
-                                <td><%= f.ano %></td>
-                                <td><%= f.dlocation %></td>
-                                <td><%= f.rlocation %></td>
-                                <td><%= f.ddate %></td>
-                                <td><%= f.rdate %></td>
-                                <% if (f.ldiv == 0) { %>
+                            {% flightListRending.forEach( f => { %}
+                            <tr class='flightList' data-no="{%= f.id %}">
+                                <td>{%= f.id %}</td>
+                                <td>{%= f.ano %}</td>
+                                <td>{%= f.dlocation %}</td>
+                                <td>{%= f.rlocation %}</td>
+                                <td>{%= f.ddate %}</td>
+                                <td>{%= f.rdate %}</td>
+                                {% if (f.ldiv == 0) { %}
                                     <td>해외</td>
-                                <% } %>
-                                <% if (f.ldiv == 1) { %>
+                                {% } %}
+                                {% if (f.ldiv == 1) { %}
                                     <td>국내</td>
-                                <% } %>
-                                <td><%= f.capacity %></td>
-                                <% if (f.seat == 'F') { %>
+                                {% } %}
+                                <td>{%= f.capacity %}</td>
+                                {% if (f.seat == 'F') { %}
                                     <td id="first">First-Class</td>
-                                <% } %>
-                                <% if (f.seat == 'B') { %>
+                                {% } %}
+                                {% if (f.seat == 'B') { %}
                                     <td id="bus">Business-Class</td>
-                                <% } %>
-                                <% if (f.seat == 'E') { %>
+                                {% } %}
+                                {% if (f.seat == 'E') { %}
                                     <td id="eco">Economy-Class</td>
-                                <% } %>
-                                <td><%= f.price %></td>
+                                {% } %}
+                                <td>{%= f.price %}</td>
                             </tr>
-                            <% }) %>
+                            {% }) %}
                         </table>
                     </div>
                 </div>
@@ -509,12 +509,12 @@
                 <div class="box box-primary">
                     <div class="box-body">
                         <select name="searchType" id="searchType">
-                            <option value="total" <%= cri.searchType == 'total'? 'selected':'' %>>전체</option>
-                            <option value="hname" <%= cri.searchType == 'hname'? 'selected':'' %>>호텔이름</option>
-                            <option value="haddr" <%= cri.searchType == 'haddr'? 'selected':'' %>>호텔주소</option>
-                            <option value="bookedup" <%= cri.searchType == 'bookedup'? 'selected':'' %>>객실체크여부</option>
+                            <option value="total" {%= cri.searchType == 'total'? 'selected':'' %}>전체</option>
+                            <option value="hname" {%= cri.searchType == 'hname'? 'selected':'' %}>호텔이름</option>
+                            <option value="haddr" {%= cri.searchType == 'haddr'? 'selected':'' %}>호텔주소</option>
+                            <option value="bookedup" {%= cri.searchType == 'bookedup'? 'selected':'' %}>객실체크여부</option>
                         </select> <input type="text" name="keyword" id="keywordInput"
-                                         value="<%= cri.keyword %>">
+                                         value="{%= cri.keyword %}">
                         <button id="btnSearch">검색</button>
                     </div>
                     <div class="box-body">
@@ -522,11 +522,11 @@
                             <span><i class="far fa-calendar-alt"></i> 체크인 </span>
                             <span class="picker"><input type="date" class="datepicker" name="checkin"
                                                         placeholder="날짜를 선택하려면 클릭." style="height:30px;"
-                                                        value="<%= cri.keyword2 %>"></span>
+                                                        value="{%= cri.keyword2 %}"></span>
                             <span><i class="far fa-calendar-alt"></i> ~  체크아웃 </span>
                             <span class="picker"><input type="date" class="datepicker" name="checkout"
                                                         placeholder="날짜를 선택하려면 클릭." style="height:30px;"
-                                                        value="<%= cri.keyword3 %>"></span>
+                                                        value="{%= cri.keyword3 %}"></span>
                             <span id="pickSearch"><a href="#"><i class="fas fa-search"></i></a></span>
                         </p>
                         <table class="table table-bordered" id="table">
@@ -543,53 +543,53 @@
                                 <th>장소구분</th>
                                 <th>예약 가능 여부</th>
                             </tr>
-                            <% hotelList.forEach( hotel => { %>
-                            <tr class="hotelList" data-no="<%= hotel.id %>">
-                                <td><%= hotel.id %></td>
-                                <td><%= hotel.hname %></td>
-                                <td><%= hotel.haddr %></td>
-                                <td><%= hotel.checkin %></td>
-                                <td><%= hotel.checkout %></td>
-                                <td><%= hotel.capacity %><span>인</span></td>
-                                <td><%= hotel.price %></td>
-                                <td><%= hotel.roomcapacity %><span>실</span></td>
+                            {% hotelList.forEach( hotel => { %}
+                            <tr class="hotelList" data-no="{%= hotel.id %}">
+                                <td>{%= hotel.id %}</td>
+                                <td>{%= hotel.hname %}</td>
+                                <td>{%= hotel.haddr %}</td>
+                                <td>{%= hotel.checkin %}</td>
+                                <td>{%= hotel.checkout %}</td>
+                                <td>{%= hotel.capacity %}<span>인</span></td>
+                                <td>{%= hotel.price %}</td>
+                                <td>{%= hotel.roomcapacity %}<span>실</span></td>
 
-                                <% if(hotel.roomtype == 'N') { %>
+                                {% if(hotel.roomtype == 'N') { %}
                                     <td style="color: #5D5D5D;" id="n">노말</td>
-                                <% } else if(hotel.roomtype == 'D') { %>
+                                {% } else if(hotel.roomtype == 'D') { %}
                                     <td style="color: #F29661;" id="d">디럭스</td>
-                                <% } else { %>
+                                {% } else { %}
                                     <td style="color: #D941C5;" id="s">스위트</td>
-                                <% } %>
+                                {% } %}
 
-                                <% if(hotel.ldiv == 0) { %>
+                                {% if(hotel.ldiv == 0) { %}
                                     <td>해외</td>
-                                <% } %>
-                                <% if(hotel.ldiv == 1) { %>
+                                {% } %}
+                                {% if(hotel.ldiv == 1) { %}
                                     <td>국내</td>
-                                <% } %>
-                                <% if(hotel.bookedup == 0) { %>
+                                {% } %}
+                                {% if(hotel.bookedup == 0) { %}
                                     <td><span class="badge bg-red">예약가능</span></td>
-                                <% } else if(hotel.bookedup == 1) { %>
+                                {% } else if(hotel.bookedup == 1) { %}
                                     <td><span class="badge bg-blue">예약불가능</span></td>
-                                <% } %>
+                                {% } %}
                             </tr>
-                            <% }) %>
+                            {% }) %}
                         </table>
                     </div>
                     <div class="box-footer">
                         <div class="text-center">
                             <ul class="pagination">
-                                <% if(pageMakerByHotel.prev == true) { %>
+                                {% if(pageMakerByHotel.prev == true) { %}
                                     <li><a id="prev">&laquo;</a></li>
-                                <% } %>
-                                <% for(idx = pageMakerByHotel.startPage; idx <= pageMakerByHotel.endPage; idx++){ %>
-                                <li class="<%= pageMakerByHotel.cri.page == idx ?'active':'' %>"><a
-                                            class="index" data-index="<%= idx %>"><%= idx %></a></li>
-                                <% } %>
-                                <% if(pageMakerByHotel.next == true) { %>
+                                {% } %}
+                                {% for(idx = pageMakerByHotel.startPage; idx <= pageMakerByHotel.endPage; idx++){ %}
+                                <li class="{%= pageMakerByHotel.cri.page == idx ?'active':'' %}"><a
+                                            class="index" data-index="{%= idx %}">{%= idx %}</a></li>
+                                {% } %}
+                                {% if(pageMakerByHotel.next == true) { %}
                                     <li><a id="next">&raquo;</a></li>
-                                <% } %>
+                                {% } %}
                             </ul>
                         </div>
                     </div>
@@ -639,35 +639,35 @@
                                 <th>가격</th>
                                 <th>장소구분</th>
                             </tr>
-                            <% tourList.forEach( tour => { %>
-                            <tr class="tourList" data-no="<%= tour.id %>">
-                                <td><%= tour.id %></td>
-                                <td><%= tour.tname %></td>
-                                <td><%= tour.tlocation %></td>
-                                <td><%= tour.startDate %></td>
-                                <td><%= tour.endDate %></td>
-                                <td><%= tour.taddr %></td>
-                                <td><%= tour.etime %></td>
-                                <td><%= tour.capacity %></td>
-                                <td><%= tour.tprice %></td>
-                                <td><%= tour.ldiv?'국내':'해외' %></td>
+                            {% tourList.forEach( tour => { %}
+                            <tr class="tourList" data-no="{%= tour.id %}">
+                                <td>{%= tour.id %}</td>
+                                <td>{%= tour.tname %}</td>
+                                <td>{%= tour.tlocation %}</td>
+                                <td>{%= tour.startDate %}</td>
+                                <td>{%= tour.endDate %}</td>
+                                <td>{%= tour.taddr %}</td>
+                                <td>{%= tour.etime %}</td>
+                                <td>{%= tour.capacity %}</td>
+                                <td>{%= tour.tprice %}</td>
+                                <td>{%= tour.ldiv?'국내':'해외' %}</td>
                             </tr>
-                            <% }) %>
+                            {% }) %}
                         </table>
                     </div>
                     <div class="box-footer">
                         <div class="text-center">
                             <ul class="pagination">
-                                <% if(pageMakerByTour.prev == true) { %>
+                                {% if(pageMakerByTour.prev == true) { %}
                                     <li><a id="prev">&laquo;</a></li>
-                                <% } %>
-                                <% for(idx = pageMakerByTour.startPage; idx = pageMakerByTour.endPage; idx++){ %>
-                                <li class="<%= pageMakerByTour.cri.page == idx ?'active':'' %>"><a
-                                            class="index" data-index="<%= idx %>"><%= idx %></a></li>
-                                <% } %>
-                                <% if(pageMakerByTour.next == true) { %>
+                                {% } %}
+                                {% for(idx = pageMakerByTour.startPage; idx = pageMakerByTour.endPage; idx++){ %}
+                                <li class="{%= pageMakerByTour.cri.page == idx ?'active':'' %}"><a
+                                            class="index" data-index="{%= idx %}">{%= idx %}</a></li>
+                                {% } %}
+                                {% if(pageMakerByTour.next == true) { %}
                                     <li><a id="next">&raquo;</a></li>
-                                <% } %>
+                                {% } %}
                             </ul>
                         </div>
                     </div>
@@ -694,13 +694,13 @@
                 <div class="box box-primary">
                     <div class="box-body">
                         <select name="searchType" id="searchType" style="width:200px; height: 25px;">
-                            <option value="N" <%= cri.searchType ==null?'selected':'' %>>----------</option>
-                            <option value="rentcarType" <%= cri.searchType =='rentcarType'?'selected':'' %>>차종류</option>
-                            <option value="rentcarCno" <%= cri.searchType =='rentcarCno'?'selected':'' %>>차번호</option>
-                            <option value="rentDepartaddr" <%= cri.searchType =='rentDepartaddr'?'selected':'' %>>대여,반납
+                            <option value="N" {%= cri.searchType ==null?'selected':'' %}>----------</option>
+                            <option value="rentcarType" {%= cri.searchType =='rentcarType'?'selected':'' %}>차종류</option>
+                            <option value="rentcarCno" {%= cri.searchType =='rentcarCno'?'selected':'' %}>차번호</option>
+                            <option value="rentDepartaddr" {%= cri.searchType =='rentDepartaddr'?'selected':'' %}>대여,반납
                                 장소
                             </option>
-                            <option value="rentLDiv" <%= cri.searchType =='rentLDiv'?'selected':'' %>>장소구분(국내/해외)
+                            <option value="rentLDiv" {%= cri.searchType =='rentLDiv'?'selected':'' %}>장소구분(국내/해외)
                             </option>
                         </select>
                         <input type="text" name="keyword" id="keywordInput">
@@ -730,36 +730,36 @@
                                 <th>보험여부</th>
                                 <th>국내/해외</th>
                             </tr>
-                            <% rentcarList.forEach( rentcar => { %>
-                            <tr class="rentcarList" data-no="<%= rentcar.id %>">
-                                <td><%= rentcar.id %></td>
-                                <td><%= rentcar.cdiv %></td>
-                                <td><%= rentcar.cno %></td>
-                                <td><%= rentcar.rentddate %></td>
-                                <td><%= rentcar.returndate %></td>
-                                <td><%= rentcar.rentaddr %></td>
-                                <td><%= rentcar.returnaddr %></td>
-                                <td><%= rentcar.price %></td>
-                                <td><%= rentcar.capacity %></td>
-                                <td><%= rentcar.insurance %></td>
-                                <td><%= rentcar.ldiv == 0?'해외':'국내' %></td>
+                            {% rentcarList.forEach( rentcar => { %}
+                            <tr class="rentcarList" data-no="{%= rentcar.id %}">
+                                <td>{%= rentcar.id %}</td>
+                                <td>{%= rentcar.cdiv %}</td>
+                                <td>{%= rentcar.cno %}</td>
+                                <td>{%= rentcar.rentddate %}</td>
+                                <td>{%= rentcar.returndate %}</td>
+                                <td>{%= rentcar.rentaddr %}</td>
+                                <td>{%= rentcar.returnaddr %}</td>
+                                <td>{%= rentcar.price %}</td>
+                                <td>{%= rentcar.capacity %}</td>
+                                <td>{%= rentcar.insurance %}</td>
+                                <td>{%= rentcar.ldiv == 0?'해외':'국내' %}</td>
                             </tr>
-                            <% }) %>
+                            {% }) %}
                         </table>
                     </div>
                     <div class="box-footer">
                         <div class="text-center">
                             <ul class="pagination">
-                                <% if(pageMakerByRentcar.prev == true) { %>
+                                {% if(pageMakerByRentcar.prev == true) { %}
                                     <li><a id="prev">&laquo;</a></li>
-                                <% } %>
-                                    <% for(idx=pageMakerByRentcar.startPage; idx<=pageMakerByRentcar.endPage; idx++){ %>
-                                    <li class="<%=pageMakerByRentcar.cri.page == idx ?'active':''%>"><a
-                                                class="index" data-index="<%=idx%>"><%=idx%></a></li>
-                                <% } %>
-                                <% if(pageMakerByRentcar.next == true) { %>
+                                {% } %}
+                                    {% for(idx=pageMakerByRentcar.startPage; idx<=pageMakerByRentcar.endPage; idx++){ %}
+                                    <li class="{%=pageMakerByRentcar.cri.page == idx ?'active':''%}"><a
+                                                class="index" data-index="{%=idx%}">{%=idx%}</a></li>
+                                {% } %}
+                                {% if(pageMakerByRentcar.next == true) { %}
                                     <li><a id="next">&raquo;</a></li>
-                                <% } %>
+                                {% } %}
                             </ul>
                         </div>
                     </div>
@@ -775,4 +775,4 @@
 </div>
 </body>
 </html>
-<%- include ('../../include/footer.ejs') %>
+{%- include ('../../include/footer.ejs') %}

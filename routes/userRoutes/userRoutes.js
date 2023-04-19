@@ -72,7 +72,22 @@ let user = {
 // 투어랜드 메인 페이지
 router.get('/', async (req, res, next) => {
 
-    console.log("33333333333333333->", user);
+    if(req.user && req.user.userid){
+        try{
+            const User = await user.findOne({
+                where : {id: req.user && req.user.userid || null},
+            });
+            res.render('login', {
+                User,
+                domains: User && User.domains,
+            });
+        }catch (err){
+            console.error(err);
+            next(err);
+        }
+
+    }
+
     let Auth, AuthEmp, Manager, login;
     if(req.session.user == undefined){
         Auth = user.Auth;
@@ -102,8 +117,6 @@ router.get('/', async (req, res, next) => {
     const startDate = new Date(popup1.enddate) - new Date(popup1.startdate);
     const endDate = Math.abs(startDate / (24 * 60 * 60 * 1000));
 
-    // console.log("startdate->", startDate);
-    // console.log("enddate->", endDate);
 
     const cookieConfig = {
         expires: new Date(Date.now() + endDate * 24 * 60 * 60),
@@ -635,13 +648,13 @@ router.get("/tourlandProductKRList", async (req, res, next) => {
     let searchQuery = "";
 
     if (ddate == "name") {
-        searchQuery = `and pname like concat('%',<%=keyword%>,'%')`;
+        searchQuery = `and pname like concat('%',{%=keyword%},'%')`;
     }
     if (searchType == "expire") {
-        searchQuery = `and pexpire like concat('%',<%=keyword%>,'%')`;
+        searchQuery = `and pexpire like concat('%',{%=keyword%},'%')`;
     }
     if (searchType == "userCart") {
-        searchQuery = `and pname like concat('%',<%=keyword%>,'%')`;
+        searchQuery = `and pname like concat('%',{%=keyword%},'%')`;
     }
     if (searchType == "location") {
         if (keyword === "한국") {
@@ -860,13 +873,13 @@ router.get("/tourlandProductJPList", async (req, res, next) => {
     let searchQuery = "";
 
     if (ddate == "name") {
-        searchQuery = `and pname like concat('%',<%=keyword%>,'%')`;
+        searchQuery = `and pname like concat('%',{%=keyword%},'%')`;
     }
     if (searchType == "expire") {
-        searchQuery = `and pexpire like concat('%',<%=keyword%>,'%')`;
+        searchQuery = `and pexpire like concat('%',{%=keyword%},'%')`;
     }
     if (searchType == "userCart") {
-        searchQuery = `and pname like concat('%',<%=keyword%>,'%')`;
+        searchQuery = `and pname like concat('%',{%=keyword%},'%')`;
     }
     if (searchType == "location") {
         if (keyword === "한국") {

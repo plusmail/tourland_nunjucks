@@ -31,7 +31,7 @@
     #manage { width: 100px; }
 </style>
 <body>
-<%- include("../../include/userHeader.ejs")%>
+{%- include("../../include/userHeader.ejs")%}
 <script>
     $(function(){
         $(".payNow").click(function(){
@@ -68,24 +68,24 @@
 
     })
 </script>
-<% if (paySuccess!=null) { %>
+{% if (paySuccess!=null) { %}
     <script>
         alert("결제가 완료 되었습니다.");
     </script>
-<% } %>
-<% if (cancel!=null) { %>
+{% } %}
+{% if (cancel!=null) { %}
     <script>
         alert("예약이 취소되었습니다.");
     </script>
-<% } %>
-<% if (addReview!=null) { %>
+{% } %}
+{% if (addReview!=null) { %}
     <script>
         alert("리뷰가 등록되었습니다.");
     </script>
-    <% } %>
+    {% } %}
 
 <section>
-    <%- include ("../../include/userMyPageMenu.ejs")%>
+    {%- include ("../../include/userMyPageMenu.ejs")%}
     <div id="myreserv">
         <h1>내 예약 현황</h1>
         <span id="info">고객님의 현재 예약 현황을 확인 하실 수 있습니다.</span>
@@ -100,69 +100,69 @@
                 <th>예약 상태</th>
                 <th id="manage">관리</th>
             </tr>
-            <% if (noList == null) { %>
-            <% list.forEach( reserv => { %>
+            {% if (noList == null) { %}
+            {% list.forEach( reserv => { %}
                     <tr>
-                        <td class="rno">RERV<%=reserv.no%></td>
-                        <td><%= reserv.rdate %></td>
-                        <td><%= reserv.product.pname %></td>
-                        <td><img src="displayFile/product?filename=<%=reserv.product.pic%>"></td>
-                        <%
+                        <td class="rno">RERV{%=reserv.no%}</td>
+                        <td>{%= reserv.rdate %}</td>
+                        <td>{%= reserv.product.pname %}</td>
+                        <td><img src="displayFile/product?filename={%=reserv.product.pic%}"></td>
+                        {%
                             let f = reserv.product.air;
                             let startdate;
                         for(let i=0; i<1; i++){
                             startdate = f[i].ddate;
                         }
-                        %>
-                        <%
+                        %}
+                        {%
                             let f = reserv.product.air;
                             let enddate;
                             for(let i=1; i<2; i++){
                                 enddate = f[i].ddate;
                             }
-                        %>
-                        <td><%=moment(startdate).format('YYYY-MM-DD')%></td>
-                        <td><%=moment(enddate).format('YYYY-MM-DD')%></td>
-                        <% if (reserv.rstatus=='1') { %>
+                        %}
+                        <td>{%=moment(startdate).format('YYYY-MM-DD')%}</td>
+                        <td>{%=moment(enddate).format('YYYY-MM-DD')%}</td>
+                        {% if (reserv.rstatus=='1') { %}
                             <td class="red">결제 가능</td>
-                        <% } %>
-                        <% if (reserv.rstatus=='2') { %>
+                        {% } %}
+                        {% if (reserv.rstatus=='2') { %}
                             <td class="blue">결제 완료 <br>(예약 확정 대기 중)</td>
-                        <% } %>
-                        <% if (reserv.rstatus=='3') { %>
+                        {% } %}
+                        {% if (reserv.rstatus=='3') { %}
                             <td class="yellow">예약 확정</td>
-                            <% } %>
+                            {% } %}
 
                         <td>
-                            <% if (reserv.rstatus=='1') { %>
+                            {% if (reserv.rstatus=='1') { %}
                                 <button class="payNow">결제하기</button>
                                 <br>
-                                <% } %>
+                                {% } %}
 
-                            <% if (reserv.rstatus=='3' && reserv.review.no==null) { %>
+                            {% if (reserv.rstatus=='3' && reserv.review.no==null) { %}
                                 <button class="writeReview">리뷰쓰기</button>
-                                <% } %>
-                            <% if (reserv.rstatus=='3' && reserv.review.no!=null) { %>
+                                {% } %}
+                            {% if (reserv.rstatus=='3' && reserv.review.no!=null) { %}
                                 <button class="seeReview">리뷰보기</button>
-                                <% } %>
-                            <% if (reserv.rstatus=='1') { %>
+                                {% } %}
+                            {% if (reserv.rstatus=='1') { %}
                                 <button class="cancel">예약 취소</button>
-                                <% } %>
-                            <% if (reserv.rstatus=='2') { %>
+                                {% } %}
+                            {% if (reserv.rstatus=='2') { %}
                                 -
-                                <% } %>
+                                {% } %}
                         </td>
                     </tr>
-                <% }) %>
-            <% } %>
-            <% if (noList != null) { %>
+                {% }) %}
+            {% } %}
+            {% if (noList != null) { %}
                 <td colspan="8" class="red">표시될 예약이 없습니다.</td>
-                <% } %>
+                {% } %}
         </table>
     </div>
 
 </section>
 
-<%- include("../../include/userFooter.ejs") %>
+{%- include("../../include/userFooter.ejs") %}
 </body>
 </html>

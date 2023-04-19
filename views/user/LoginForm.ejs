@@ -1,5 +1,5 @@
 <link rel="stylesheet" type="text/css" href="/stylesheets/tourlandLoginForm.css"/>
-<%- include("../include/Header.ejs") %>
+{%- include("../include/Header.ejs") %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script  type="text/javascript">
 
@@ -51,21 +51,21 @@
             <h2>투어랜드</h2>
             <div id="loginInnerBox">
                 <div id="inputBox">
-                    <% if( userAuth.userid != null) { %>
-                    <input type="text" name="id" id="id" placeholder="아이디" value="<%= userAuth.userid %>">
+                    {% if( userAuth.userid != null) { %}
+                    <input type="text" name="id" id="id" placeholder="아이디" value="{%= userAuth.userid %}">
                     <input type="password" name="pass" id="pass" placeholder="비밀번호"
-                           value="<%= userAuth.userpass %>">
-                    <% } else  { %>
+                           value="{%= userAuth.userpass %}">
+                    {% } else  { %}
                         <input type="text" name="id" id="id" placeholder="아이디">
                         <input type="password" name="pass" id="pass" placeholder="비밀번호">
-                    <% } %>
+                    {% } %}
                 </div>
                 <div id="submitBox">
                     <input type="button" id="btnLogin" value="입력">
                 </div>
-                <% if(error != null) { %>
-                    <p class="error"><%= error %></p>
-                <% } %>
+                {% if(error != null) { %}
+                    <p class="error">{%= error %}</p>
+                {% } %}
                 <div id="errormsg"></div>
             </div>
         </form>
@@ -92,4 +92,4 @@
         location.href = "/FindIdPw";
     })
 </script>
-<%- include("../include/userFooter.ejs") %>
+{%- include("../include/userFooter.ejs") %}

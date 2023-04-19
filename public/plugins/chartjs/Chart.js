@@ -69,7 +69,7 @@
 			scaleShowLabels: true,
 
 			// Interpolated JS string - can access value
-			scaleLabel: "<%=value%>",
+			scaleLabel: "{%=value%}",
 
 			// Boolean - Whether the scale should stick to integers, and not show any floats even if drawing space is there
 			scaleIntegersOnly: true,
@@ -147,10 +147,10 @@
 			tooltipXOffset: 10,
 
 			// String - Template string for single tooltips
-			tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %>",
+			tooltipTemplate: "{%if (label){%}{%=label%}: {%}%}{%= value %}",
 
 			// String - Template string for single tooltips
-			multiTooltipTemplate: "<%= value %>",
+			multiTooltipTemplate: "{%= value %}",
 
 			// String - Colour behind the legend colour block
 			multiTooltipKeyBackground: '#fff',
@@ -469,11 +469,11 @@
 					// Convert the template into pure JavaScript
 					str
 						.replace(/[\r\t\n]/g, " ")
-						.split("<%").join("\t")
-						.replace(/((^|%>)[^\t]*)'/g, "$1\r")
-						.replace(/\t=(.*?)%>/g, "',$1,'")
+						.split("{%").join("\t")
+						.replace(/((^|%})[^\t]*)'/g, "$1\r")
+						.replace(/\t=(.*?)%}/g, "',$1,'")
 						.split("\t").join("');")
-						.split("%>").join("p.push('")
+						.split("%}").join("p.push('")
 						.split("\r").join("\\'") +
 					"');}return p.join('');"
 				);
@@ -2042,7 +2042,7 @@
 		barDatasetSpacing : 1,
 
 		//String - A legend template
-		legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+		legendTemplate : "<ul class=\"{%=name.toLowerCase()%}-legend\">{% for (var i=0; i<datasets.length; i++){%}<li><span style=\"background-color:{%=datasets[i].fillColor%}\"></span>{%if(datasets[i].label){%}{%=datasets[i].label%}{%}%}</li>{%}%}</ul>"
 
 	};
 
@@ -2339,7 +2339,7 @@
 		animateScale : false,
 
 		//String - A legend template
-		legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
+		legendTemplate : "<ul class=\"{%=name.toLowerCase()%}-legend\">{% for (var i=0; i<segments.length; i++){%}<li><span style=\"background-color:{%=segments[i].fillColor%}\"></span>{%if(segments[i].label){%}{%=segments[i].label%}{%}%}</li>{%}%}</ul>"
 
 	};
 
@@ -2541,7 +2541,7 @@
 		datasetFill : true,
 
 		//String - A legend template
-		legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+		legendTemplate : "<ul class=\"{%=name.toLowerCase()%}-legend\">{% for (var i=0; i<datasets.length; i++){%}<li><span style=\"background-color:{%=datasets[i].strokeColor%}\"></span>{%if(datasets[i].label){%}{%=datasets[i].label%}{%}%}</li>{%}%}</ul>"
 
 	};
 
@@ -2913,7 +2913,7 @@
 		animateScale : false,
 
 		//String - A legend template
-		legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
+		legendTemplate : "<ul class=\"{%=name.toLowerCase()%}-legend\">{% for (var i=0; i<segments.length; i++){%}<li><span style=\"background-color:{%=segments[i].fillColor%}\"></span>{%if(segments[i].label){%}{%=segments[i].label%}{%}%}</li>{%}%}</ul>"
 	};
 
 
@@ -3176,7 +3176,7 @@
 			datasetFill : true,
 
 			//String - A legend template
-			legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+			legendTemplate : "<ul class=\"{%=name.toLowerCase()%}-legend\">{% for (var i=0; i<datasets.length; i++){%}<li><span style=\"background-color:{%=datasets[i].strokeColor%}\"></span>{%if(datasets[i].label){%}{%=datasets[i].label%}{%}%}</li>{%}%}</ul>"
 
 		},
 

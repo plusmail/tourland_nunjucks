@@ -1,4 +1,4 @@
-<%- include("../../include/header.ejs")%>
+{%- include("../../include/header.ejs")%}
 <div class="content">
 	<div class="row">
 		<div class="col-sm-12">
@@ -7,16 +7,16 @@
 					<h3 class="box-title">FAQ 수정</h3>
 				</div>
 				<form role="form" action="FAQModify" method="post">
-					<input type="hidden" value="<%=faq.no%>" name="no">
-					<input type="hidden" value="<%=cri.page%>" name="page">
+					<input type="hidden" value="{%=faq.no%}" name="no">
+					<input type="hidden" value="{%=cri.page%}" name="page">
 					<div class="box-body">
 						<div class="form-group">
 							<label>제목</label>
-							<input type="text" name="title" class="form-control" placeholder="제목을 입력하세요" value="<%=faq.title%>">
+							<input type="text" name="title" class="form-control" placeholder="제목을 입력하세요" value="{%=faq.title%}">
 						</div>
 						<div class="form-group">
 							<label>내용</label>
-							<textarea rows="15" cols="30" placeholder="내용을 입력하세요" name="content" class="form-control"><%=faq.content%></textarea>
+							<textarea rows="15" cols="30" placeholder="내용을 입력하세요" name="content" class="form-control">{%=faq.content%}</textarea>
 						</div>
 						<div class="box-footer">
 							<button type="submit" class="btn btn-primary">수정</button>
@@ -27,4 +27,4 @@
 		</div>
 	</div>
 </div>
-<%- include("../../include/footer.ejs")%>
+{%- include("../../include/footer.ejs")%}

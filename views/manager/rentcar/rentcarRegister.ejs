@@ -1,4 +1,4 @@
-<%- include ('../../include/header.ejs') %>
+{%- include ('../../include/header.ejs') %}
 <style>
     label{
         padding-bottom:6px;
@@ -105,7 +105,7 @@
                     <div class="box-body">
                         <div class="noNameAddr">
                             <label><span class="red">*</span>번호</label>
-                            <input type="text" name="id" class="form-control" value="<%=autoNO%>" readonly>
+                            <input type="text" name="id" class="form-control" value="{%=autoNO%}" readonly>
                         </div>
                         <div class="noNameAddr">
                             <label><span class="red">*</span>차 종류</label>
@@ -176,4 +176,4 @@
         </div>
     </div>
 </div>
-<%- include ('../../include/footer.ejs') %>
+{%- include ('../../include/footer.ejs') %}

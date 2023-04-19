@@ -59,28 +59,28 @@
     </div>
     <div id="loginBox">
         <form>
-            <% if (registerSuccess != null) { %>
+            {% if (registerSuccess != null) { %}
                 <h2>가입 완료 되었습니다. 로그인 수행하여 주십시오.</h2>
-            <% } %>
-            <% if (registerSuccess == null ) { %>
+            {% } %}
+            {% if (registerSuccess == null ) { %}
                 <h2>투어랜드</h2>
-            <% } %>
+            {% } %}
             <div id="loginInnerBox">
                 <div id="inputBox">
-                    <% if(EmpStay != null) { %>
-                        <input type="text" name="id" id="id" placeholder="아이디" value="<%= EmpStay.empid %>">
-                        <input type="password" name="pass" id="pass" placeholder="비밀번호" value="<%= EmpStay.empass %>">
-                    <% } else  { %>
+                    {% if(EmpStay != null) { %}
+                        <input type="text" name="id" id="id" placeholder="아이디" value="{%= EmpStay.empid %}">
+                        <input type="password" name="pass" id="pass" placeholder="비밀번호" value="{%= EmpStay.empass %}">
+                    {% } else  { %}
                         <input type="text" name="id" id="id" placeholder="아이디">
                         <input type="password" name="pass" id="pass" placeholder="비밀번호">
-                    <% } %>
+                    {% } %}
                 </div>
                 <div id="submitBox">
                     <input type="button" id="btnLogin" value="입력">
                 </div>
-                <% if(error != null) { %>
-                    <p class="error"><%= error %></p>
-                <% } %>
+                {% if(error != null) { %}
+                    <p class="error">{%= error %}</p>
+                {% } %}
                 <div id="errormsg"></div>
             </div>
         </form>

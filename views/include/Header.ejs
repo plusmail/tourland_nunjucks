@@ -139,26 +139,26 @@
 <header>
     <nav id="nav1">
         <ul>
-            <%
+            {%
             console.log(userAuth.role);
-            if (userAuth.role == "customer" || userAuth == null) { %>
+            if (userAuth.role == "customer" || userAuth == null) { %}
                 <li><a href="/customer/tourlandBoardNotice">고객센터</a></li>
                 <li><a href="/customer/tourlandRegister">회원가입</a></li>
                 <li><a href="/customer/loginForm" class="balance">로그인</a></li>
-            <% } else { %>
+            {% } else { %}
                 <li><a href="/customer/logout" class="balance">로그아웃</a></li>
                 <li><a href="/customer/tourlandBoardNotice">고객센터</a></li>
-                <% if (userAuth.role == 'customer') { %>
+                {% if (userAuth.role == 'customer') { %}
                 <li><a href="/customer/EditPassword">마이페이지</a></li>
-                <p id="userAuth">[ <%= userAuth.username %> ]님! 반갑습니다.</p>
-                <% } else if(userAuth.role == 'admin' || userAuth.role == 'basic') { %>
+                <p id="userAuth">[ {%= userAuth.username %} ]님! 반갑습니다.</p>
+                {% } else if(userAuth.role == 'admin' || userAuth.role == 'basic') { %}
                     <li><a href="/customer/EditPassword">마이페이지</a></li>
-                    <p id="userAuth">[ <%= userAuth.username %> ] 관리자님! 수고가 많습니다.</p>
+                    <p id="userAuth">[ {%= userAuth.username %} ] 관리자님! 수고가 많습니다.</p>
                         <li><a href="/customer/loginManagerForm" class="balance">관리자로그인</a></li>
                     <li id="manager" style="margin-left: -15px;"><a
                                 href="/manager/statistics">관리자</a></li>
-                <% } %>
-            <% } %>
+                {% } %}
+            {% } %}
         </ul>
     </nav>
     <div id="main">

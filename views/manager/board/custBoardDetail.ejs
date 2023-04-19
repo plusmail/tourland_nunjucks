@@ -1,4 +1,4 @@
-<%- include("../../include/header.ejs")%>
+{%- include("../../include/header.ejs")%}
 <style>
   #previewDiv{
     height: 250px;
@@ -20,23 +20,23 @@
 					<div class="box-body">
 						<div class="form-group">
 							<label>번호</label>
-							<input type="text" name="no" class="form-control" value="<%=custBoardVO.id%>" readonly="readonly">
+							<input type="text" name="no" class="form-control" value="{%=custBoardVO.id%}" readonly="readonly">
 						</div>
 						<div class="form-group">
 							<label>작성자</label>
-							<input type="text" name="writer" style="background: azure;" class="form-control" value="<%=custBoardVO.writer%>" readonly="readonly">
+							<input type="text" name="writer" style="background: azure;" class="form-control" value="{%=custBoardVO.writer%}" readonly="readonly">
 						</div>
 						<div class="form-group">
 							<label>작성일자</label> <!-- 작성일은 수정되지 않게 설정했기 때문에 form에서 보내지 않기로함  -->
-							<input type="text" style="background: azure;" class="form-control" value="<%=custBoardVO.regdate%>" readonly="readonly">
+							<input type="text" style="background: azure;" class="form-control" value="{%=custBoardVO.regdate%}" readonly="readonly">
 						</div>
 						<div class="form-group">
 							<label>제목</label>
-							<input type="text" name="title" class="form-control" value="<%=custBoardVO.title%>">
+							<input type="text" name="title" class="form-control" value="{%=custBoardVO.title%}">
 						</div>
 						<div class="form-group">
 							<label>내용</label>
-							<textarea rows="15" cols="30" placeholder="내용을 입력하세요" name="content" class="form-control" required="required"><%=custBoardVO.content%></textarea>
+							<textarea rows="15" cols="30" placeholder="내용을 입력하세요" name="content" class="form-control" required="required">{%=custBoardVO.content%}</textarea>
 						</div>
 						<div class="box-footer">
 							<!-- <button type="submit" class="btn btn-primary">수정-테스트</button> -->
@@ -58,7 +58,7 @@
 			   alert("삭제가 취소되었습니다");
 			   return false;
 		   }
-		   fetch("removeCustBoard?id=<%=custBoardVO.id%>", {method : "delete"})
+		   fetch("removeCustBoard?id={%=custBoardVO.id%}", {method : "delete"})
 				   .then((res) => {
 					   alert('삭제되었습니다.');
 					   location.href = "custBoardMngList";
@@ -69,4 +69,4 @@
 
 
   </script>
-<%- include("../../include/footer.ejs")%>
+{%- include("../../include/footer.ejs")%}

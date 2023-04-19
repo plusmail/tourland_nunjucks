@@ -1,4 +1,4 @@
-<%- include ("../../include/header.ejs") %>
+{%- include ("../../include/header.ejs") %}
 
 <style>
     table .table table-bordered th,td,th{
@@ -21,11 +21,11 @@
                 </div>
                 <div class="box-body">
                     <select name="searchType" id="searchType" style="width:200px; height: 25px;">
-                        <option value="N" <%=cri.searchType ==null?'selected':''%>>----------</option>
-                        <option value="rentcarType" <%=cri.searchType =='rentcarType'?'selected':''%>>차종류</option>
-                        <option value="rentcarCno" <%=cri.searchType =='rentcarCno'?'selected':''%>>차번호</option>
-                        <option value="rentDepartaddr" <%=cri.searchType =='rentDepartaddr'?'selected':''%>>대여,반납 장소</option>
-                        <option value="rentLDiv" <%=cri.searchType =='rentLDiv'?'selected':''%>>장소구분(국내/해외)</option>
+                        <option value="N" {%=cri.searchType ==null?'selected':''%}>----------</option>
+                        <option value="rentcarType" {%=cri.searchType =='rentcarType'?'selected':''%}>차종류</option>
+                        <option value="rentcarCno" {%=cri.searchType =='rentcarCno'?'selected':''%}>차번호</option>
+                        <option value="rentDepartaddr" {%=cri.searchType =='rentDepartaddr'?'selected':''%}>대여,반납 장소</option>
+                        <option value="rentLDiv" {%=cri.searchType =='rentLDiv'?'selected':''%}>장소구분(국내/해외)</option>
                     </select>
                     <input type="text" name="keyword" id="keywordInput">
                     <button id="btnSearch">Search</button>
@@ -57,48 +57,48 @@
                             <th>상세보기</th>
 
                         </tr>
-                        <% list.forEach( rentcarList => { %>
-                            <tr class="rentcarList" data-click="<%=rentcarList.id%>">
-                                <td><%=rentcarList.id%></td>
-                                <td><%=rentcarList.cdiv%></td>
-                                <td><%=rentcarList.cno%></td>
-                                <td><%=rentcarList.rentddate%></td>
-                                <td><%=rentcarList.returndate%></td>
-                                <td><%=rentcarList.rentaddr%></td>
-                                <td><%=rentcarList.returnaddr%></td>
-                                <td><%=rentcarList.price%></td>
-                                <td><%=rentcarList.capacity%></td>
-                                <td><%=rentcarList.insurance%></td>
-                                <td><%=rentcarList.ldiv == 0?'해외':'국내'%></td>
-                                <td><button style="background:steelblue; border:none;" class="toRentcarDetail" data-click="<%=rentcarList.id%>">상세보기</button>
-                                    <button style="background:tomato; border:none;" class="delRentcar" data-click="<%=rentcarList.id%>">삭제</button></td>
+                        {% list.forEach( rentcarList => { %}
+                            <tr class="rentcarList" data-click="{%=rentcarList.id%}">
+                                <td>{%=rentcarList.id%}</td>
+                                <td>{%=rentcarList.cdiv%}</td>
+                                <td>{%=rentcarList.cno%}</td>
+                                <td>{%=rentcarList.rentddate%}</td>
+                                <td>{%=rentcarList.returndate%}</td>
+                                <td>{%=rentcarList.rentaddr%}</td>
+                                <td>{%=rentcarList.returnaddr%}</td>
+                                <td>{%=rentcarList.price%}</td>
+                                <td>{%=rentcarList.capacity%}</td>
+                                <td>{%=rentcarList.insurance%}</td>
+                                <td>{%=rentcarList.ldiv == 0?'해외':'국내'%}</td>
+                                <td><button style="background:steelblue; border:none;" class="toRentcarDetail" data-click="{%=rentcarList.id%}">상세보기</button>
+                                    <button style="background:tomato; border:none;" class="delRentcar" data-click="{%=rentcarList.id%}">삭제</button></td>
                             </tr>
-                        <% }) %>
+                        {% }) %}
                     </table>
                 </div>
                 <div class="box-footer">
                     <!--  부트 스트랩으로 사용  -->
                     <div class='text-center'>
                         <ul class="pagination">
-                            <% if (pagingData.totalPages != 0) { %>
+                            {% if (pagingData.totalPages != 0) { %}
                             <div class="" style="text-align:center;">
                                 <ul class="pagination">
-                                    <li <%if(pagingData.currentPage == 1){%> class="disabled" <%}else{%>class="waves-effect" <%}%> >
-                                        <a <%if(pagingData.currentPage > 1){%> href="?currentPage=<%=pagingData.currentPage-1%>" <%}%>>
+                                    <li {%if(pagingData.currentPage == 1){%} class="disabled" {%}else{%}class="waves-effect" {%}%} >
+                                        <a {%if(pagingData.currentPage > 1){%} href="?currentPage={%=pagingData.currentPage-1%}" {%}%}>
                                             <i class="material-icons">prev</i>
                                         </a>
                                     </li>
-                                    <% for(var i=pagingData.pnStart; i<=pagingData.pnEnd; i++){ %> <li <%if(i===pagingData.currentPage){%> class="active"
-                                            <%}%>><a href="?currentPage=<%=i%>"><%=i%></a></li>
-                                    <% } %>
-                                    <li <%if(pagingData.currentPage == pagingData.totalPages){%> class="disabled" <%}else{%> class="waves-effect" <%}%>>
-                                        <a <%if(pagingData.currentPage < pagingData.totalPages){%> href="?currentPage=<%=pagingData.currentPage+1%>" <%}%> class="waves-effect">
+                                    {% for(var i=pagingData.pnStart; i<=pagingData.pnEnd; i++){ %} <li {%if(i===pagingData.currentPage){%} class="active"
+                                            {%}%}><a href="?currentPage={%=i%}">{%=i%}</a></li>
+                                    {% } %}
+                                    <li {%if(pagingData.currentPage == pagingData.totalPages){%} class="disabled" {%}else{%} class="waves-effect" {%}%}>
+                                        <a {%if(pagingData.currentPage < pagingData.totalPages){%} href="?currentPage={%=pagingData.currentPage+1%}" {%}%} class="waves-effect">
                                             <i class="material-icons">next</i>
                                         </a>
                                     </li>
                                 </ul>
                             </div>
-                            <% } %>
+                            {% } %}
 
                         </ul>
                     </div>
@@ -114,7 +114,7 @@
         var returndate = $("input[name='returndate']").val();
         location.href = "/manager/rentcarMngList?searchType=rentDepartDate"+"&keyword="+rentddate+"&keyword2="+returndate;
 
-        //<option value="rentDepartDate" <%=cri.searchType =='rentDepartDate'?'selected':''%>>출발날짜</option>
+        //<option value="rentDepartDate" {%=cri.searchType =='rentDepartDate'?'selected':''%}>출발날짜</option>
     })
 
 
@@ -144,4 +144,4 @@
 
 </script>
 
-<%- include ("../../include/footer.ejs") %>
+{%- include ("../../include/footer.ejs") %}

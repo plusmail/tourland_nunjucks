@@ -22,9 +22,9 @@
 </style>
 </head>
 <body>
-	<%- include("../../include/userHeader.ejs")%>
+	{%- include("../../include/userHeader.ejs")%}
 		<section>
-			<%- include("../../include/userBoardMenu.ejs")%>
+			{%- include("../../include/userBoardMenu.ejs")%}
 		    <div id="detailDiv">
 				<div>
 				  <br>
@@ -32,40 +32,40 @@
 				</div>
 				<div id="detailContent">
 				   <ul id="datailUl">
-				   <li> <%=plan.id%> </li>
-				   <li class="detailLi"> <%=plan.title%> </li>
-				   <li> <%=plan.writer%></li>
-				   <li> <%=plan.regdate%></li>
+				   <li> {%=plan.id%} </li>
+				   <li class="detailLi"> {%=plan.title%} </li>
+				   <li> {%=plan.writer%}</li>
+				   <li> {%=plan.regdate%}</li>
 				   </ul>
 				   <div id="datailRealContent">
 
-					   <%=plan.content%>
+					   {%=plan.content%}
 				   </div>
 				   
 				   	<!-- 답변이 있을때 나오게 -->
-				   	<% if(plan.answer ==1) {%>
+				   	{% if(plan.answer ==1) {%}
 				   <hr>
 					   	<div id="respond">
-					   			<%=plan.respond%>
+					   			{%=plan.respond%}
 					   	</div>
-					<% } %>
+					{% } %}
 <!--					로그인한 사람이 매니저 이면, 답변관리 메뉴 보이기-->
 <!--					그 외는 안보이게 하기 -->
 				   <!-- 답변  -->
-					<% if (login === "manager") { %>
+					{% if (login === "manager") { %}
 				   	   	<div id="detailComment">
 				     	 	<button id="reply">답변관리</button>
 				   		</div>
-					<%} %>
+					{%} %}
 				</div>
 		     </div>
 		</section>
 <script>
 	$("#reply").click(function(){
-		var answer ="<%=plan.answer%>";
-		var id = "<%=plan.id%>";
-		var respond = "<%=plan.respond%>";
-		var page = "<%=cri.page%>";
+		var answer ="{%=plan.answer%}";
+		var id = "{%=plan.id%}";
+		var respond = "{%=plan.respond%}";
+		var page = "{%=cri.page%}";
 		if(answer==0){
 			location.href = "/manager/planBoardDetail?id="+id;
 		}else if(answer==1){
@@ -73,6 +73,6 @@
 		}
 	})
 </script>
-	<%- include("../../include/userFooter.ejs") %>
+	{%- include("../../include/userFooter.ejs") %}
 </body>
 </html>

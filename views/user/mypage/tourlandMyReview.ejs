@@ -1,4 +1,4 @@
-<%- include("../../include/userHeader.ejs")%>
+{%- include("../../include/userHeader.ejs")%}
 <!DOCTYPE html>
 <html>
 <head>
@@ -102,7 +102,7 @@
 <body>
 
 <section>
-    <%- include ("../../include/userMyPageMenu.ejs")%>
+    {%- include ("../../include/userMyPageMenu.ejs")%}
 
     <div id="writeReview">
         <h1>리뷰 작성</h1>
@@ -110,19 +110,19 @@
         <form action="tourlandAddMyReview" method="post">
             <p>
                 <label>번호</label>
-                <span>RV00<%=rno%></span>
-                <input type="hidden" value="<%=rno %>" name="rno">
+                <span>RV00{%=rno%}</span>
+                <input type="hidden" value="{%=rno %}" name="rno">
             </p>
             <p>
                 <label>고객명</label>
-                <input type="text" value="<%=username %>" readonly="readonly">
-                <input type="hidden" name="userno" value="<%=userno %>">
+                <input type="text" value="{%=username %}" readonly="readonly">
+                <input type="hidden" name="userno" value="{%=userno %}">
             </p>
             <p>
                 <label>상품명</label>
             <div id="proImgBox">
-                <p id="proTitle"><%=pname %></p>
-                <input type="hidden" name="pno" value="<%=pno %>">
+                <p id="proTitle">{%=pname %}</p>
+                <input type="hidden" name="pno" value="{%=pno %}">
             </div>
             </p>
             <p>
@@ -151,6 +151,6 @@
 
 </section>
 
-<%- include("../../include/userFooter.ejs")%>
+{%- include("../../include/userFooter.ejs")%}
 </body>
 </html>

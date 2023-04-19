@@ -1,4 +1,4 @@
-<%- include("../../include/header.ejs") %>
+{%- include("../../include/header.ejs") %}
 <style>
   label {
     float: left;
@@ -31,51 +31,51 @@
 					    <input type="hidden" value="" id="forSubmit">
 						<div class="form-group">
 							<label>고객 번호</label>
-							<input type="text" name="id" value="<%=userVO.id%>" readonly="readonly" style="background:lavender;" >
+							<input type="text" name="id" value="{%=userVO.id%}" readonly="readonly" style="background:lavender;" >
 						</div>
 						<div class="form-group">
 							<label>고객 이름</label>
-							<input type="text" name="username" required="required" placeholder=" 한글 2-5자리" value="<%=userVO.username%>">
+							<input type="text" name="username" required="required" placeholder=" 한글 2-5자리" value="{%=userVO.username%}">
 							<span class="errorMsg">이름을 한글 2자리에서 5자리로 입력해주세요.</span>
 						</div>
 
 
 						<div class="form-group">
 							<label>생년월일</label>
-							<input type="date" name="userbirth" id="datepicker" placeholder="2000-02-02" value="<%=userVO.userbirth%>">
+							<input type="date" name="userbirth" id="datepicker" placeholder="2000-02-02" value="{%=userVO.userbirth%}">
 							<span class="errorMsg">생년월일 형식에 맞게 넣어주세요. 예시: 2000-02-02</span>
 						</div>
 						<div class="form-group">
 							<label>전화번호</label>
-							<input type="text" name="usertel" required="required"  placeholder=" 010-4334-4321" value="<%=userVO.usertel%>">
+							<input type="text" name="usertel" required="required"  placeholder=" 010-4334-4321" value="{%=userVO.usertel%}">
 							<span class="errorMsg">형식에 맞게 넣어주세요 예시: 010-4334-4321</span>
 						</div>
 						<div class="form-group">
 							<label>주소</label>
-							<input type="text" name="useraddr" required="required" value="<%=userVO.useraddr%>">
+							<input type="text" name="useraddr" required="required" value="{%=userVO.useraddr%}">
 						</div>
 						<div class="form-group">
 							<label>여권번호</label>
-							<input type="text" name="userpassport" required="required" value="<%=userVO.userpassport%>">
+							<input type="text" name="userpassport" required="required" value="{%=userVO.userpassport%}">
 						</div>
 						<div class="form-group">
 							<label>보유쿠폰</label>
 							<select style="width:155px; height:25px">
-								<% couponLists.forEach( couponList => { %>
-							     <option><%=couponList.cname%></option>
-							   <% }) %>
+								{% couponLists.forEach( couponList => { %}
+							     <option>{%=couponList.cname%}</option>
+							   {% }) %}
 							</select>
 						</div>
 						<div class="form-group">
 							<label>고객 아이디</label>
-							<input type="text" name="userid" required="required"  placeholder=" 영문,숫자 포함 5-12자리" value="<%=userVO.userid%>">
+							<input type="text" name="userid" required="required"  placeholder=" 영문,숫자 포함 5-12자리" value="{%=userVO.userid%}">
 						<!-- 	<button id="btnCheck" type="button">중복확인</button> -->
 							<span class="errorMsg">영문, 숫자 포함 5-12자리를 넣어주세요</span>
 							<span class="errorMsg">중복되는 아이디 입니다. 다른 아이디를 입력해주세요.</span>
 						</div>
 						<div class="form-group">
 							<label>비밀번호</label>
-							<input type="text" name="userpass" placeholder=" 영문, 숫자 포함 5-12자리" value="<%=userVO.userpass%>">
+							<input type="text" name="userpass" placeholder=" 영문, 숫자 포함 5-12자리" value="{%=userVO.userpass%}">
 							<span class="errorMsg">영문, 숫자 포함 5-12자리를 넣어주세요</span>
 						</div>
 						<div class="box-footer">
@@ -92,11 +92,11 @@
 
 <script>
 
-	let id ="<%=userVO.id%>";
-	let searchType = "<%=cri.searchType%>";
-	let keyword = "<%=cri.keyword%>";
+	let id ="{%=userVO.id%}";
+	let searchType = "{%=cri.searchType%}";
+	let keyword = "{%=cri.keyword%}";
 
-	let usersecess = <%=usersecess%>;
+	let usersecess = {%=usersecess%};
 
 	$(function(){
 
@@ -181,10 +181,10 @@
 
 		//리스트로 버튼 눌렀을 때 리스트로 돌아가기
 		$("#btnReturnToList").click(function(){
-			location.href="/manager/userMngList/<%=usersecess%>/?searchType="+searchType+"&keyword="+keyword;
+			location.href="/manager/userMngList/{%=usersecess%}/?searchType="+searchType+"&keyword="+keyword;
 		})
 	})
 
 </script>
 
-<%- include('../../include/footer.ejs')%>
+{%- include('../../include/footer.ejs')%}
