@@ -14,7 +14,7 @@
     <nav id="nav1">
         <ul>
             {%
-            if Auth.id == "" or Auth == null  %}
+            if Auth.id === "" or Auth === null  %}
                 <li><a href="/customer/tourlandBoardNotice">고객센터</a></li>
                 <li><a href="/customer/tourlandRegister">회원가입</a></li>
                 <li><a href="/customer/loginForm" class="balance">로그인</a></li>
@@ -22,11 +22,11 @@
             {%  else %}
                 <li><a href="/customer/logout" class="balance">로그아웃</a></li>
                 <li><a href="/customer/tourlandBoardNotice">고객센터</a></li>
-                {% if login == 'user'  %}
+                {% if login === 'user'  %}
                 <li><a href="/customer/EditPassword">마이페이지</a></li>
                 <p id="userAuth">[ {{Auth.username }} ]님! 반갑습니다.</p>
                 {% endif %}
-                {% if login == 'manager' %}
+                {% if login === 'manager' %}
                 <li id="manager" style="margin-left: -15px;"><a
                             href="/manager/statistics">관리자</a></li>
                 <p id="managerAuth">[ {{Manager.name}} ]님! 반갑습니다.</p>0

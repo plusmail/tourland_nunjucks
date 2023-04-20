@@ -144,6 +144,11 @@
 </script>
 
 <script>
+    {%
+        currentProduct.forEach()
+
+    %}
+
     {% if currentProductPrice !== null  %}
     //최근 본 상품의 이미지를 누르면 링크로 이동 이엘때문에 따로 처리, 동적 추가 docu on
         $(document).on("click", ".currentP1", function () {
@@ -450,3 +455,8 @@
 
     </div>
     {% endblock %}
+
+
+{% block Footer %}
+{% include './include/userFooter.html' %}
+{% endblock%}

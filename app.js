@@ -5,10 +5,9 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 require('dotenv').config({ path: '.env' });
 const cors = require('cors');
-const { sequelize } = require('./models/index'); // 시퀄라이즈
+const { user, sequelize } = require('./models/index'); // 시퀄라이즈
 const session = require('express-session');
 const MemoryStore = require('memorystore')(session);
-const passport = require('passport');
 const nunjucks = require('nunjucks');
 
 const indexRouter = require('./routes/index');
@@ -17,10 +16,11 @@ const userRoutes = require('./routes/userRoutes/userRoutes');
 const managerRoutes = require('./routes/managerRoutes/managerRoutes');
 const bodyParser = require("express");
 const FileStore = require('session-file-store')(session);
+const passport = require('passport');
 const passportConfig = require('./passport');
 
 const app = express();
-
+passportConfig();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');

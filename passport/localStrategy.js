@@ -6,15 +6,18 @@ const {user} = require('../models');
 
 module.exports = () => {
     passport.use(new LocalStrategy({
-        usernameField: 'userid',
-        passwordField: 'password',
+        usernameField: 'id',
+        passwordField: 'pass',
         passReqToCallback: false,
+        viewedProducts: [],
     }, async (userid, password, done) => {
         try {
-            const exUser = await user.findOne({ where: { userid } });
+            const exUser = await user.findOne({ where: { userid:userid } });
+            // console.log("localS1111111->", exUser);
             if (exUser) {
-                const result = await bcrypt.compare(password, exUser.password);
+                const result = await bcrypt.compare(password, exUser.userpass);
                 if (result) {
+
                     done(null, exUser);
                 } else {
                     done(null, false, { message: '비밀번호가 일치하지 않습니다.' });
@@ -27,6 +30,5 @@ module.exports = () => {
             done(error);
         }
     }));
-
 
 };

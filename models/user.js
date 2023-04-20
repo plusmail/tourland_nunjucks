@@ -74,6 +74,10 @@ module.exports = function(sequelize, DataTypes) {
     accessToken: {
       type: DataTypes.STRING(255),
       allowNull: true
+    },
+    viewedProducts: {
+      type: DataTypes.JSON,
+      allowNull: true
     }
   }, {
     sequelize,

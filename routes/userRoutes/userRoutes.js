@@ -12,7 +12,6 @@ const moment = require("moment");
 
 const {sessionCheck, sessionEmpCheck} = require('../../controller/sessionCtl');
 
-
 const models = require("../../models/index");
 const {
     product,
@@ -36,6 +35,8 @@ const path = require("path");
 const bodyParser = require('body-parser');
 const parser = bodyParser.urlencoded({extended: false});
 const {upload} = require("../../controller/fileupload");
+const passport = require("passport");
+const {isLoggedIn, isNotLoggedIn} = require("../../middlewares");
 
 
 let user = {
@@ -66,27 +67,45 @@ let user = {
     mypage: "mypageuser"
 }
 
+const productCurrent = async (productId)=>{
+    const productL = await product.findOne({
+        attributes: ['id','pname','ppic'],
+        where: {
+            id: productId
+        }
+    });
+    console.log("p111111111->", productL.ppic);
+    return productL;
+}
+// const {count: totalItems, rows: tutorials} = countlist;
 
 
 
 // 투어랜드 메인 페이지
-router.get('/', async (req, res, next) => {
+router.get('/',  async (req, res, next) => {
 
-    if(req.user && req.user.userid){
-        try{
-            const User = await user.findOne({
-                where : {id: req.user && req.user.userid || null},
-            });
-            res.render('login', {
-                User,
-                domains: User && User.domains,
-            });
-        }catch (err){
-            console.error(err);
-            next(err);
-        }
-
+    // 최근 본 상품 리스트에 추가
+    if (!req.session.recentlyViewed) {
+        req.session.recentlyViewed = [];
     }
+    req.session.recentlyViewed.push(14);
+    req.session.recentlyViewed.push(15);
+    req.session.recentlyViewed.push(16);
+
+    const recentlyViewed = req.session.recentlyViewed;
+
+    const currentProduct = [];
+
+    const products = recentlyViewed.map(productId => {
+        try{
+            currentProduct.push(productCurrent(productId));
+        }catch (error){
+            console.log(error);
+        }
+    });
+
+
+
 
     let Auth, AuthEmp, Manager, login;
     if(req.session.user == undefined){
@@ -104,7 +123,6 @@ router.get('/', async (req, res, next) => {
 
     const currentProductPrice = {};
     const currentProductPrice2 = {};
-    const currentProduct = {};
     const currentProduct2 = {};
 
     const popup1 = await models.popup.findOne({
@@ -490,69 +508,97 @@ const fetchEmpData = async (req) => {
 
 // 로그인 전송
 router.post('/loginForm', (req, res, next) => {
-    let {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
 
-
-    let {id, pass} = req.body;
-
-    let empVO = {};
-    let session = {};
-
-    let registerSuccess = {};
-    let UserStay;
-    let EmpStay = {};
-    let error = "";
-    let searchkeyword = "";
-    let loginSuccess = false;
-
-    fetchData(req).then((userVO) => {
-        console.log("11111111111111111111111->",userVO);
-        // 직원 ID가 없는 경우
-        if (userVO == null) {
-            error = "idnoneexist";
-            res.status(405).json({"responseText":error});
-            console.log("2222222222222->",userVO);
-        } else {
-
-            // 직원 ID가 있고 탈퇴한 회원
-            if (userVO.usersecess === 1) {
-                error = "retiredcustomer";
-                res.status(405).json({"responseText":error});
-
-            } else if (userVO.usersecess === 0) {
-
-                bcrypt.compare(req.body.pass, userVO.userpass, (err, result) => {
-                    UserStay = userVO;
-                    if (result) {
-                        loginSuccess = true;
-
-                        req.session.user = {
-                            "User": userVO.username,
-                            "login": "user",
-                            "Auth": userVO,
-                            "pass": pass,
-                            "mypage": "mypageuser",
-                            "userid": id,
-                        }
-                        req.session.save();
-                        Auth = userVO;
-                        login = "user";
-
-                        console.log(`세션 저장 완료! `);
-                        res.status(200).json({"responseText":"loginsuccess"});
-                    } else {
-                        res.status(405).json({"responseText":err});
-                    }
-                })
-
-            } else {
-                error = "usernotfind";
-                res.status(405).json({"responseText":error});
-            }
-
+    console.log('/loginForm-> ', req.body);
+    passport.authenticate('local', (err, user, info) => {
+        console.log('passport.authenticalte callback ');
+        if (err) {
+            console.error(err);
+            return next(err);
         }
+        if (info) {
+            return res.status(401).send(info.reason);
+        }
+        return req.login(user, loginErr => { // 이 부분 callback 실행
+            console.log('req.login callback');
+            if (loginErr) {
+                return next(loginErr);
+            }
+            const fillteredUser = { ...user.dataValues };
 
-    })
+            console.log('req.login callback->', fillteredUser.userpass);
+
+            delete fillteredUser.userpass;
+            return res.json(fillteredUser);
+        });
+    })(req, res, next);
+
+
+
+    //
+    //
+    // let {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
+    //
+    //
+    // let {id, pass} = req.body;
+    //
+    // let empVO = {};
+    // let session = {};
+    //
+    // let registerSuccess = {};
+    // let UserStay;
+    // let EmpStay = {};
+    // let error = "";
+    // let searchkeyword = "";
+    // let loginSuccess = false;
+    //
+    // fetchData(req).then((userVO) => {
+    //     // 직원 ID가 없는 경우
+    //     if (userVO == null) {
+    //         error = "idnoneexist";
+    //         res.status(405).json({"responseText":error});
+    //     } else {
+    //
+    //         // 직원 ID가 있고 탈퇴한 회원
+    //         if (userVO.usersecess === 1) {
+    //             error = "retiredcustomer";
+    //             res.status(405).json({"responseText":error});
+    //
+    //         } else if (userVO.usersecess === 0) {
+    //
+    //             bcrypt.compare(req.body.pass, userVO.userpass, (err, result) => {
+    //                 UserStay = userVO;
+    //                 if (result) {
+    //                     loginSuccess = true;
+    //                     result.viewedProducts.push('제품코드 넣었다.');
+    //
+    //                     req.session.user = {
+    //                         "User": userVO.username,
+    //                         "login": "user",
+    //                         "Auth": userVO,
+    //                         "pass": pass,
+    //                         "mypage": "mypageuser",
+    //                         "userid": id,
+    //                     }
+    //                     req.session.save();
+    //                     Auth = userVO;
+    //                     login = "user";
+    //
+    //                     console.log(`세션 저장 완료! `);
+    //                     res.status(200).json({"responseText":"loginsuccess"});
+    //                 } else {
+    //                     res.status(405).json({"responseText":err});
+    //                 }
+    //             })
+    //
+    //         } else {
+    //             error = "usernotfind";
+    //             res.status(405).json({"responseText":error});
+    //         }
+    //
+    //     }
+    //
+    // })
 
 
 });
@@ -821,6 +867,14 @@ router.get("/tourlandProductDetail/:pno", async (req, res, next) => {
                 id: pno
             }
         });
+
+        // 최근 본 상품 리스트에 추가
+        if (!req.session.recentlyViewed) {
+            req.session.recentlyViewed = [];
+        }
+        req.session.recentlyViewed.push(pno);
+
+
 
         let searchkeyword = "";
         let error = "";
