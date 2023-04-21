@@ -82,7 +82,7 @@ const productCurrent = async (productId)=>{
 
 
 // 투어랜드 메인 페이지
-router.get('/',  async (req, res, next) => {
+router.get('/',   async (req, res, next) => {
 
     // // 최근 본 상품 리스트에 추가
     // if (!req.session.recentlyViewed) {
@@ -94,19 +94,36 @@ router.get('/',  async (req, res, next) => {
 
     // const recentlyViewed = req.session.recentlyViewed;
 
-    // const currentProduct = [];
+    // const currentProductViewed = [];
 
     // const products = recentlyViewed.map(productId => {
     //     try{
-    //         currentProduct.push(productCurrent(productId));
+    //         currentProductViewed.push(productCurrent(productId));
     //     }catch (error){
     //         console.log(error);
     //     }
     // });
 
-    console.log("main->", req.user);
+    // console.log("main->", req.user.currentProductViewed);
+
+    if (req.user) {
+        const viewedProducts = user.viewedProducts || [];
+        if (!viewedProducts.includes(productId)) {
+          viewedProducts.push(productId);
+          try{
+            const updateViewed = await user.update({
+                viewedProducts : viewedProducts
+              },{
+                where : {userid:req.user.userid}
+              });
+          }
 
 
+          connection.query('UPDATE users SET viewedProducts = ? WHERE id = ?', [viewedProducts, user.id], function(err, result) {
+            if (err) { console.error(err); }
+          });
+        }
+      }
 
     let Auth, AuthEmp, Manager, login;
     if(req.session.user == undefined){
@@ -121,7 +138,7 @@ router.get('/',  async (req, res, next) => {
         Manager = req.session.user.Mananger;
         login = req.session.user.login;
     }
-
+    const currentProduct = {};
     const currentProductPrice = {};
     const currentProductPrice2 = {};
     const currentProduct2 = {};
@@ -215,6 +232,7 @@ router.get('/',  async (req, res, next) => {
 
 
     res.render('tourlandMain', {
+        currentProductViewed,
         currentProductPrice,
         currentProductPrice2,
         currentProduct,
@@ -393,8 +411,6 @@ router.post('/EditPasswordCheck1', async (req, res, next) => {
 
 // 로그인 폼
 router.get('/loginForm', async (req, res, next) => {
-    console.log("3333333333->", req.session.user);
-
     let {Auth, Manager, login} = sessionCheck(req, res);
     let {registerSuccess, id} = req.query;
     let UserStay = {userid: id};
@@ -514,23 +530,30 @@ router.post('/loginForm', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         console.log('passport.authenticalte callback ');
         if (err) {
+            console.log("66666666666666666");
             console.error(err);
             return next(err);
         }
         if (info) {
-            return res.status(401).send(info.reason);
+            console.log("777777777777777", info);
+            return res.status(401).json(info);
         }
         return req.login(user, loginErr => { // 이 부분 callback 실행
             console.log('req.login callback');
             if (loginErr) {
-                return next(loginErr);
+                let error = "usernotfind";
+                res.status(405).json({"responseText":error});
+                // return next(loginErr);
             }
             const fillteredUser = { ...user.dataValues };
 
-            console.log('req.login callback->', fillteredUser.userpass);
 
             delete fillteredUser.userpass;
-            return res.json(fillteredUser);
+            console.log('req.login callback->', fillteredUser);
+            return res.status(200).json({"responseText":"loginsuccess"});
+
+
+            // return res.json(fillteredUser);
         });
     })(req, res, next);
 

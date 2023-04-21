@@ -144,10 +144,9 @@
 </script>
 
 <script>
-    {%
-        currentProduct.forEach()
-
-    %}
+    {% for i in range(0, currentProductViewed.length) -%}
+    {{ i }},
+  {%- endfor %}
 
     {% if currentProductPrice !== null  %}
     //최근 본 상품의 이미지를 누르면 링크로 이동 이엘때문에 따로 처리, 동적 추가 docu on
@@ -166,9 +165,9 @@
 </script>
 
 
-    {% endblock %}
+{% endblock %}
 
-    {% block popup1 %}
+{% block popup1 %}
 
     <!-- 팝업 -->
     <div id="popup1" style=" margin-left:10%;">  <!-- 1번 팝업 -->

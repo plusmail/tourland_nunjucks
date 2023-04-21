@@ -100,7 +100,10 @@ section {
     position: absolute;
     top: 62px;
 }
-
+.errormsg{
+    text-align: center;
+    color: red;
+}
 h3{
     text-align: center;
 }

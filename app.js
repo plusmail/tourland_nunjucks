@@ -20,7 +20,11 @@ const passport = require('passport');
 const passportConfig = require('./passport');
 
 const app = express();
+
+//passport local, kakao 실행
 passportConfig();
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
@@ -48,6 +52,7 @@ app.use(session({
     },
 }));
 
+//passport 초기화 및 세션사용
 app.use(passport.initialize());
 app.use(passport.session());
 

@@ -8,6 +8,8 @@
 
 <body>
 {% include "../include/userHeader.html" %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script  type="text/javascript">
 
@@ -15,37 +17,35 @@
 
             $("#btnLogin").click(function () {
 
-
                 const id = $("#id").val();
                 const pass = $("#pass").val();
-                $.ajax({
-                    url: "/customer/loginForm",
-                    type: 'post',
-                    traditional: true,
-                    data: {"id" : id, "pass":pass},
-                    dataType: "json",
-                    success: function (res) {
-                        console.log("11111111111111");
-                        if (res.responseText === "loginfail") {
-
-                            $("#errormsg").text("아이디와 비밀번호 확인 하세요.");
-
-                        }else if(res.responseText === "loginsuccess"){
-                            confirm("로그이 완료되었습니다.첫 페이지로 이동합니다.");
-                            location.href = "/customer";
-                        }
-                        else return;
-
+                axios({
+                    url: '/customer/loginForm', // 통신할 웹문서
+                    method: 'post', // 통신할 방식
+                    data: { // 인자로 보낼 데이터
+                      id: id,
+                      pass: pass
                     },
-                    error: function (res) {
-                        alert("1111->" + res);
-                        console.log(res);
-                        if (res.responseText === "loginfail") {
-                            alert("로그인 실패");
-                            return;
-                        }
+                    responseType:'json',
+                    responseEncoding:'utf-8'
+                  }).then((res)=>{
+                    console.log("axios1->", res);
+                    console.log("axios2->", res.data.responseText);
+                    console.log("axios3->", res.status);
+
+                    if(res.data.responseText === "loginsuccess"){
+                        confirm("로그이 완료되었습니다.첫 페이지로 이동합니다.");
+                        location.href = "/customer";
                     }
+                  }) .catch((error)=> {
+                    console.log("555555->", error.response.status);
+                    $("#errormsg").text(`아이디와 비밀번호 확인 하세요.${error.response.statusText}`);
                 })
+                  .finally(function () {
+                    // always executed
+                  });  
+                  
+
             })
 
         }
@@ -83,8 +83,8 @@
                 {% if error != null %}
                     <p class="error">{{error }}</p>
                 {% endif %}
-                <div id="errormsg"></div>
             </div>
+            <div class='errormsg' id="errormsg"></div>
         </form>
         <div id="loginBtns">
             <button id="join" style="cursor: pointer">회원가입</button>
@@ -98,6 +98,7 @@
                 <span>kakao</span> 로그인
             </button>
         </div>
+
     </div>
 
 </section>
