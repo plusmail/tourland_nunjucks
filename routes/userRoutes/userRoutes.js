@@ -84,26 +84,27 @@ const productCurrent = async (productId)=>{
 // 투어랜드 메인 페이지
 router.get('/',  async (req, res, next) => {
 
-    // 최근 본 상품 리스트에 추가
-    if (!req.session.recentlyViewed) {
-        req.session.recentlyViewed = [];
-    }
-    req.session.recentlyViewed.push(14);
-    req.session.recentlyViewed.push(15);
-    req.session.recentlyViewed.push(16);
+    // // 최근 본 상품 리스트에 추가
+    // if (!req.session.recentlyViewed) {
+    //     req.session.recentlyViewed = [];
+    // }
+    // req.session.recentlyViewed.push(14);
+    // req.session.recentlyViewed.push(15);
+    // req.session.recentlyViewed.push(16);
 
-    const recentlyViewed = req.session.recentlyViewed;
+    // const recentlyViewed = req.session.recentlyViewed;
 
-    const currentProduct = [];
+    // const currentProduct = [];
 
-    const products = recentlyViewed.map(productId => {
-        try{
-            currentProduct.push(productCurrent(productId));
-        }catch (error){
-            console.log(error);
-        }
-    });
+    // const products = recentlyViewed.map(productId => {
+    //     try{
+    //         currentProduct.push(productCurrent(productId));
+    //     }catch (error){
+    //         console.log(error);
+    //     }
+    // });
 
+    console.log("main->", req.user);
 
 
 
