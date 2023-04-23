@@ -39,7 +39,11 @@
                     }
                   }) .catch((error)=> {
                     console.log("555555->", error.response.status);
-                    $("#errormsg").text(`아이디와 비밀번호 확인 하세요.${error.response.statusText}`);
+                    if(error.response.status == 409){
+                        $("#errormsg").text(`탈퇴한 회원입니다. 재가입하세요.${error.response.statusText}`);
+                    }else{
+                        $("#errormsg").text(`인증에 실패했습니다. 재 시도 하세요..${error.response.statusText}`);
+                    }
                 })
                   .finally(function () {
                     // always executed

@@ -1,7 +1,7 @@
 <link rel="stylesheet" type="text/css" href="/stylesheets/tourlandProductDetail.css"/>
 
 <body>
-{%- include("../../include/userHeader.ejs") %}
+{%- include("../../include/userHeader.html") %}
 <script>
     var uno = 0;
     var price = 0;
@@ -28,17 +28,17 @@
         $(".selAir").each(function (i, obj) {
             switch ($(obj).find("option:selected").val()) {
                 case "F":
-                    var airprice = {%= vo.airplaneId_airplanes[0].price %} *
+                    var airprice = {{vo.airplaneId_airplanes[0].price }} *
                     2 * Number($(".airSelect").eq(i).find("option:selected").attr("data-capacity"));
                     price += airprice;
                     break;
                 case "B":
-                    var airprice = {%= vo.airplaneId_airplanes[2].price %} *
+                    var airprice = {{ vo.airplaneId_airplanes[2].price }} *
                     2 * Number($(".airSelect").eq(i).find("option:selected").attr("data-capacity"));
                     price += airprice;
                     break;
                 case "E":
-                    var airprice = {%= vo.airplaneId_airplanes[4].price %} *
+                    var airprice = {{ vo.airplaneId_airplanes[4].price }} *
                     2 * Number($(".airSelect").eq(i).find("option:selected").attr("data-capacity"));
                     price += airprice;
                     break;
@@ -47,18 +47,18 @@
         $(".selHotel").each(function (i, obj) {
             switch ($(obj).find("option:selected").val()) {
                 case "S":
-                    var hotelPrice = {%= vo.hotelId_hotels[0].price %};
-                    var dateDiff = Number(calDateDiff("{%=vo.hotelId_hotels[0].checkin%}", "{%=vo.hotelId_hotels[0].checkout%}"));
+                    var hotelPrice = {{ vo.hotelId_hotels[0].price }};
+                    var dateDiff = Number(calDateDiff("{{vo.hotelId_hotels[0].checkin}}", "{{vo.hotelId_hotels[0].checkout}}"));
                     price += (hotelPrice * dateDiff * Number($(".hotelSelect").eq(i).find("option:selected").attr("data-capacity")));
                     break;
                 case "D":
-                    var hotelPrice = {%= vo.hotelId_hotels[1].price %};
-                    var dateDiff = Number(calDateDiff("{%=vo.hotelId_hotels[1].checkin%}", "{%=vo.hotelId_hotels[1].checkout%}"));
+                    var hotelPrice = {{ vo.hotelId_hotels[1].price }};
+                    var dateDiff = Number(calDateDiff("{{vo.hotelId_hotels[1].checkin}}", "{{vo.hotelId_hotels[1].checkout}}"));
                     price += (hotelPrice * dateDiff * Number($(".hotelSelect").eq(i).find("option:selected").attr("data-capacity")));
                     break;
                 case "N":
-                    var hotelPrice = {%= vo.hotelId_hotels[2].price %};
-                    var dateDiff = Number(calDateDiff("{%=vo.hotelId_hotels[2].checkin%}", "{%=vo.hotelId_hotels[2].checkout%}"));
+                    var hotelPrice = {{ vo.hotelId_hotels[2].price }};
+                    var dateDiff = Number(calDateDiff("{{vo.hotelId_hotels[2].checkin}}", "{{vo.hotelId_hotels[2].checkout}}"));
                     price += (hotelPrice * dateDiff * Number($(".hotelSelect").eq(i).find("option:selected").attr("data-capacity")));
                     break;
             }
@@ -68,7 +68,7 @@
             price += tourprice;
         })
         if ($("#selRentcar option:selected").val() == 'S') {
-            price += Math.ceil({%= vo.rentcarId_rentcars[0].price/vo.rentcarId_rentcars[0].capacity %}* bookCapacity);
+            price += Math.ceil({{ vo.rentcarId_rentcars[0].price/vo.rentcarId_rentcars[0].capacity }}* bookCapacity);
         }
         $("#price").text(price.toLocaleString());
     }
@@ -86,7 +86,7 @@
         })
         $("#review").click(function() {
             alert("ddddddddd")
-            location.href = "tourlandProductReview/{%=vo.id%}?price={%=vo.pprice%}";
+            location.href = "tourlandProductReview/{{vo.id}}?price={{vo.pprice}}";
         })
         for (var i = 1; i <= 45; i++) {
             var option = $("<option>").html(i + "명");
@@ -136,7 +136,7 @@
             var p = $("<p>").html("투숙인원 ");
             switch (selOption) {
                 case "S":
-                    for (var i = 1; i <= {%= vo.hotelId_hotels[0].capacity %}*{%=vo.hotelId_hotels[0].roomcapacity%}; i++) {
+                    for (var i = 1; i <= {{vo.hotelId_hotels[0].capacity }}*{{vo.hotelId_hotels[0].roomcapacity}}; i++) {
                         var option = $("<option data-capacity='" + i + "'>").html(i + "명");
                         hotelSelect.append(option);
                     }
@@ -144,7 +144,7 @@
                     $(this).parent().after(p);
                     break;
                 case "D":
-                    for (var i = 1; i <={%= vo.hotelId_hotels[1].capacity %}*{%= vo.hotelId_hotels[1].roomcapacity %}; i++) {
+                    for (var i = 1; i <={{vo.hotelId_hotels[1].capacity }}*{{vo.hotelId_hotels[1].roomcapacity }}; i++) {
                         var option = $("<option data-capacity='" + i + "'>").html(i + "명");
                         hotelSelect.append(option);
                     }
@@ -152,7 +152,7 @@
                     $(this).parent().after(p);
                     break;
                 case "N":
-                    for (var i = 1; i <={%= vo.hotelId_hotels[2].capacity %}*{%= vo.hotelId_hotels[2].roomcapacity %}; i++) {
+                    for (var i = 1; i <={{vo.hotelId_hotels[2].capacity }}*{{vo.hotelId_hotels[2].roomcapacity }}; i++) {
                         var option = $("<option data-capacity='" + i + "'>").html(i + "명");
                         hotelSelect.append(option);
                     }
@@ -199,12 +199,12 @@
         $(".selTour").change();
 
         $("#doReserv").click(function () {
-            if ("{%=Auth.userid%}"==null) {
+            if ("{{Auth.userid}}"==null) {
                 alert("로그인부터 먼저해주세요");
                 location.href = "/loginForm";
                 return false;
             }
-            var pno = {%= vo.id %};
+            var pno = {{vo.id}};
             var price = replaceAll($("#price").text(), ",", "");
             var ano = [];
             var acapacity = [];
@@ -271,14 +271,14 @@
             })
         });
         $("#doWish").click(function () {
-            if ( "{%=Auth.userid%}"==null ) {
+            if ( "{{Auth.userid}}"==null ) {
                 alert("로그인부터 먼저해주세요");
                 location.href = "/loginForm";
                 return false;
             }
             //유저 번호
             //상품 번호
-            var pno = {%= vo.id %};
+            var pno = {{vo.id}};
             //가격
             var price = replaceAll($("#price").text(), ",", "");
             //항공 출발편 번호
@@ -375,17 +375,17 @@
         });
     });
 </script>
-{% if (Auth != null && login == 'user') { %}
+{% if Auth != null and login == 'user' %}
 <script>
-    uno = "{%= Auth.userid %}";
+    uno = "{{Auth.userid}}";
 </script>
-{% } %}
+{% endif %}
 <section>
     <div id="proBox">
-        <h1>{%= vo.pname %}</h1>
+        <h1>{{vo.pname}}</h1>
         <div id="imgBox">
             <div id="bigImgBox">
-                <img src="/displayFile/product{%= vo.ppic %}">
+                <img src="/displayFile/product{{vo.ppic}}">
             </div>
             <div id="smallImgBox">
                 <ul>
@@ -453,47 +453,40 @@
 
         <div id="infoBox">
             <ul>
-                <li id="infoNo">상품 번호 : <span id="pno">P{%= vo.id %}</span></li>
-                <li id="infoName"><span id="pname">{%=vo.pname%}</span></li>
+                <li id="infoNo">상품 번호 : <span id="pno">P{{vo.id}}</span></li>
+                <li id="infoName"><span id="pname">{{vo.pname}}</span></li>
 
-                {%
-                 let air = vo.airplaneId_airplanes;
-                 let ddate;
-                 for(let i = 0; i < 1; i++ ) {
-                     ddate = air[i].ddate;
-                 }
-                 %}
+                {% set air = vo.airplaneId_airplanes %}
+                {% set ddate %}
+                {% for item in air %}
+                {{ item.ddate}}
 
-                <li id="infoDate">출발일 : <span id="ddate">{%=moment(ddate).format('YYYY-MM-DD') %}</span></li>
+                <li id="infoDate">출발일 : <span id="ddate">{{moment(ddate).format('YYYY-MM-DD') }}</span></li>
                 <li id="infoDays">여행 기간 : <span id="tourDays">
-                        {%
-                            let start = vo.pname.indexOf("]")-2;
-                            let end = vo.pname.indexOf("]")-1;
-                            let substr = vo.pname.substring(start, end)-1;
+                        {% set start = vo.pname.indexOf("]")-2 %}
+                        {% set end = vo.pname.indexOf("]")-1 %}
+                        {% set substr = vo.pname.substring(start, end)-1; %}
 
-                            let start2 = vo.pname.indexOf("]")-2;
-                            let end2 = vo.pname.indexOf("]")-1;
-                            let substr2 = vo.pname.substring(start2, end2);
-                            %}
-                        {%= substr+"박"+substr2+"일"; %}
+                        {% set start2 = vo.pname.indexOf("]")-2 %}
+                        {% set end2 = vo.pname.indexOf("]")-1 %}
+                        {% set substr2 = vo.pname.substring(start2, end2) %}
+                        {{substr+"박"+substr2+"일" }}
                     </span>
                 </li>
-                {%
-                let p = vo.pcapacity;
-                let capacity;
-                for(let i=0; i < 1;i++) {
-                    capacity = p[i];
-                }
-                %}
+
+                {% set p = vo.pcapacity %}
+                {% set capacity %}
+                {% for capacity in p %}
+
+                {% endfor %}
 
                 <li class="selOption">
                     <p>
                         예약인원
                         <select id="capacity">
                             <option value="">선택</option>
-                            {% for(let i = 1; i< capacity;i++) {%}
-                            <option value="reservp" data-dano="{%=i%}"> {%=i%} </option>
-                            {% } %}
+                            {% for i in capacity %}
+                            <option value="reservp" data-dano="{{i}}"> {{i}} </option>
                         </select>
                     </p>
                 </li>
@@ -502,10 +495,10 @@
                         항공기옵션1
                         <select class="selAir">
                             <option value="">선택</option>
-                            <option value="F" data-dano="{%=vo.airplaneId_airplanes[0].id%}" data-rano="{%=vo.airplaneId_airplanes[1].id%}">First-Class
+                            <option value="F" data-dano="{{vo.airplaneId_airplanes[0].id}}" data-rano="{{vo.airplaneId_airplanes[1].id}}">First-Class
                             </option>
-                            <option value="B" data-dano="{%=vo.airplaneId_airplanes[2].id%}" data-rano="{%=vo.airplaneId_airplanes[3].id%}">Business</option>
-                            <option value="E" data-dano="{%=vo.airplaneId_airplanes[4].id%}" data-rano="{%=vo.airplaneId_airplanes[5].id%}">Economy</option>
+                            <option value="B" data-dano="{{vo.airplaneId_airplanes[2].id}}" data-rano="{{vo.airplaneId_airplanes[3].id}}">Business</option>
+                            <option value="E" data-dano="{{vo.airplaneId_airplanes[4].id}}" data-rano="{{vo.airplaneId_airplanes[5].id}}">Economy</option>
                         </select>
                     </p>
                 </li>
@@ -514,10 +507,10 @@
                         항공기옵션2
                         <select class="selAir">
                             <option value="">선택</option>
-                            <option value="F" data-dano="{%=vo.airplaneId_airplanes[0].id%}" data-rano="{%=vo.airplaneId_airplanes[1].id%}">First-Class
+                            <option value="F" data-dano="{{vo.airplaneId_airplanes[0].id}}" data-rano="{{vo.airplaneId_airplanes[1].id}}">First-Class
                             </option>
-                            <option value="B" data-dano="{%=vo.airplaneId_airplanes[2].id%}" data-rano="{%=vo.airplaneId_airplanes[3].id%}">Business</option>
-                            <option value="E" data-dano="{%=vo.airplaneId_airplanes[4].id%}" data-rano="{%=vo.airplaneId_airplanes[5].id%}">Economy</option>
+                            <option value="B" data-dano="{{vo.airplaneId_airplanes[2].id}}" data-rano="{{vo.airplaneId_airplanes[3].id}}">Business</option>
+                            <option value="E" data-dano="{{vo.airplaneId_airplanes[4].id}}" data-rano="{{vo.airplaneId_airplanes[5].id}}">Economy</option>
                         </select>
                     </p>
                 </li>
@@ -526,10 +519,10 @@
                         항공기옵션3
                         <select class="selAir">
                             <option value="">선택</option>
-                            <option value="F" data-dano="{%=vo.airplaneId_airplanes[0].id%}" data-rano="{%=vo.airplaneId_airplanes[1].id%}">First-Class
+                            <option value="F" data-dano="{{vo.airplaneId_airplanes[0].id}}" data-rano="{{vo.airplaneId_airplanes[1].id}}">First-Class
                             </option>
-                            <option value="B" data-dano="{%=vo.airplaneId_airplanes[2].id%}" data-rano="{%=vo.airplaneId_airplanes[3].id%}">Business</option>
-                            <option value="E" data-dano="{%=vo.airplaneId_airplanes[4].id%}" data-rano="{%=vo.airplaneId_airplanes[5].id%}">Economy</option>
+                            <option value="B" data-dano="{{vo.airplaneId_airplanes[2].id}}" data-rano="{{vo.airplaneId_airplanes[3].id}}">Business</option>
+                            <option value="E" data-dano="{{vo.airplaneId_airplanes[4].id}}" data-rano="{{vo.airplaneId_airplanes[5].id}}">Economy</option>
                         </select>
                     </p>
                 </li>
@@ -538,9 +531,9 @@
                         호텔옵션1
                         <select class="selHotel">
                             <option value="">선택</option>
-                            <option value="S" data-hno="{%=vo.hotelId_hotels[0].id%}">스위트룸</option>
-                            <option value="D" data-hno="{%=vo.hotelId_hotels[1].id%}">디럭스룸</option>
-                            <option value="N" data-hno="{%=vo.hotelId_hotels[2].id%}">일반룸</option>
+                            <option value="S" data-hno="{{vo.hotelId_hotels[0].id}}">스위트룸</option>
+                            <option value="D" data-hno="{{vo.hotelId_hotels[1].id}}">디럭스룸</option>
+                            <option value="N" data-hno="{{vo.hotelId_hotels[2].id}}">일반룸</option>
                             <option value="DS">선택안함</option>
                         </select>
                     </p>
@@ -550,9 +543,9 @@
                         호텔옵션2
                         <select class="selHotel">
                             <option value="">선택</option>
-                            <option value="S" data-hno="{%=vo.hotelId_hotels[0].id%}">스위트룸</option>
-                            <option value="D" data-hno="{%=vo.hotelId_hotels[1].id%}">디럭스룸</option>
-                            <option value="N" data-hno="<%=vo.hotelId_hotels[2].id%}">일반룸</option>
+                            <option value="S" data-hno="{{vo.hotelId_hotels[0].id}}">스위트룸</option>
+                            <option value="D" data-hno="{{vo.hotelId_hotels[1].id}}">디럭스룸</option>
+                            <option value="N" data-hno="{{vo.hotelId_hotels[2].id}}">일반룸</option>
                             <option value="DS">선택안함</option>
                         </select>
                     </p>
@@ -562,9 +555,9 @@
                         호텔옵션3
                         <select class="selHotel">
                             <option value="">선택</option>
-                            <option value="S" data-hno="<%=vo.hotelId_hotels[0].id%}">스위트룸</option>
-                            <option value="D" data-hno="<%=vo.hotelId_hotels[1].id%}">디럭스룸</option>
-                            <option value="N" data-hno="<%=vo.hotelId_hotels[2].id%}">일반룸</option>
+                            <option value="S" data-hno="{{vo.hotelId_hotels[0].id}}">스위트룸</option>
+                            <option value="D" data-hno="{{vo.hotelId_hotels[1].id}}">디럭스룸</option>
+                            <option value="N" data-hno="{{vo.hotelId_hotels[2].id}}">일반룸</option>
                             <option value="DS">선택안함</option>
                         </select>
                     </p>
@@ -573,8 +566,8 @@
                     <p>
                         투어옵션<br>
                         <% vo.tourId_tours.forEach( tour => { %}
-                            <input type="checkbox" name="tourChk" value="<%=tour.id%}" class="selTour"
-                                   data-price="<%=tour.tprice%}"> <span><%=tour.tname%}</span><br>
+                            <input type="checkbox" name="tourChk" value="{{tour.id}}" class="selTour"
+                                   data-price="<%=tour.tprice%}"> <span>{{tour.tname}}</span><br>
                         <% }) %}
                     </p>
                 </li>
@@ -583,12 +576,12 @@
                         렌터카옵션
                         <select id="selRentcar">
                             <option value="">선택</option>
-                            <option value="S" data-rentno="<%=vo.rentcarId_rentcars[0].id%}">선택함</option>
+                            <option value="S" data-rentno="{{vo.rentcarId_rentcars[0].id}}">선택함</option>
                             <option value="DS">선택안함</option>
                         </select>
                     </p>
                 </li>
-                <li id="infoPrice" style="clear : both;">가격 : <span id="price"><%=vo.pprice%}</span>원
+                <li id="infoPrice" style="clear : both;">가격 : <span id="price">{{vo.pprice}}</span>원
                 </li>
             </ul>
             <div id="btnsBox">
@@ -604,7 +597,7 @@
         </div>
 
         <h2>여행 세부 내용</h2>
-        <%-vo.pcontent%}
+        {{vo.pcontent}}
     </div>
 </section>
 <%- include("../../include/userFooter.html") %}

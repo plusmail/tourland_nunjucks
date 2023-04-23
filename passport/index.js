@@ -11,7 +11,7 @@ module.exports = () =>{
     passport.deserializeUser((userid, done) =>{
         user.findOne( {
             where : {userid},
-            attributes: ['id','userid','username'],
+            attributes: ['id','userid','username','role','viewedProducts', 'usersecess'],
             }
         )
         .then(user => done(null, user))

@@ -12,13 +12,18 @@ module.exports = () => {
         viewedProducts: [],
     }, async (userid, password, done) => {
         try {
-            // console.log("localS1111111->", exUser);
             const exUser = await user.findOne({ where: { userid:userid } });
             if (exUser) {
                 const result = await bcrypt.compare(password, exUser.userpass);
                 if (result) {
+                    console.log("local->", exUser.usersecess);
 
-                    done(null, exUser);
+                    if(exUser.usersecess == false || null){
+                        done(null, false, { errorCode:409, message: '탈퇴한 회원 입니다. 재 가입하세요.' });
+                    }else{
+                        done(null, exUser);
+                    }
+
                 } else {
                     done(null, false, { message: '비밀번호가 일치하지 않습니다.' });
                 }
