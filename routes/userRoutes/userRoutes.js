@@ -106,24 +106,24 @@ router.get('/',   async (req, res, next) => {
 
     // console.log("main->", req.user.currentProductViewed);
 
-    if (req.user) {
-        const viewedProducts = user.viewedProducts || [];
-        if (!viewedProducts.includes(productId)) {
-          viewedProducts.push(productId);
-          try{
-            const updateViewed = await user.update({
-                viewedProducts : viewedProducts
-              },{
-                where : {userid:req.user.userid}
-              });
-          }
-
-
-          connection.query('UPDATE users SET viewedProducts = ? WHERE id = ?', [viewedProducts, user.id], function(err, result) {
-            if (err) { console.error(err); }
-          });
-        }
-      }
+    // if (req.user) {
+    //     const viewedProducts = user.viewedProducts || [];
+    //     if (!viewedProducts.includes(productId)) {
+    //       viewedProducts.push(productId);
+    //       try{
+    //         const updateViewed = await user.update({
+    //             viewedProducts : viewedProducts
+    //           },{
+    //             where : {userid:req.user.userid}
+    //           });
+    //       }
+    //
+    //
+    //       // connection.query('UPDATE users SET viewedProducts = ? WHERE id = ?', [viewedProducts, user.id], function(err, result) {
+    //       //   if (err) { console.error(err); }
+    //       // });
+    //     }
+    //   }
 
     let Auth, AuthEmp, Manager, login;
     if(req.session.user == undefined){
@@ -232,7 +232,7 @@ router.get('/',   async (req, res, next) => {
 
 
     res.render('tourlandMain', {
-        currentProductViewed,
+        // currentProductViewed,
         currentProductPrice,
         currentProductPrice2,
         currentProduct,
@@ -530,12 +530,10 @@ router.post('/loginForm', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         console.log('passport.authenticalte callback ');
         if (err) {
-            console.log("66666666666666666");
             console.error(err);
             return next(err);
         }
         if (info) {
-            console.log("777777777777777", info);
             return res.status(401).json(info);
         }
         return req.login(user, loginErr => { // 이 부분 callback 실행

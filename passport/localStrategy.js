@@ -12,8 +12,8 @@ module.exports = () => {
         viewedProducts: [],
     }, async (userid, password, done) => {
         try {
-            const exUser = await user.findOne({ where: { userid:userid } });
             // console.log("localS1111111->", exUser);
+            const exUser = await user.findOne({ where: { userid:userid } });
             if (exUser) {
                 const result = await bcrypt.compare(password, exUser.userpass);
                 if (result) {
