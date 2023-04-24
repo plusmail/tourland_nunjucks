@@ -22,7 +22,8 @@ const {
     pairstatus,
     ptourstatus,
     photelstatus,
-    prentstatus
+    prentstatus,
+    user,
 } = require('../../models/index');
 
 const fs = require('fs');
@@ -39,33 +40,33 @@ const passport = require("passport");
 const {isLoggedIn, isNotLoggedIn} = require("../../middlewares");
 
 
-let user = {
-    Auth: {
-        id: "0",
-        username: "",
-        userbirth: "",
-        usertel: "",
-        useraddr: "",
-        userpassport: "",
-        userid: "0",
-        usersecess: "",
-        useremail: ""
-    },
-    AuthEmp: {
-        empno: "",
-        empname: "",
-        empbirth: "",
-        emptel: "",
-        empaddr: "",
-        epmauth: "",
-        empid: "",
-        epmretired: ""
-    },
-    Mananger: {name: "", right: 1},
-    User: "",
-    login: "user",
-    mypage: "mypageuser"
-}
+// let user = {
+//     Auth: {
+//         id: "0",
+//         username: "",
+//         userbirth: "",
+//         usertel: "",
+//         useraddr: "",
+//         userpassport: "",
+//         userid: "0",
+//         usersecess: "",
+//         useremail: ""
+//     },
+//     AuthEmp: {
+//         empno: "",
+//         empname: "",
+//         empbirth: "",
+//         emptel: "",
+//         empaddr: "",
+//         epmauth: "",
+//         empid: "",
+//         epmretired: ""
+//     },
+//     Mananger: {name: "", right: 1},
+//     User: "",
+//     login: "user",
+//     mypage: "mypageuser"
+// }
 
 const productCurrent = async (productId)=>{
     const productL = await product.findOne({
@@ -84,7 +85,10 @@ const productCurrent = async (productId)=>{
 // 투어랜드 메인 페이지
 router.get('/',   async (req, res, next) => {
 
-    console.log("get / ->",req.user.viewedProducts);
+    if(req.user){
+        console.log("get / ->",req.user.viewedProducts);
+
+    }
 
     // // 최근 본 상품 리스트에 추가
     // if (!req.session.recentlyViewed) {
@@ -763,7 +767,36 @@ router.get("/tourlandProductDetail/:pno", async (req, res, next) => {
     const pno = req.params.pno;
     let {price, rdate, cnt, searchType, keyword} = req.query;
 
+    if (req.isAuthenticated()) {
+        // 로그인된 사용자의 경우 viewedProducts 배열에 추가합니다.
+        let viewedProduct = req.user.viewedProducts;
+        if (!viewedProduct.includes(pno)) {
+            viewedProduct.push(pno);
+        }
 
+        const updateResult = await user.update({
+            viewedProducts : viewedProduct,
+        },{
+            where : {userid : req.user.userid}
+        });
+  
+
+        // req.user.save(function (err, savedRecord) {
+        //     console.log("detail->>>>>>>", err, savedRecord);
+        //     if (err)
+        //      return res.json({ result: false, message: 'Error while saving user', data: null });
+        //     else
+        //      return res.json({ result: true, message: 'Hotel record saved successfully!', data: savedRecord.hotels });
+        //    });
+
+    } else {
+    // 로그인되지 않은 사용자의 경우 쿠키를 사용하여 viewedProducts 배열에 추가합니다.
+        const viewedProducts = req.cookies.viewedProducts || [];
+        if (!viewedProducts.includes(pno)) {
+            viewedProducts.push(pno);
+            res.cookie('viewedProducts', viewedProducts, { maxAge: 604800000 });
+        }
+    }
 
     try {
 
@@ -811,8 +844,6 @@ router.get("/tourlandProductDetail/:pno", async (req, res, next) => {
         });
 
 
-   
-
 
         let searchkeyword = "";
         let error = "";
@@ -822,11 +853,15 @@ router.get("/tourlandProductDetail/:pno", async (req, res, next) => {
         let date = '';
         let capa = '';
         let count = '';
+        let user = req.user;
+
+
+        console.log("===================>", user);
 
 
         if (vo != null) {
             res.render("user/product/tourlandProductDetail", {
-                Auth,
+                user,
                 login,
                 Manager,
                 searchkeyword,
