@@ -1,7 +1,7 @@
 <link rel="stylesheet" type="text/css" href="/stylesheets/tourlandProductDetail.css"/>
 
 <body>
-{%- include("../../include/userHeader.html") %}
+{%  include "../../include/userHeader.html" %}
 <script>
     var uno = 0;
     var price = 0;
@@ -457,12 +457,15 @@
                 <li id="infoName"><span id="pname">{{vo.pname}}</span></li>
 
                 {% set air = vo.airplaneId_airplanes %}
-                {% set ddate %}
                 {% for item in air %}
                 {{ item.ddate}}
 
-                <li id="infoDate">출발일 : <span id="ddate">{{moment(ddate).format('YYYY-MM-DD') }}</span></li>
-                <li id="infoDays">여행 기간 : <span id="tourDays">
+
+                <li id="infoDate">
+                    출발일 : <span id="ddate">{{moment(ddate).format('YYYY-MM-DD') }}</span>
+                </li>
+                <li id="infoDays">여행 기간 : 
+                    <span id="tourDays">
                         {% set start = vo.pname.indexOf("]")-2 %}
                         {% set end = vo.pname.indexOf("]")-1 %}
                         {% set substr = vo.pname.substring(start, end)-1; %}
@@ -473,12 +476,8 @@
                         {{substr+"박"+substr2+"일" }}
                     </span>
                 </li>
-
-                {% set p = vo.pcapacity %}
-                {% set capacity %}
-                {% for capacity in p %}
-
                 {% endfor %}
+                {% set p = vo.pcapacity %}
 
                 <li class="selOption">
                     <p>
@@ -487,6 +486,7 @@
                             <option value="">선택</option>
                             {% for i in capacity %}
                             <option value="reservp" data-dano="{{i}}"> {{i}} </option>
+                            {% endfor %}
                         </select>
                     </p>
                 </li>
@@ -600,6 +600,6 @@
         {{vo.pcontent}}
     </div>
 </section>
-<%- include("../../include/userFooter.html") %}
+{% include "../../include/userFooter.html"  %}
 </body>
 </html>
