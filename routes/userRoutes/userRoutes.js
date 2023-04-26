@@ -765,14 +765,39 @@ router.get("/tourlandProductKRList", async (req, res, next) => {
 // 패키지 제품 상세 리스트
 router.get("/tourlandProductDetail/:pno", async (req, res, next) => {
     let {Auth, AuthEmp, Manager, login} = sessionCheck(req, res);
-    const {pno} = req.params;
+    const pno = req.params.pno;
     let {price, rdate, cnt, searchType, keyword} = req.query;
 
-    console.log("toru detail->", pno);
+    if (req.isAuthenticated()) {
+        // 로그인된 사용자의 경우 viewedProducts 배열에 추가합니다.
+        let viewedProduct = req.user.viewedProducts;
+        if (!viewedProduct.includes(pno)) {
+            viewedProduct.push(pno);
+        }
 
-    let result = await viewedProducts(req, pno, next);
+        const updateResult = await user.update({
+            viewedProducts : viewedProduct,
+        },{
+            where : {userid : req.user.userid}
+        });
+  
 
-    console.log("toru detail1->", result);
+        // req.user.save(function (err, savedRecord) {
+        //     console.log("detail->>>>>>>", err, savedRecord);
+        //     if (err)
+        //      return res.json({ result: false, message: 'Error while saving user', data: null });
+        //     else
+        //      return res.json({ result: true, message: 'Hotel record saved successfully!', data: savedRecord.hotels });
+        //    });
+
+    } else {
+    // 로그인되지 않은 사용자의 경우 쿠키를 사용하여 viewedProducts 배열에 추가합니다.
+        const viewedProducts = req.cookies.viewedProducts || [];
+        if (!viewedProducts.includes(pno)) {
+            viewedProducts.push(pno);
+            res.cookie('viewedProducts', viewedProducts, { maxAge: 604800000 });
+        }
+    }
 
     try {
 
