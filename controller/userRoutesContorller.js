@@ -16,7 +16,7 @@ exports.viewedProducts = async (req,pno, next) =>{
         });
 
     } else {
-        // 로그인되지 않은 사용자의 경우 쿠키를 사용하여 viewedProducts 배열에 추가합니다.
+    // 로그인되지 않은 사용자의 경우 쿠키를 사용하여 viewedProducts 배열에 추가합니다.
         const viewedProducts = req.cookies.viewedProducts || [];
         if (!viewedProducts.includes(pno)) {
             viewedProducts.push(pno);
@@ -35,7 +35,7 @@ exports.viewedProductsList = (req,next) =>{
         viewedProduct = req.user.viewedProducts;
 
     } else {
-        // 로그인되지 않은 사용자의 경우 쿠키를 사용하여 viewedProducts 배열에 추가합니다.
+    // 로그인되지 않은 사용자의 경우 쿠키를 사용하여 viewedProducts 배열에 추가합니다.
         viewedProduct = req.cookies.viewedProducts;
     }
     // console.log("viewedProductsList->", viewedProduct)
@@ -43,3 +43,4 @@ exports.viewedProductsList = (req,next) =>{
     return viewedProduct;
 
 }
+
