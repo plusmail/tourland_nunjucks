@@ -9,7 +9,7 @@ module.exports = () => {
         usernameField: 'id',
         passwordField: 'pass',
         passReqToCallback: false,
-        viewedProducts: [],
+        viewedProducts: ['null'],
     }, async (userid, password, done) => {
         try {
             const exUser = await user.findOne({ where: { userid:userid } });

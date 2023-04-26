@@ -144,22 +144,17 @@
 </script>
 
 <script>
-    {% for i in range(0, currentProductViewed.length) -%}
-    {{ i }},
-  {%- endfor %}
 
-    {% if currentProductPrice !== null  %}
+    {% if currentProductPrice !== null %}
     //최근 본 상품의 이미지를 누르면 링크로 이동 이엘때문에 따로 처리, 동적 추가 docu on
-        $(document).on("click", ".currentP1", function () {
-            location.href = "tourlandProductDetail?pno="+{{ currentProduct.pno }}+
-            "&price=" +{{currentProductPrice}};
-        })
+    $(document).on("click", ".currentP1", function () {
+        location.href = "tourlandProductDetail?pno=" + {{currentProduct.pno}}+"&price="+{{currentProductPrice}};
+    })
     {% endif %}
-    {% if currentProductPrice2 !== null  %}
-        $(document).on("click", ".currentP2", function () {
-            location.href = "tourlandProductDetail?pno="+{{ currentProduct2.pno }}+
-                "&price=" + {{currentProductPrice2 }};
-        })
+    {% if currentProductPrice2 !== null %}
+    $(document).on("click", ".currentP2", function () {
+        location.href = "tourlandProductDetail?pno=" + {{currentProduct2.pno}}+"&price="+{{currentProductPrice2}};
+    })
     {% endif %}
 
 </script>
@@ -169,291 +164,282 @@
 
 {% block popup1 %}
 
-    <!-- 팝업 -->
-    <div id="popup1" style=" margin-left:10%;">  <!-- 1번 팝업 -->
-        {% if popup1 == null %}
-            <div id="previewPopup1">
-                <img src="/images/event1.jpg" style="width:400px; height:400px;" id="popup1img">
-                <p class="popupClose" style="background:black;">
-                    <input type="checkbox" class="expireCK">
-                    <label for="expireCK" style="color:white" class="label3">3일동안 이 창 열지 않기</label> <!-- for -->
-                    <button class="popupBtnClose"> 닫기</button>
-                </p>
-            </div>
-        {% else %}
-        <div id="previewPopup1">
-            <img src="displayFile/popup?filename={{popup1.pic}}" style="width:400px; height:400px;" id="popup1img">
-            <p class="popupClose" style="background:black;">
-                <input type="checkbox" class="expireCK">
-                <label for="expireCK" style="color:white" class="label3">3일동안 이 창 열지 않기</label> <!-- for -->
-                <button class="popupBtnClose"> 닫기</button>
-            </p>
-        </div>
-        {% endif %}
+<!-- 팝업 -->
+<div id="popup1" style=" margin-left:10%;">  <!-- 1번 팝업 -->
+    {% if popup1 == null %}
+    <div id="previewPopup1">
+        <img src="/images/event1.jpg" style="width:400px; height:400px;" id="popup1img">
+        <p class="popupClose" style="background:black;">
+            <input type="checkbox" class="expireCK">
+            <label for="expireCK" style="color:white" class="label3">3일동안 이 창 열지 않기</label> <!-- for -->
+            <button class="popupBtnClose"> 닫기</button>
+        </p>
     </div>
-    {% endblock %}
-
-    {% block popup2 %}
-
-    <div id="popup2" style=" margin-left:10%;"> <!-- 2번팝업  -->
-        {% if popup2 == null %}
-            <div id="previewPopup2">
-                <img src="/resources/images/event2.jpg" style="width:400px; height:400px;" id="popup2img">
-                <p class="popupClose" style="background:black;">
-                    <input type="checkbox" class="expireCK2">
-                    <label for="expireCK" style="color:white" class="label3">3일동안 이 창 열지 않기</label> <!-- for -->
-                    <button class="popupBtnClose2"> 닫기</button>
-                </p>
-            </div>
-        {% else %}
-        <div id="previewPopup2">
-            <img src="displayFile/popup?filename={{popup2.pic }}" style="width:400px; height:400px;" id="popup2img">
-            <p class="popupClose" style="background:black;">
-                <input type="checkbox" class="expireCK2">
-                <label for="expireCK" style="color:white" class="label3">3일동안 이 창 열지 않기</label> <!-- for -->
-                <button class="popupBtnClose2"> 닫기</button>
-            </p>
-        </div>
-        {% endif %}
+    {% else %}
+    <div id="previewPopup1">
+        <img src="displayFile/popup?filename={{popup1.pic}}" style="width:400px; height:400px;" id="popup1img">
+        <p class="popupClose" style="background:black;">
+            <input type="checkbox" class="expireCK">
+            <label for="expireCK" style="color:white" class="label3">3일동안 이 창 열지 않기</label> <!-- for -->
+            <button class="popupBtnClose"> 닫기</button>
+        </p>
     </div>
+    {% endif %}
+</div>
+{% endblock %}
 
-    {% endblock %}
+{% block popup2 %}
+
+<div id="popup2" style=" margin-left:10%;"> <!-- 2번팝업  -->
+    {% if popup2 == null %}
+    <div id="previewPopup2">
+        <img src="/resources/images/event2.jpg" style="width:400px; height:400px;" id="popup2img">
+        <p class="popupClose" style="background:black;">
+            <input type="checkbox" class="expireCK2">
+            <label for="expireCK" style="color:white" class="label3">3일동안 이 창 열지 않기</label> <!-- for -->
+            <button class="popupBtnClose2"> 닫기</button>
+        </p>
+    </div>
+    {% else %}
+    <div id="previewPopup2">
+        <img src="displayFile/popup?filename={{popup2.pic }}" style="width:400px; height:400px;" id="popup2img">
+        <p class="popupClose" style="background:black;">
+            <input type="checkbox" class="expireCK2">
+            <label for="expireCK" style="color:white" class="label3">3일동안 이 창 열지 않기</label> <!-- for -->
+            <button class="popupBtnClose2"> 닫기</button>
+        </p>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
 
 
-    {% block section %}
+{% block section %}
 
-    <div id="mainBox">
-        <section id="section1">
-            <div id="imgBox">
-                <div class="box1"> <!-- 메인 슬라이드 박스  -->
-                    <div><a href="/loginForm">
-                            <img src="/images/maincoupon.jpg" style="z-index:2" title="로그인 페이지로 이동합니다."></a></div>
-                    <div><a href="/customer/eventDetailPage?no=3">
-                            <img src="/images/mainevent1.jpg" style="z-index:1" title="이벤트 상세 페이지로 이동합니다"></a></div>
-                    <div><img src="/images/mainevent2.jpg"></div>
-                </div>
+<div id="mainBox">
+    <section id="section1">
+        <div id="imgBox">
+            <div class="box1"> <!-- 메인 슬라이드 박스  -->
+                <div><a href="/loginForm">
+                    <img src="/images/maincoupon.jpg" style="z-index:2" title="로그인 페이지로 이동합니다."></a></div>
+                <div><a href="/customer/eventDetailPage?no=3">
+                    <img src="/images/mainevent1.jpg" style="z-index:1" title="이벤트 상세 페이지로 이동합니다"></a></div>
+                <div><img src="/images/mainevent2.jpg"></div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section id="section2">
-            <div id="toDiv" class="divBox">
-                <h2>도착지</h2>
-                <select>
-                    <option>선택</option>
-                    <option>제주</option>
-                    <option>일본</option>
-                    <option>중국</option>
-                </select>
-            </div>
-            <div id="tourDays" class="divBox">
-                <h2>여행일</h2>
-                <select>
-                    <option>선택</option>
-                    <option>3일</option>
-                    <option>5일</option>
-                    <option>7일</option>
-                </select>
-            </div>
-            <div id="capa" class="divBox">
-                <h2>인원</h2>
-                <select>
-                    <option>선택</option>
-                    <option>2명</option>
-                    <option>3명</option>
-                    <option>4명</option>
-                    <option>5명</option>
-                    <option>6명</option>
-                    <option>7명</option>
-                    <option>8명</option>
-                    <option>9명</option>
-                    <option>10명</option>
-                    <option>11명</option>
-                    <option>12명</option>
-                    <option>13명</option>
-                    <option>14명</option>
-                    <option>15명</option>
-                    <option>16명</option>
-                    <option>17명</option>
-                    <option>18명</option>
-                    <option>19명</option>
-                    <option>20명</option>
-                </select>
-            </div>
-            <div id="dateDiv" class="divBox">
-                <h2>출발 날짜</h2>
-                <p id="datePick">
-                    <!-- <span><i class="far fa-calendar-alt"></i> 날짜별 검색</span>  -->
-                    <span id="picker">
+    <section id="section2">
+        <div id="toDiv" class="divBox">
+            <h2>도착지</h2>
+            <select>
+                <option>선택</option>
+                <option>제주</option>
+                <option>일본</option>
+                <option>중국</option>
+            </select>
+        </div>
+        <div id="tourDays" class="divBox">
+            <h2>여행일</h2>
+            <select>
+                <option>선택</option>
+                <option>3일</option>
+                <option>5일</option>
+                <option>7일</option>
+            </select>
+        </div>
+        <div id="capa" class="divBox">
+            <h2>인원</h2>
+            <select>
+                <option>선택</option>
+                <option>2명</option>
+                <option>3명</option>
+                <option>4명</option>
+                <option>5명</option>
+                <option>6명</option>
+                <option>7명</option>
+                <option>8명</option>
+                <option>9명</option>
+                <option>10명</option>
+                <option>11명</option>
+                <option>12명</option>
+                <option>13명</option>
+                <option>14명</option>
+                <option>15명</option>
+                <option>16명</option>
+                <option>17명</option>
+                <option>18명</option>
+                <option>19명</option>
+                <option>20명</option>
+            </select>
+        </div>
+        <div id="dateDiv" class="divBox">
+            <h2>출발 날짜</h2>
+            <p id="datePick">
+                <!-- <span><i class="far fa-calendar-alt"></i> 날짜별 검색</span>  -->
+                <span id="picker">
                         <input type="date" class="datepicker" name="rentddate" placeholder="날짜를 선택하려면 클릭."
                                style="height:30px;"></span>
-                    <span id="pickSearch"><a href="#"><i class="fas fa-search"></i></a></span>
-                </p>
-            </div>
-            <div id="searchDivBtn" class="divBox">
-                <button>검색</button>
-            </div>
-        </section>
+                <span id="pickSearch"><a href="#"><i class="fas fa-search"></i></a></span>
+            </p>
+        </div>
+        <div id="searchDivBtn" class="divBox">
+            <button>검색</button>
+        </div>
+    </section>
 
-        <section id="section3">
-            <div class="popular" id="first">
-                <a href="#">
-                    <h3>일본 특가 상품</h3>
-                    <p>신주쿠 교엔 / 파격적인 가격</p>
-                    <img alt="" src="/images/japan/sinjuku.jpg">
-                    <div id="popInfo">
-                        ~ 6/30일 까지 단독 할인
-                    </div>
-                </a>
-            </div>
-            <div class="popular">
-                <a href="#">
-                    <h3>여름 휴가 랭킹 1위 /제주</h3>
-                    <p>떠나요 둘이서~</p>
-                    <img alt="" src="/images/jeju/tour1.jpg">
-                    <div class="popInfo2">
-                        ~ 7/30일 까지 단독 할인
-                    </div>
-                </a>
-            </div>
-            <div class="popular">
-                <a href="#">
-                    <h3>얼리버드 상품</h3>
-                    <p>제주 성산봉</p>
-                    <img alt="" src="/images/jeju/tour11.jpg">
-                    <div class="popInfo2">
-                        ~ 4/30일 까지 단독 할인
-                    </div>
-                </a>
-            </div>
-            <div class="popular">
-                <a href="#">
-                    <h3>일본 땡처리 항공</h3>
-                    <p>친구와 같이 떠나는 도쿄 디즈니랜드</p>
-                    <img alt="" src="/images/japan/land.jpg">
-                    <div class="popInfo2">
-                        ~ 7/30일 까지 단독 할인
-                    </div>
-                </a>
-            </div>
-            <div class="popular">
-                <a href="#">
-                    <h3>절호의 찬스</h3>
-                    <p>만리장성</p>
-                    <img alt="" src="/images/china/manri2.jpg">
-                    <div class="popInfo2">
-                        ~ 7/30일 까지 단독 할인
-                    </div>
-                </a>
-            </div>
-            <div class="popular">
-                <a href="#">
-                    <h3>특가 상품</h3>
-                    <p>청나라 시대의 궁, 원명원</p>
-                    <img alt="" src="/images/china/wonmyung.jpg">
-                    <div class="popInfo2">
-                        ~ 6/30일 까지 단독 할인
-                    </div>
-                </a>
-            </div>
-            <div class="popular">
-                <a href="#">
-                    <h3>테마 찬스 상품 / 제주 애월읍</h3>
-                    <p>효리네 민박의 그 곳</p>
-                    <img alt="" src="/images/jeju/tour13.jpg">
-                    <div class="popInfo2">
-                        ~ 8/30일 까지 단독 할인
-                    </div>
-                </a>
-            </div>
-
-        </section>
-        <section id="section4">
-            {% if banner1 == null %}
-                <div class="bannerBox" id="banner1">
-                    <h3>그리스 + 산토리니 5박 6일</h3>
-                    <p>마지막 찬스, 서울 출발</p>
-                    <img alt="" src="/images/santo.jpg">
+    <section id="section3">
+        <div class="popular" id="first">
+            <a href="#">
+                <h3>일본 특가 상품</h3>
+                <p>신주쿠 교엔 / 파격적인 가격</p>
+                <img alt="" src="/images/japan/sinjuku.jpg">
+                <div id="popInfo">
+                    ~ 6/30일 까지 단독 할인
                 </div>
-            {% else %}
-            <div class="bannerBox" id="banner1">
-                <h3>{{banner1.title}}</h3>
-                <p>{{banner1.content}}</p>
-                <img alt="" src="displayFile/banner?filename={{banner1.pic }}">
-            </div>
-            {% endif %}
-
-            {% if banner2 == null %}
-                <div class="bannerBox">
-                    <h3>진짜 오사카를 만나다</h3>
-                    <p>간사이 미니 패스, 대구 출발</p>
-                    <img alt="" src="/images/osaka.jpg">
+            </a>
+        </div>
+        <div class="popular">
+            <a href="#">
+                <h3>여름 휴가 랭킹 1위 /제주</h3>
+                <p>떠나요 둘이서~</p>
+                <img alt="" src="/images/jeju/tour1.jpg">
+                <div class="popInfo2">
+                    ~ 7/30일 까지 단독 할인
                 </div>
-            {% else %}
-            <div class="bannerBox">
-                <h3>{{banner2.title}}</h3>
-                <p>{{banner2.content}}}</p>
-                <img alt="" src="displayFile/banner?filename={{banner2.pic}}">
-            </div>
-            {% endif %}
-        </section>
+            </a>
+        </div>
+        <div class="popular">
+            <a href="#">
+                <h3>얼리버드 상품</h3>
+                <p>제주 성산봉</p>
+                <img alt="" src="/images/jeju/tour11.jpg">
+                <div class="popInfo2">
+                    ~ 4/30일 까지 단독 할인
+                </div>
+            </a>
+        </div>
+        <div class="popular">
+            <a href="#">
+                <h3>일본 땡처리 항공</h3>
+                <p>친구와 같이 떠나는 도쿄 디즈니랜드</p>
+                <img alt="" src="/images/japan/land.jpg">
+                <div class="popInfo2">
+                    ~ 7/30일 까지 단독 할인
+                </div>
+            </a>
+        </div>
+        <div class="popular">
+            <a href="#">
+                <h3>절호의 찬스</h3>
+                <p>만리장성</p>
+                <img alt="" src="/images/china/manri2.jpg">
+                <div class="popInfo2">
+                    ~ 7/30일 까지 단독 할인
+                </div>
+            </a>
+        </div>
+        <div class="popular">
+            <a href="#">
+                <h3>특가 상품</h3>
+                <p>청나라 시대의 궁, 원명원</p>
+                <img alt="" src="/images/china/wonmyung.jpg">
+                <div class="popInfo2">
+                    ~ 6/30일 까지 단독 할인
+                </div>
+            </a>
+        </div>
+        <div class="popular">
+            <a href="#">
+                <h3>테마 찬스 상품 / 제주 애월읍</h3>
+                <p>효리네 민박의 그 곳</p>
+                <img alt="" src="/images/jeju/tour13.jpg">
+                <div class="popInfo2">
+                    ~ 8/30일 까지 단독 할인
+                </div>
+            </a>
+        </div>
 
-        <section id="section5">
-            <div id="counsel" class="infoBox">
-                <h3>여행 상담</h3>
-                <p>고객 센터</p>
-                <p class="big" style="letter-spacing: 0.15em;">1588-0000</p>
-            </div>
+    </section>
+    <section id="section4">
+        {% if banner1 == null %}
+        <div class="bannerBox" id="banner1">
+            <h3>그리스 + 산토리니 5박 6일</h3>
+            <p>마지막 찬스, 서울 출발</p>
+            <img alt="" src="/images/santo.jpg">
+        </div>
+        {% else %}
+        <div class="bannerBox" id="banner1">
+            <h3>{{banner1.title}}</h3>
+            <p>{{banner1.content}}</p>
+            <img alt="" src="displayFile/banner?filename={{banner1.pic }}">
+        </div>
+        {% endif %}
 
-            <div id="workTime" class="infoBox">
-                <h3>업무 시간</h3>
-                <p><span class="bold">평일 </span>09:00 ~ 18:00</p>
-                <p><span class="bold">주말/공휴일 </span>휴무</p>
-            </div>
+        {% if banner2 == null %}
+        <div class="bannerBox">
+            <h3>진짜 오사카를 만나다</h3>
+            <p>간사이 미니 패스, 대구 출발</p>
+            <img alt="" src="/images/osaka.jpg">
+        </div>
+        {% else %}
+        <div class="bannerBox">
+            <h3>{{banner2.title}}</h3>
+            <p>{{banner2.content}}}</p>
+            <img alt="" src="displayFile/banner?filename={{banner2.pic}}">
+        </div>
+        {% endif %}
+    </section>
 
-            <div id="shortcutBtns" class="infoBox">
-                <a href="/customer/tourlandBoardNotice">공지사항</a>
-                <a href="/customer/tourlandBoardFAQ">FAQ</a>
-                <a href="/customer/tourlandCustBoard">여행 후기</a>
-                <a href="/customer/tourlandPlanBoard">상품 문의사항</a>
-            </div>
+    <section id="section5">
+        <div id="counsel" class="infoBox">
+            <h3>여행 상담</h3>
+            <p>고객 센터</p>
+            <p class="big" style="letter-spacing: 0.15em;">1588-0000</p>
+        </div>
 
-            <div id="slideBoxMain" style="cursor: pointer">
-                <div id="slExit" style="position: absolute; left:-18px; top:200px; background:mistyrose; width:18px;">
+        <div id="workTime" class="infoBox">
+            <h3>업무 시간</h3>
+            <p><span class="bold">평일 </span>09:00 ~ 18:00</p>
+            <p><span class="bold">주말/공휴일 </span>휴무</p>
+        </div>
+
+        <div id="shortcutBtns" class="infoBox">
+            <a href="/customer/tourlandBoardNotice">공지사항</a>
+            <a href="/customer/tourlandBoardFAQ">FAQ</a>
+            <a href="/customer/tourlandCustBoard">여행 후기</a>
+            <a href="/customer/tourlandPlanBoard">상품 문의사항</a>
+        </div>
+
+        <div id="slideBoxMain" style="cursor: pointer">
+            <div id="slExit" style="position: absolute; left:-18px; top:200px; background:mistyrose; width:18px;">
                     <span id="arrowSide" style="width:18px; 25px;"><i class="fas fa-caret-right"
                                                                       style="margin-left:8px;" id="arrows"></i></span>
-                </div>
-                <ul>
-                    <li style="background: mistyrose;"><a href="/customer/tourlandMyReserv" style="display:block;">예약확인/결제</a>
-                    </li>
-                    <li>최근 본 상품</li>
-                    <li style="margin-bottom:10px; height:130px;">
-                        {% if currentProduct.pic == null %}
-                            <span>최근 본 상품이 없습니다.</span>
-                        {% else %}
-                        <img src="displayFile/product?filename={{currentProduct.pic}}"
-                             style="width:100px; height: 100px;" class="currentP1">
-                        <span style="width:100px; white-space:nowrap; overflow: hidden; display: block;"
-                              class="currentP1">{{currentProduct.pname }}</span>
-                        {% endif %}
-                    </li>
-                    <li style="margin-bottom:10px; height:130px;">
-                        {% if currentProduct.pic == null %}
-                            <div></div>
-                        {% else %}
-
-                        <img src="displayFile/product?filename={{currentProduct2.pic}}}"
-                             style="width:100px; height: 100px; " class="currentP2">
-                        <span style="width:100px; white-space:nowrap; overflow: hidden; display: block;"
-                              class="currentP2">{{currentProduct2.pname }}</span>
-                        {% endif %}
-                    </li>
-                </ul>
-                <span id="slSpan"><i class="fas fa-angle-up" style="color:silver;"></i> Top</span>
             </div>
-        </section>
+            <ul>
+                <li style="background: mistyrose;"><a href="/customer/tourlandMyReserv"
+                                                      style="display:block;">예약확인/결제</a>
+                </li>
+                <li>최근 본 상품({{lastViewedCount}} 개)</li>
+                <li style="margin-bottom:10px; height:130px;">
+                {% if lastViewedCount  < 1 %}
+                <span>최근 본 상품이 없습니다.</span>
+                {% else %}
+                    {% for i in range(0, lastViewedItems.length) %}
+                <img width="80" src="displayFile/product?filename={{ lastViewedItems[i].ppic }}" style="width:100px; height: 100px;" class="currentP1">
+                <span style="width:100px; white-space:nowrap; overflow: hidden; display: block;"
+                      class="currentP1">{{lastViewedItems[i].pname }}</span>
+                    {% endfor %}
+                {% endif %}
+                </li>
+            </ul>
+            <span id="slSpan"><i class="fas fa-angle-up" style="color:silver;"></i> Top</span>
+        </div>
+    </section>
 
-    </div>
-    {% endblock %}
+</div>
+{% endblock %}
 
 
 {% block Footer %}

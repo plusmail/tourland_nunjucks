@@ -5,7 +5,7 @@ exports.viewedProducts = async (req,pno, next) =>{
 
     if (req.isAuthenticated()) {
         // 로그인된 사용자의 경우 viewedProducts 배열에 추가합니다.
-        let viewedProduct = req.user.viewedProducts;
+        let viewedProduct = req.user.viewedProducts || [];
         console.log("viewedP->>>> isAuth", req.user.viewedProducts);
 
 

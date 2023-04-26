@@ -86,33 +86,18 @@ const productCurrent = async (productId)=>{
 // 투어랜드 메인 페이지
 router.get('/',   async (req, res, next) => {
 
-    if(req.user){
-        console.log("get / ->",req.user.viewedProducts);
 
-    }
+    let vpl= viewedProductsList(req, next);
 
-    // // 최근 본 상품 리스트에 추가
-    // if (!req.session.recentlyViewed) {
-    //     req.session.recentlyViewed = [];
-    // }
-    // req.session.recentlyViewed.push(14);
-    // req.session.recentlyViewed.push(15);
-    // req.session.recentlyViewed.push(16);
-
-    // const recentlyViewed = req.session.recentlyViewed;
-
-    // const currentProductViewed = [];
-
-    // const products = recentlyViewed.map(productId => {
-    //     try{
-    //         currentProductViewed.push(productCurrent(productId));
-    //     }catch (error){
-    //         console.log(error);
-    //     }
-    // });
-
-    // console.log("main->", req.user.currentProductViewed);
-
+    let lastViewed = await product.findAndCountAll({
+        raw: true,
+        attributes: ['id','pname','ppic','pprice'],
+        where: {
+            id: {[Op.in]: vpl}
+        }
+    })
+    console.log("/ lastViewed------------>", lastViewed);
+    const {count: lastViewedCount, rows: lastViewedItems} = lastViewed;
 
     let Auth, AuthEmp, Manager, login;
     if(req.session.user == undefined){
@@ -234,7 +219,9 @@ router.get('/',   async (req, res, next) => {
         AuthEmp,
         login,
         Manager,
-        searchkeyword
+        searchkeyword,
+        lastViewedCount,
+        lastViewedItems
     });
 
 });
@@ -767,37 +754,8 @@ router.get("/tourlandProductDetail/:pno", async (req, res, next) => {
     let {Auth, AuthEmp, Manager, login} = sessionCheck(req, res);
     const pno = req.params.pno;
     let {price, rdate, cnt, searchType, keyword} = req.query;
+    let vpr = viewedProducts(req, pno, next);
 
-    if (req.isAuthenticated()) {
-        // 로그인된 사용자의 경우 viewedProducts 배열에 추가합니다.
-        let viewedProduct = req.user.viewedProducts;
-        if (!viewedProduct.includes(pno)) {
-            viewedProduct.push(pno);
-        }
-
-        const updateResult = await user.update({
-            viewedProducts : viewedProduct,
-        },{
-            where : {userid : req.user.userid}
-        });
-  
-
-        // req.user.save(function (err, savedRecord) {
-        //     console.log("detail->>>>>>>", err, savedRecord);
-        //     if (err)
-        //      return res.json({ result: false, message: 'Error while saving user', data: null });
-        //     else
-        //      return res.json({ result: true, message: 'Hotel record saved successfully!', data: savedRecord.hotels });
-        //    });
-
-    } else {
-    // 로그인되지 않은 사용자의 경우 쿠키를 사용하여 viewedProducts 배열에 추가합니다.
-        const viewedProducts = req.cookies.viewedProducts || [];
-        if (!viewedProducts.includes(pno)) {
-            viewedProducts.push(pno);
-            res.cookie('viewedProducts', viewedProducts, { maxAge: 604800000 });
-        }
-    }
 
     try {
 
