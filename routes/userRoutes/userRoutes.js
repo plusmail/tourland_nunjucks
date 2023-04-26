@@ -38,6 +38,7 @@ const parser = bodyParser.urlencoded({extended: false});
 const {upload} = require("../../controller/fileupload");
 const passport = require("passport");
 const {isLoggedIn, isNotLoggedIn} = require("../../middlewares");
+const {viewedProducts,viewedProductsList} = require("../../controller/userRoutesContorller");
 
 
 // let user = {
