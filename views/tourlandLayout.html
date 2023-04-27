@@ -9,18 +9,38 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
 <script src="https://kit.fontawesome.com/6f2f0f2d95.js"></script>
 
-<link rel="stylesheet" type="text/css" href="./stylesheets/tourlandMain.css"/>
+<link rel="stylesheet" type="text/css" href="/stylesheets/tourlandMain.css"/>
+
+{% block registerFormCss %}
+{% endblock %}
 
 <body>
+{% block header %}
+{% endblock %}
 <div id="container">
-    {% block header %}
-    {% endblock%}
 
     {% block script %}
-    {% endblock%}
+    {% endblock %}
+
+    {% block registerFormScript %}
+    {% endblock %}
+
 
     {% block section %}
-    {% endblock%}
+    {% endblock %}
+
+    {% block loginScript %}
+    {% endblock %}
+
+    {% block loginSectionBlock %}
+    {% endblock %}
+
+    {% block loginScriptButton %}
+    {% endblock %}
+
+
+    {% block registerFormSection %}
+    {% endblock %}
 
 
     {% block Footer%}

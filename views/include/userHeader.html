@@ -6,14 +6,14 @@
 <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 <script src="https://kit.fontawesome.com/6f2f0f2d95.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/stylesheets/userHeader.css"/>
+<link rel="stylesheet" type="text/css" href="/stylesheets/tourlandLoginForm.css"/>
 
 
 <header>
     <nav id="nav1">
         <ul>
-            <script> console.log({{user.userid}}) </script>
             {% if user ===  undefined %}
                 <li><a href="/customer/tourlandBoardNotice">고객센터</a></li>
                 <li><a href="/customer/tourlandRegister">회원가입</a></li>

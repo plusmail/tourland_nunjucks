@@ -40,6 +40,12 @@ const passport = require("passport");
 const {isLoggedIn, isNotLoggedIn} = require("../../middlewares");
 const {viewedProducts,viewedProductsList} = require("../../controller/userRoutesContorller");
 
+router.use((req, res, next)=>{
+    res.locals.user = req.user;
+    next();
+});
+  
+
 
 // let user = {
 //     Auth: {
@@ -99,23 +105,6 @@ router.get('/',   async (req, res, next) => {
     console.log("/ lastViewed------------>", lastViewed);
     const {count: lastViewedCount, rows: lastViewedItems} = lastViewed;
 
-    let Auth, AuthEmp, Manager, login;
-    if(req.session.user == undefined){
-        Auth = user.Auth;
-        AuthEmp = user.AuthEmp;
-        Manager = user.Mananger;
-        login = user.login;
-    }
-    else {
-        Auth = req.session.user.Auth;
-        AuthEmp = req.session.user.AuthEmp;
-        Manager = req.session.user.Mananger;
-        login = req.session.user.login;
-    }
-    const currentProduct = {};
-    const currentProductPrice = {};
-    const currentProductPrice2 = {};
-    const currentProduct2 = {};
 
     const popup1 = await models.popup.findOne({
         raw: true,
@@ -166,62 +155,19 @@ router.get('/',   async (req, res, next) => {
         }
     });
 
-    let msg = `세션이 존재하지 않습니다.`
-
-    if (req.session.user) {
-        msg = `${req.session.user.User}`;
-        if(Auth != null){
-            Auth = {
-                username: req.session.user.User,
-                userid: req.session.user.Auth.userid,
-                userpass: req.session.user.Auth.userpass
-            };
-            Manager : {
-                name: req.session.user.Auth.username
-            }
-        }
-        if(AuthEmp != null){
-            Auth = {
-                username: req.session.user.User,
-                userid: req.session.user.AuthEmp.empid,
-                userpass: req.session.user.AuthEmp.emppass
-            };
-            AuthEmp = {
-                empname: req.session.user.User,
-                emprid: req.session.user.AuthEmp.empid,
-                emppass: req.session.user.AuthEmp.emppass
-            };
-            Manager = {
-                name :  req.session.user.AuthEmp.empname
-            }
-        }
-
-        login = req.session.user.login;
-    }
-
-    console.log("Auth============->", Auth, AuthEmp, msg);
-
     let {searchType, keyword, keyword2} = req.query;
     let searchkeyword = keyword;
 
 
+
     res.render('tourlandMain', {
-        // currentProductViewed,
-        currentProductPrice,
-        currentProductPrice2,
-        currentProduct,
-        currentProduct2,
         popup1: popup1,
         popup2,
         banner1,
         banner2,
-        Auth,
-        AuthEmp,
-        login,
-        Manager,
         searchkeyword,
         lastViewedCount,
-        lastViewedItems
+        lastViewedItems,
     });
 
 });
@@ -236,21 +182,12 @@ router.get('/tourlandRegister', function (req, res, next) {
     let Auth = null;
     let login = "";
 
-    let msg = `세션이 존재하지 않습니다.`
-    if (req.session.user) {
-        msg = `${req.session.user.User}`;
-        Auth = {username: req.session.user.User};
-        login = req.session.user.login;
-    }
 
-    console.log("Auth->", Auth, msg);
-
-    let Manager = {};
     let {searchType, keyword, keyword2} = req.query;
     let searchkeyword = keyword;
 
 
-    res.render("user/tourlandRegisterForm", {autoNo, Auth, login, Manager, searchkeyword, userVO});
+    res.render("user/tourlandRegisterForm", {searchkeyword, userVO});
 });
 // 회원가입 전송
 router.post('/tourlandRegister', async (req, res, next) => {
