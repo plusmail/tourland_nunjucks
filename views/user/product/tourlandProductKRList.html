@@ -158,20 +158,28 @@
                     {%  endfor %}
                     {{airPrice}}
                     {% set hotel = product.hotelId_hotels %}
+                    {% set checkin = 0 %}
+                    {% set checkout = 0 %}
+                    {% set checkinDate = 0 %}
+                    {% set checkoutDate = 0 %}
+                    {% set checkinTime=0 %}
+                    {% set checkoutTime = 0 %}
+                    {% set dateDiff =0 %}
+                    {% set hotelPrice=0 %}                    
                     {% for h in hotel %}
-                    {{h.checkin}}
                             {% set checkin = h.checkin %}
                             {% set checkout = h.checkout %}
                             {% set checkinDate = checkin %}
                             {% set checkoutDate = checkout %}
                             {% set checkinTime = checkinDate.time / (1000 * 60 * 60 * 24) %}
+                            {{checkinTime}}
                             {% set checkoutTime = checkoutDate.time / (1000 * 60 * 60 * 24) %}
                             {% set dateDiff = checkoutTime - checkinTime %}
                             {% set hotelPrice = h.price * dateDiff %}
 
-                            {{hotelPrice}}
                     {% endfor %}
-                        {% set tour = product.tourId_tours %}
+                    {{hotelPrice}}
+                    {% set tour = product.tourId_tours %}
                         {% for t in tour %}
                             {% set tourPrice = tourPrice + t.tprice %}
                         {% endfor %}
