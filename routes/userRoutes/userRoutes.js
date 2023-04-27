@@ -47,7 +47,7 @@ router.use((req, res, next)=>{
 
 const logger = require('../../winston')('server');
  
-logger.info('winston info log test');
+
 logger.error('winston error log test');
 
 
@@ -58,7 +58,7 @@ const productCurrent = async (productId)=>{
             id: productId
         }
     });
-    console.log("p111111111->", productL.ppic);
+    logger.info('productCurrent->',productL.ppic);
     return productL;
 }
 // const {count: totalItems, rows: tutorials} = countlist;
@@ -154,20 +154,13 @@ router.get('/',   async (req, res, next) => {
 // 회원가입
 router.get('/tourlandRegister', function (req, res, next) {
 
-    let autoNo = "";
-
-    let userVO = {};
-
-    let Auth = null;
-    let login = "";
-
-
     let {searchType, keyword, keyword2} = req.query;
     let searchkeyword = keyword;
 
-
-    res.render("user/tourlandRegisterForm", {searchkeyword, userVO});
+    res.render("user/tourlandRegisterForm", {searchkeyword});
 });
+
+
 // 회원가입 전송
 router.post('/tourlandRegister', async (req, res, next) => {
     let query;
@@ -182,7 +175,7 @@ router.post('/tourlandRegister', async (req, res, next) => {
     });
 
     if (userExists) {
-        res.status(401).json({message: "Email is already in use."});
+        res.status(401).json({message: "User is is already in use."});
         return;
     }
 
