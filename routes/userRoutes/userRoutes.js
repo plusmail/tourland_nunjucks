@@ -534,7 +534,6 @@ router.get("/logout", (req, res, next) => {
 
 // KR 패키지 목록
 router.get("/tourlandProductKRList", async (req, res, next) => {
-    let {Auth, AuthEmp, Manager, login} = sessionCheck(req, res);
     const userid = req.params.userid;
     let {ddate, rdate, cnt, searchType, keyword} = req.query;
     const contentSize = Number(process.env.CONTENTSIZE); // 한페이지에 나올 개수
@@ -640,15 +639,11 @@ router.get("/tourlandProductKRList", async (req, res, next) => {
 
         if (list != null) {
             res.render("user/product/tourlandProductKRList", {
-                Auth,
-                AuthEmp,
-                login,
                 tourDays,
                 date,
                 capa, 
                 countlist,
                 list,
-                Manager,
                 searchkeyword,
                 error,
                 pagingData,

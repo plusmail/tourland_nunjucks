@@ -205,14 +205,12 @@
                                 </li>
                                 {% for(var i = pagingData.pnStart; i <= pagingData.pnEnd; i++){ %}
                                 <li
-                                {% if(i === pagingData.currentPage){ %} class="active"
-                                        {% } %}
+                                    {% if(i === pagingData.currentPage){ %} class="active"  {% } %}
                                 ><a href="?currentPage={%= i %}">{%= i %}</a></li>
                                 {% } %}
                                 <li
                                 {% if(pagingData.currentPage == pagingData.totalPages){ %} class="disabled"
-                                {% }else{ %} class="waves-effect"
-                                        {% } %}
+                                {% }else{ %} class="waves-effect" {% } %}
                                 >
                                     <a
                                             {% if(pagingData.currentPage < pagingData.totalPages){ %}
