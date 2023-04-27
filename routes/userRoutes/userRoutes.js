@@ -44,36 +44,12 @@ router.use((req, res, next)=>{
     res.locals.user = req.user;
     next();
 });
-  
 
+const logger = require('../../winston')('server');
+ 
+logger.info('winston info log test');
+logger.error('winston error log test');
 
-// let user = {
-//     Auth: {
-//         id: "0",
-//         username: "",
-//         userbirth: "",
-//         usertel: "",
-//         useraddr: "",
-//         userpassport: "",
-//         userid: "0",
-//         usersecess: "",
-//         useremail: ""
-//     },
-//     AuthEmp: {
-//         empno: "",
-//         empname: "",
-//         empbirth: "",
-//         emptel: "",
-//         empaddr: "",
-//         epmauth: "",
-//         empid: "",
-//         epmretired: ""
-//     },
-//     Mananger: {name: "", right: 1},
-//     User: "",
-//     login: "user",
-//     mypage: "mypageuser"
-// }
 
 const productCurrent = async (productId)=>{
     const productL = await product.findOne({
@@ -94,15 +70,18 @@ router.get('/',   async (req, res, next) => {
 
 
     let vpl= viewedProductsList(req, next);
-
-    let lastViewed = await product.findAndCountAll({
+    console.log("/ lastViewed------------1>", vpl);
+    let lastViewed=[]
+    if( vpl !== null){
+        lastViewed = await product.findAndCountAll({
         raw: true,
         attributes: ['id','pname','ppic','pprice'],
         where: {
             id: {[Op.in]: vpl}
         }
     })
-    console.log("/ lastViewed------------>", lastViewed);
+    console.log("/ lastViewed------------3>", lastViewed);
+    }
     const {count: lastViewedCount, rows: lastViewedItems} = lastViewed;
 
 
@@ -233,18 +212,25 @@ router.get('/idCheck/:userid', async (req, res, next) => {
     try {
         let checkUserid = await models.user.findOne({
             raw: true,
-            attributes: ['userid'],
+            attributes: ['userid','usersecess'],
             where: {
                 userid: userid
             }
         })
 
-        if (checkUserid != null) {
+        console.log("idCheck---->", checkUserid);
+
+        if (checkUserid !== null){
             console.log("check->", checkUserid.userid);
             if (checkUserid.userid != null) {
-                res.status(200).send("exist");
+                res.status(201).send("exist");
             }
-        } else {
+            else if(checkUserid.usersecess == 0) {
+                res.status(202).send("usersecess");
+            }else{
+                
+            }
+        }else{
             res.status(200).send("notexist");
         }
     } catch (e) {

@@ -126,57 +126,26 @@
 
         $("#btnCheck").click(function () {
             $(".errorMsg").css("display", "none");
-            let empid = $("input[name='userid']").val();
-            //아이디 중복 ajax로 처리하기
-
+            let userid = $("input[name='userid']").val();
+            //아이디 중복 ajax를 axios로 변경 처리하기
             axios({
-                url: "/customer/idCheck/" + empid,, // 통신할 웹문서
-                method: 'post', // 통신할 방식
-                data: { // 인자로 보낼 데이터
-                  id: id
-                },
+                url: "/customer/idCheck/" + userid, // 통신할 웹문서
+                method: 'get', // 통신할 방식
                 responseType:'json',
                 responseEncoding:'utf-8'
-              }).then((res)=>{
-                console.log("axios1->", res);
-                console.log("axios2->", res.data.responseText);
-                console.log("axios3->", res.status);
+                }).then((res)=>{
 
-                if(res.data.responseText === "loginsuccess"){
-                    confirm("로그이 완료되었습니다.첫 페이지로 이동합니다.");
-                    location.href = "/customer";
-                }
-              }) .catch((error)=> {
-                console.log("555555->", error.response.status);
-                if(error.response.status == 409){
-                    $("#errormsg").text(`탈퇴한 회원입니다. 재가입하세요.${error.response.statusText}`);
-                }else{
-                    $("#errormsg").text(`인증에 실패했습니다. 재 시도 하세요..${error.response.statusText}`);
-                }
-            })
-              .finally(function () {
-                // always executed
-              });
-
-
-            $.ajax({
-                url: "idCheck/" + empid,  //이 커맨드에서 유저아이디와 사원 아이디를 모두 확인하기에
-                type: "get",
-                dataType: "text",
-                success: function (res) {
-                    console.log(res);
-                    didUcheckId = true;
-                    if (res == "exist") {
+                    if (res.status == 200) {
+                        $("input[name='userid']").next().next().next().next().css("display", "inline");
+                        didUcheckId = true;
+                    } else {
                         $("input[name='userid']").next().next().next().css("display", "inline");
                         validId = false;
-                    } else {
-                        $("input[name='userid']").next().next().next().next().css("display", "inline");
                     }
-                }
-
+                }).catch((error)=> {
+                        $("#errormsg").text(`시스템 에러 관리자에게 문의. ${error.response.statusText}`);
+                })
             })
-
-        })
 
 
         //아이디 입력값이 달라질 때 마다 아이디 체크 여부를 초기화
