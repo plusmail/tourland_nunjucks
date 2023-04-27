@@ -645,7 +645,7 @@ router.get("/tourlandProductKRList", async (req, res, next) => {
                 login,
                 tourDays,
                 date,
-                capa,
+                capa, 
                 countlist,
                 list,
                 Manager,
