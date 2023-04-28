@@ -636,6 +636,8 @@ router.get("/tourlandProductKRList", async (req, res, next) => {
         let date = '';
         let capa = '';
 
+        console.log("KRList------>", list);
+
 
         if (list != null) {
             res.render("user/product/tourlandProductKRList", {
@@ -1461,8 +1463,6 @@ router.post('/tourlandPlanBoardRegister', async (req, res, next) => {
 //-----------------------------------------여행후기여행후기여행후기여행후기여행후기여행후기여행후기여행후기여행후기----------------------------------------------------------------
 // 여행 후기 게시판 목록 보기기
 router.get('/tourlandCustBoard', async (req, res, next) => {
-    // userHeader 에서 필요한 변수들
-    let {Auth, AuthEmp, Manager, login} = sessionCheck(req, res);
     let searchkeyword = "";
 
     const contentSize = 5 // 한페이지에 나올 개수
@@ -1488,43 +1488,39 @@ router.get('/tourlandCustBoard', async (req, res, next) => {
 
     const pagingData = getPagingData(listCount, currentPage, limit);
     let cri = currentPage;
-    res.render('user/board/tourlandCustBoard', {
-        Auth, AuthEmp, login, Manager, searchkeyword, cri, list, pagingData})
+    res.render('user/board/tourlandCustBoard', {searchkeyword, cri, list, pagingData})
 })
 
 // 여행 후기 게시글 보기
-router.get('/tourlandCustBoardDetail', async (req, res, next) => {
+router.get('/tourlandCustBoardDetail/:id', async (req, res, next) => {
     // userHeader 에서 필요한 변수들
-    let {Auth, AuthEmp, Manager, login} = sessionCheck(req, res);
-    let mypage = req.session.user.mypage;
-    let username = req.session.user.Auth.username;
-    let searchkeyword = "";
 
     console.log('=---쿼리에서 id 추출 ---', req.query.id);
+    const {id} = req.params;
+    const {searchkeyword, searchtype} = req.query
 
     let custBoardVO =
         await models.custboard.findOne({
             raw: true,
             where: {
-                id: req.query.id
+                id
             }
         });
     console.log('----게시글보기====', custBoardVO);
+
     // custBoardVO 테이블에 있는 자료중 1개만갖고오기
-
-    console.log('------현재사용자????----->>>>', Auth);
-    console.log('-------현재사용자mypage??------', mypage);
-
+    // let mypage = {};
+    // if (req.user.role === 'basic') {
+    //     mypage = "basic"
+    // } else if (req.user.role === 'admin') {
+    //     mypage = "admin"
+    // }
 
     res.render('user/board/tourlandCustBoardDetail', {
-        custBoardVO,
-        Auth,
-        AuthEmp,
-        login,
-        Manager,
         searchkeyword,
-        mypage,
-        username
+        // mypage,
+        // username
+        custBoardVO
     });
 })
 

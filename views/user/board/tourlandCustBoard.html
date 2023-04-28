@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+    <link href="/stylesheets/paging.css" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/boardStyle.css" rel="stylesheet" type="text/css" />
+    <style>
+        section nav ul li:nth-child(3) {
+            background: mistyrose;
+        }
+
+        #btnWrite{
+            width: 100px;
+            padding:5px;
+            background:mistyrose;
+            border:none;
+            margin-left:40px;
+        }
+    </style>
+</head>
+
+<body>
+{%- include("../../include/userHeader.html")%}
+<section>
+    <div id="review">
+        <br>
+        <h1>여행 후기</h1>
+        --------------------------------------
+        <br>
+        <button onclick="btnWrite()" class="btn btn-primary" id="btnWrite">글쓰기</button>
+        <table id="reserv" style="margin-top:15px;">
+            <tr>
+                <th class="nono">번호</th>
+                <th class="thTitle">제목</th>
+                <th>작성자</th>
+                <th class="lastTh">작성 일자</th>
+
+            </tr>
+
+            {% for custBoardList in list %}
+                <tr class="custBoardList" data-click="{{custBoardList.id}}">
+                    <td class="nono">{{custBoardList.id}}</td>
+                    <td class="thTitle">
+                        <a href="/customer/tourlandCustBoardDetail/{{custBoardList.id}}?page={{cri}}" style="text-decoration: none;">
+                            {{custBoardList.title}}</a>
+                    </td>
+                    <td>{{custBoardList.writer}}</td>
+                    <td>{{custBoardList.regdate}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {%- include("../../include/pagination.html") %}
+</section>
+<script>
+
+
+    // //글쓰기 버튼 누르면
+    // $("#btnWrite").click(function(){
+    //     location.href="tourlandCustBoardRegister";
+    // })
+    function btnWrite() {
+        location.href = 'tourlandCustBoardRegister';
+    }
+</script>
+
+
+{%- include("../../include/userFooter.html")%}
+</body>
+</html>

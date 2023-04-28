@@ -26,6 +26,7 @@ exports.viewedProducts = async (req,pno, next) =>{
         const viewedProduct = req.cookies.viewedProducts || [];
         if (!viewedProduct.includes(pno)) {
             viewedProduct.push(pno);
+            if(req.cookie ?? false)
             req.cookie('viewedProducts', viewedProduct, { maxAge: 604800000 });
         }
 

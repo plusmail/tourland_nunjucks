@@ -29,7 +29,7 @@ router.get('/', async function (req, res, next) {
 router.get('/displayFile/:whichOne', async  (req, res, next) => {
     const choice = req.params.whichOne;
     const query = req.query.filename;
-    const base_dir = "public/displayFile";
+    const base_dir = "displayFile/";
 
     let path;
     if( choice === "popup"){
@@ -46,7 +46,7 @@ router.get('/displayFile/:whichOne', async  (req, res, next) => {
     // }
     if ( choice === "product" || (choice === "productSmall")){
         path = base_dir + "/product" + query;
-        console.log("10000000000000000000");
+        // console.log("10000000000000000000");
     }
     if ( choice === "practice"){
         path = base_dir + "/practice" + query;
