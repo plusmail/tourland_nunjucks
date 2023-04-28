@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="/stylesheets/boardStyle.css" rel="stylesheet" type="text/css" />
+<style>
+
+#datailRealContent{
+	width: 700px;
+    margin: 0 auto;
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+#respond{
+	background-color: #D5D5D5;
+    margin-top: 52px;
+    padding: 75px;
+}
+
+</style>
+</head>
+<body>
+	{%- include("../../include/userHeader.ejs")%}
+		<section>
+			{%- include("../../include/userBoardMenu.ejs")%}
+		    <div id="detailDiv">
+				<div>
+				  <br>
+				  <p>고객님의 문의사항 입니다. </p>
+				</div>
+				<div id="detailContent">
+				   <ul id="datailUl">
+				   <li> {%=plan.id%} </li>
+				   <li class="detailLi"> {%=plan.title%} </li>
+				   <li> {%=plan.writer%}</li>
+				   <li> {%=plan.regdate%}</li>
+				   </ul>
+				   <div id="datailRealContent">
+
+					   {%=plan.content%}
+				   </div>
+				   
+				   	<!-- 답변이 있을때 나오게 -->
+				   	{% if(plan.answer ==1) {%}
+				   <hr>
+					   	<div id="respond">
+					   			{%=plan.respond%}
+					   	</div>
+					{% } %}
+<!--					로그인한 사람이 매니저 이면, 답변관리 메뉴 보이기-->
+<!--					그 외는 안보이게 하기 -->
+				   <!-- 답변  -->
+					{% if (login === "manager") { %}
+				   	   	<div id="detailComment">
+				     	 	<button id="reply">답변관리</button>
+				   		</div>
+					{%} %}
+				</div>
+		     </div>
+		</section>
+<script>
+	$("#reply").click(function(){
+		var answer ="{%=plan.answer%}";
+		var id = "{%=plan.id%}";
+		var respond = "{%=plan.respond%}";
+		var page = "{%=cri.page%}";
+		if(answer==0){
+			location.href = "/manager/planBoardDetail?id="+id;
+		}else if(answer==1){
+			location.href = "/manager/planBoardModify?no="+no+"&respond="+respond;
+		}
+	})
+</script>
+	{%- include("../../include/userFooter.ejs") %}
+</body>
+</html>

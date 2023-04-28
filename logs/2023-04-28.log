@@ -1,1 +1,43 @@
+<<<<<<< HEAD
 [31m[2023-04-28 08:52:52] [ERROR] server:[39m winston error log test
+=======
+[31m[2023-04-28 09:16:55] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 09:19:17] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 09:25:52] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 09:43:19] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 09:47:37] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 11:13:09] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 11:40:39] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 13:38:18] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 13:39:04] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 14:50:15] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 14:51:36] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 14:58:37] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 15:43:29] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 15:59:15] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:04:19] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:05:47] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:11:47] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:13:48] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:14:12] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:19:54] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:20:24] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:20:33] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:22:16] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:23:18] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:30:17] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:30:42] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:31:03] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:31:31] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:33:21] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:33:46] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:35:46] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:37:15] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:37:21] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:37:56] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:51:36] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:51:54] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:52:16] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:53:20] [ERROR] server:[39m winston error log test
+[31m[2023-04-28 17:53:25] [ERROR] server:[39m winston error log test
+>>>>>>> 5eb57a19b3f1b6ddf5874234d97a15bed6e5c0f3

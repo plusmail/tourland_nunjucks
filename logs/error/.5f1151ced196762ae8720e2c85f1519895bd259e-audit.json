@@ -11,9 +11,15 @@
             "hash": "608895320b0c64e9a7557afb4c3f4a9b815da67e2109d53f907d9a2ca1a7bc42"
         },
         {
+<<<<<<< HEAD
             "date": 1682639572840,
             "name": "logs/error/2023-04-28.error.log",
             "hash": "054d7c55fedac419291ebb629e4d0ddd546c4bb2df7579905f4d596c85724fe9"
+=======
+            "date": 1682641015875,
+            "name": "logs/error/2023-04-28.error.log",
+            "hash": "fbaac9d982d3f3bd6358982cc90df3afa8944e971a0cbbbc70ba99bf182f7ba6"
+>>>>>>> 5eb57a19b3f1b6ddf5874234d97a15bed6e5c0f3
         }
     ],
     "hashType": "sha256"

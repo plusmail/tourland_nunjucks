@@ -1,0 +1,53 @@
+<!--  페이징 기능 시작  -->
+
+<div class="box-footer">
+    <div class='text-center'>
+        <ul class="pagination">
+            {% if pagingData.totalPages !== 0  %}
+            <div class="" style="text-align:center;">
+                <ul class="pagination">
+                    <li {% if pagingData.currentPage == 1  %} 
+                    class="disabled" 
+                    {% else %} 
+                    class="waves-effect" 
+                    {% endif %}
+                     >
+                        <a
+                                {% if pagingData.currentPage > 1 %}
+                                href="?currentPage={{pagingData.currentPage-1 }}"
+                                {% endif %}
+                        >
+                            <i class="material-icons">prev</i>
+                        </a>
+                    </li>
+                    {% for i in range(pagingData.pnStart, pagingData.pnEnd) %}
+                        <li
+                        {% if i != pagingData.currentPage %} 
+                            class="active"
+                        {% endif %}
+                        >
+                        <a href="?currentPage={{i}}">{{i}}</a></li>
+                    {% endfor %}
+                        <li
+                        {% if pagingData.currentPage === pagingData.totalPages %} 
+                                class="disabled"
+                        {% else %} 
+                        class="waves-effect"
+                        {% endif %} 
+                        >
+                        <a
+                                {% if pagingData.currentPage < pagingData.totalPages %}
+                                href="?currentPage={{pagingData.currentPage+1 }}"
+                                {% endif %}
+                                class="waves-effect">
+                            <i class="material-icons">next</i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            {% endif %}
+
+        </ul>
+    </div>
+</div>
+<!--  페이징 기능 끝  -->

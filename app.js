@@ -33,6 +33,12 @@ nunjucks.configure('views', {
     watch : true,
 })
 
+const env = new nunjucks.Environment();
+
+env.addGlobal('jsonify', function(str) {
+  return JSON.stringify(str);
+});
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(bodyParser.json());

@@ -1,6 +1,298 @@
 {%- include("../../include/userHeader.ejs") %}
 <link rel="stylesheet" type="text/css" href="/stylesheets/tourlandProductJPList.css"/>
+<script>
+    $(function(){
+    	$("#mainSearchIcon").click(function(){
+            var mainKeyword = $("#mainSearchKeyword").val();
+            
+            if(mainKeyword == ""){
+            	alert("검색어를 입력해주세요");
+            	return false;
+            }
+    		location.href="/tourland/customer/tourlandSearch/default?searchType=&keyword="+mainKeyword+"&keyword2=";
+    	})
+    })
+</script>
+<style>
+    section {
+        width: 1000px;
+        margin: 0 auto;
+    }
+    
+    div#pkgTitleBox {
+        height: 230px;
+        border-bottom: 1px solid #ededed;
+    }
+    
+    div#pkgTitleBox h1 {
+        height: 80px;
+        line-height: 80px;
+    }
+    
+    div#pkgContentBox {
+        padding-top: 50px;
+    }
+    
+    div#pkgSearch {
+        width: 300px;
+        background: #ededed;
+        float: left;
+    }
+    
+    div#pkgSearch h3 {
+        background: goldenrod;
+        height: 50px;
+        line-height: 50px;
+        text-indent: 10px;
+    }
+    
+    div#pkgSearch p {
+        height: 50px;
+        line-height: 50px;
+        text-indent: 10px;
+    }
+    
+    div#pkgSearch input {
+        width: 90%;
+        margin-left: 10px;
+    }
+    
+    div#pkgSearch select {
+        width: 90%;
+        margin-left: 10px;
+    }
+    
+    #pkgBtnBox {
+        text-align: center;
+    }
+    
+    button#pkgSearchBtn {
+        border: none;
+        width: 150px;
+        height: 30px;
+        background: #929292;
+    }
+    
+    div#pkgListWrap {
+        width: 650px;
+        padding: 0 20px 20px 30px;
+        overflow: hidden;
+    }
+    
+    #totalCnt {
+        font-weight: bold;
+    }
+    
+    div#pkgOrderBy {
+        height: 80px;
+        line-height: 80px;
+    }
+    
+    div#pkgOrderBy button {
+        border: none;
+        width: 100px;
+        height: 30px;
+    } 
+    
+    div.pkgImg {
+        width: 250px;
+        height: 180px;
+        margin-right: 10px;
+        float: left;
+    }
+    
+    div.pkgImg img {
+        width: 100%;
+        height : 200px;
+    }
+    
+    div.pkgInfoBox {
+        width: 90%;
+        height: 210px; 
+        padding: 20px;
+        border: 1px solid #ededed; 
+    }
+    
+    div.pkgInfoBox p {
+        height: 40px;
+    }
+    
+    div.pkgInfoBox .pkgTitle {
+        height: 80px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+    
+    .pkgPrice {
+        text-indent: 5px;
+        font-size: 19px;
+        color: maroon;
+        text-align: right;
+    }
+    
+    .pkgDate {
+        text-align: right;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    
+    .pkgReserv {
+        text-align: right;
+    }
+    
+    .pkgReservBtn {
+        border: none;
+        width: 100px;
+        height: 30px;
+    }
+    .pagination {
+        list-style : none;
+        margin-left : 150px; 
+        margin-top : 10px;
+    }
+    .pagination li {
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        float : left;
+        border : 1px solid lightgrey;
+    }
+    .pagination .active {
+        background-color : grey;
+    }   
+    
+    #listAll { margin-left: 420px; background: steelblue; color: #fff;}   
+    .pagination li .pageNumA { display: block; height: 100%;}
+    </style>
+<script> 
 
+    function replaceAll(str, searchStr, replaceStr) {
+        return str.split(searchStr).join(replaceStr);
+    }
+    /* yyyy-MM-dd 형식으로 변경하는 메서드  */
+    function getFormatDate(date,seperater){
+        var date = new Date(date);
+        var year = date.getFullYear();              //yyyy
+        var month = (date.getMonth()+1);          //M
+        month = month >= 9 ? month : '0' + month;  //month 두자리로 저장
+        var day = date.getDate();                   //d
+        day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+        return  year + seperater + month + seperater + day;
+    }
+    function calPrice(obj) {
+        var price = 0;
+        $(obj.air).each(function(i,obj){
+             if(obj.seat=='E') {
+                 price += obj.price;
+             } 
+         })
+         $(obj.hotel).each(function(i,obj){
+             if(obj.roomtype=='N') {
+                 var checkinDate = new Date(obj.checkin);
+                 var checkoutDate = new Date(obj.checkout);
+                 var dateDiffDate = new Date();
+                 dateDiffDate.setDate(checkoutDate.getDate()-checkinDate.getDate());
+                 price += (obj.price * (dateDiffDate.getDate())); 
+             } 
+         }) 
+         $(obj.tour).each(function(i,obj){
+             price += obj.tprice;  
+         })
+         return price.toLocaleString();
+    }
+    function appendAjaxData(rs,url,classname) {
+         $(rs.list).each(function(i,obj){
+             var $input1 = $("<input>").attr("type", "hidden").attr("value", obj.pno).attr("id", "pno");
+             var $div1 = $("<div>").addClass("pkgImg");
+             var $img1 = $("<img>").attr("src", "displayFile/product?filename="+obj.pic);
+             var $div2 = $("<div>").addClass("pkgInfoBox");
+             var $p1 = $("<p>").addClass("pkgTitle").html(obj.pname);
+             var price = calPrice(obj);
+             var $p2 = $("<p>").addClass("pkgPrice").html(price+"원 부터~").css("text-align","right");
+             var $p3 = $("<p>").addClass("pkgDate").html("~ "+getFormatDate(obj.pexpire,"/")+"까지 예약 가능");
+             var $p4 = $("<p>").addClass("pkgReserv");
+             var $btn = $("<button data-price='"+price+"' data-pno='"+obj.pno+"'>").addClass("pkgReservBtn").html("지금 바로 예약");
+             
+             $div1.append($img1);
+             $div2.append($div1);
+             $div2.append($p1); 
+             $div2.append($p2);
+             $div2.append($p3);
+             $p4.append($btn);
+             $div2.append($p4);
+             var $pkgListBox = $("<div class='pkgListBox'>").append($div2);
+             $("#pkgListBoxWrap").append($pkgListBox);
+         })
+         /* 페이징 부분 */
+         if(rs.pageMaker.prev==true){
+            var $li1 = $("<li>");
+            var $a1 = $("<a>").attr("href", "/tourland/customer/"+url+"?page=0" ).html("&laquo");
+            $li1.append($a1);
+         }
+         if(rs.pageMaker.next==true){
+            var $li3 = $("<li>");
+            var $a3 = $("<a>").attr("href", "/tourland/customer/"+url+"?page=2" ).html("&laquo");
+            $li3.append($a3);
+         }
+         for(var j = rs.pageMaker.startPage; j<= rs.pageMaker.endPage; j++){
+            $li2 = $("<li>").addClass("").addClass(classname).html(j).css("cursor", "pointer");
+            if(j==rs.pageMaker.cri.page) {
+                $li2.addClass("active");
+            }
+            $(".pagination").append($li1);
+            $(".pagination").append($li2);
+            $(".pagination").append($li3);
+         }
+    }
+    /* 리스트 좌측 검색 박스에서 검색했을 때 데이터를 불러오는 Ajax */
+    function getSearchResult(locale){
+        var ddate = $(".datepicker").val();//출발일 선택
+        var tourDays = $("#rdate").val();//여행일 선택
+        var cnt = $("#cnt").val(); //인원
+        $.ajax({
+            url : "tourlandProduct"+locale+"SearchList",
+            type : "get",
+            dataType : "json",
+            data : {ddate : ddate, tourDays : tourDays, cnt : cnt},
+            success : function(rs){
+                 $("#pkgListBoxWrap").empty();
+                 $(".pagination").empty();
+                 $("#totalCount").html(rs.list.length);
+                 appendAjaxData(rs,"tourlandProduct"+locale+"SearchList","");
+            }
+        })
+    }
+    
+    /* 리스트 우측 전체 리스트 보기 버튼을 클릭했을 때 모든 데이터를 불러오는 Ajax  */
+    function getList(page,locale){
+        $.ajax({
+            url : "tourlandProduct"+locale+"ListAll/"+page,
+            type : "get",
+            dataType : "json",
+            success : function(rs){
+                 $("#pkgListBoxWrap").empty();
+                 $(".pagination").empty();
+                 $("#totalCount").html(rs.count);
+                 appendAjaxData(rs,"tourlandProduct"+locale+"ListAll","listAll");
+            }
+        })
+    }
+    /* 낮은 가격 순 버튼을 클릭했을 때 모든 데이터를 불러오는 Ajax  */
+    function getLowPriceList(page,locale){
+        $.ajax({
+            url : "tourlandProduct"+locale+"SearchLowPirceList/"+page,
+            type : "get",
+            dataType : "json",
+            success : function(rs){
+                 $("#pkgListBoxWrap").empty();
+                 $(".pagination").empty();
+                 $("#totalCount").html(rs.count);
+                 appendAjaxData(rs,"tourlandProduct"+locale+"SearchLowPirceList","lowPriceListPage");
+            }
+        })
+    }
+
+</script>
 <script>
     function replaceAll(str, searchStr, replaceStr) {
         return str.split(searchStr).join(replaceStr);
@@ -15,20 +307,7 @@
         $("#listAll").click(function () {
             getList(1, "Japan");
         })
-        /* 리스트 우측 전체 리스트 보기 버튼을 클릭했을 때 모든 데이터를 불러오는 Ajax  */
-        function getList(page,locale){
-            $.ajax({
-                url : "tourlandProduct"+locale+"ListAll/"+page,
-                type : "get",
-                dataType : "json",
-                success : function(rs){
-                    $("#pkgListBoxWrap").empty();
-                    $(".pagination").empty();
-                    $("#totalCount").html(rs.count);
-                    appendAjaxData(rs,"tourlandProduct"+locale+"ListAll","listAll");
-                }
-            })
-        }
+
 
         /* 낮은 가격 순 정렬 */
         $("#byPrice").click(function () {
