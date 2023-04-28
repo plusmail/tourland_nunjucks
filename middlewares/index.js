@@ -23,9 +23,11 @@ exports.isLoggedIn = (req, res, next) => {
     if( req.isAuthenticated()){
         next();
     }else {
-        res.status(403).send("로그인 필요");
+        // res.status(403).send("로그인 필요");
+        res.redirect(`loginForm/`);
     }
 };
+
 
 exports.isNotLoggedIn = (req, res, next) => {
     if(!req.isAuthenticated()){
@@ -35,6 +37,7 @@ exports.isNotLoggedIn = (req, res, next) => {
         res.redirect(`/?error=${message}`);
     }
 };
+
 
 exports.verifyToken = (req, res, next) =>{
     try {

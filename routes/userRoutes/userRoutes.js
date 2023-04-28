@@ -1526,7 +1526,7 @@ router.get('/tourlandCustBoardDetail/:id', async (req, res, next) => {
 
 
 // 여행 후기 등록하는 페이지 보기
-router.get('/tourlandCustBoardRegister', (req, res, next) => {
+router.get('/tourlandCustBoardRegister', isLoggedIn, (req, res, next) => {
 
     let custBoardVO = {};
 
@@ -1535,20 +1535,14 @@ router.get('/tourlandCustBoardRegister', (req, res, next) => {
     let searchkeyword = "";
 
     let mypage = {};
-    if (login === 'user') {
-        mypage = "mypageuser"
-    } else if (login === 'Manager') {
-        mypage = "mypageemp"
-    }
 
     console.log('---------------mypage---------', mypage);
-    console.log('------------------Auth누구------', Auth);
 
-    res.render('user/board/tourlandCustBoardRegister', {mypage, Auth, login, Manager, searchkeyword, custBoardVO})
+    res.render('user/board/tourlandCustBoardRegister', {mypage, searchkeyword, custBoardVO})
 })
 
 // 여행 후기 등록하기
-router.post('/tourlandCustBoardRegister', upload.single("image"), async (req, res, next) => {
+router.post('/tourlandCustBoardRegister', isLoggedIn, upload.single("image"), async (req, res, next) => {
 // userHeader 에서 필요한 변수들
     let Manager = {};
     let searchkeyword = "";

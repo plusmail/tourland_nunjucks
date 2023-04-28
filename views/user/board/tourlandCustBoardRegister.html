@@ -38,7 +38,7 @@
 
                         <p>
                             <label>작성자</label>
-                            {% if (mypage === 'mypageuser') { %}
+                            {% if (user !== null) { %}
                                 {%=Auth.username%}<br>
                                 <input
                                     type="hidden"
@@ -47,14 +47,6 @@
                                     readonly="readonly">
                                 {% } %}
 
-                                {% if (mypage === 'mypageemp') { %}
-                                    {%=Auth.empname%}
-                                    <input
-                                        type="hidden"
-                                        name="writer"
-                                        value="{%-Auth.empname%}"
-                                        readonly="readonly">
-                                    {% } %}
                                 </p>
                                 <p>
                                     <label>제목</label>
