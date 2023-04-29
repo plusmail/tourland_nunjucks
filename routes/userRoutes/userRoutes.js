@@ -35,7 +35,7 @@ const {fixed} = require("lodash/fp/_falseOptions");
 const path = require("path");
 const bodyParser = require('body-parser');
 const parser = bodyParser.urlencoded({extended: false});
-const {upload} = require("../../controller/fileupload");
+const {upload, uploadMultiFiles} = require("../../controller/fileupload");
 const passport = require("passport");
 const {isLoggedIn, isNotLoggedIn} = require("../../middlewares");
 const {viewedProducts,viewedProductsList} = require("../../controller/userRoutesContorller");
@@ -69,7 +69,7 @@ const productCurrent = async (productId)=>{
 router.get('/',   async (req, res, next) => {
 
 
-    let vpl= viewedProductsList(req, next);
+    let vpl= viewedProductsList(req, res, next);
     console.log("/ lastViewed------------1>", vpl);
     let lastViewed=[]
     if( vpl !== null){
@@ -1486,9 +1486,19 @@ router.get('/tourlandCustBoard', async (req, res, next) => {
             limit, offset
         });
 
-    const pagingData = getPagingData(listCount, currentPage, limit);
+    const {count: totalItems, rows: tutorials} = listCount;
+
+
+
+    console.log("111111111", totalItems, tutorials);
+    
+    // const pagingData = getPagingData(totalItems, currentPage, limit);
+    const pagingData = getPagingDataCount(totalItems, currentPage, limit);
+
+    console.log("22222222", pagingData);
+
     let cri = currentPage;
-    res.render('user/board/tourlandCustBoard', {searchkeyword, cri, list, pagingData})
+    res.render('user/board/tourlandCustBoard', {searchkeyword, cri, list:tutorials, pagingData})
 })
 
 // 여행 후기 게시글 보기
@@ -1526,7 +1536,7 @@ router.get('/tourlandCustBoardDetail/:id', async (req, res, next) => {
 
 
 // 여행 후기 등록하는 페이지 보기
-router.get('/tourlandCustBoardRegister', isLoggedIn, (req, res, next) => {
+router.get('/tourlandCustBoardRegister', (req, res, next) => {
 
     let custBoardVO = {};
 
@@ -1536,97 +1546,73 @@ router.get('/tourlandCustBoardRegister', isLoggedIn, (req, res, next) => {
 
     let mypage = {};
 
-    console.log('---------------mypage---------', mypage);
+    console.log('---------------mypage----111-----', mypage);
 
     res.render('user/board/tourlandCustBoardRegister', {mypage, searchkeyword, custBoardVO})
 })
 
+
 // 여행 후기 등록하기
-router.post('/tourlandCustBoardRegister', isLoggedIn, upload.single("image"), async (req, res, next) => {
+router.post('/tourlandCustBoardRegister', uploadMultiFiles.array("files"), async (req, res, next) => {
 // userHeader 에서 필요한 변수들
-    let Manager = {};
     let searchkeyword = "";
 
-    let mypage = {};
-    if (login === 'user') {
-        mypage = "mypageuser"
-    } else if (login === 'Manager') {
-        mypage = "mypageemp"
+    let { boardtype, userid, title, content, password } = req.body;
+
+    console.log("CustBoard->>>>>", req.files);
+    const files = [];
+    for (const file of req.files) {
+      files.push({ filename: file.filename, url: `/custimg/${file.filename}` });
+    }
+    body = {
+        raw: true,
+        title,
+        content,
+        writer:userid,
+        passwd:password,
+        image: files,
     }
 
-    // console.log('--------------등록했따Auth누구------', mypage);
-    console.log('------------------Auth누구------', Auth);
-    console.log('---------------auth비밀번호', Auth.userpass);
+    const custRegister = await models.custboard.create(body);
 
-    let body = {};
-    if (req.file != null) {
-        body = {
-            raw: true,
-            title: req.body.title,
-            content: req.body.content,
-            writer: req.body.writer,
-            regdate: req.body.regdate,
-            image: req.file.filename,
-        }
-    } else {
-        body = {
-            raw: true,
-            title: req.body.title,
-            content: req.body.content,
-            writer: req.body.writer,
-            regdate: req.body.regdate,
-        }
-    }
-    console.log('------------req.body-----', req.body);
-    console.log('파일파일파일파일파일파일', req.file);
+    res.redirect("/customer/tourlandCustBoard")
 
-    // console.log('~~~~~~~ req.session~~~~~~~~',req.session.user.Auth.userpass);
+//     console.log('------------------게시글 등록-----------------', custRegister);
 
-    const custRegister = await models.custboard.create(body, {
-            passwd: req.session.user.Auth.userpass
-        }
-    );
+// // ------------------게시글 등록하면 후기 게시판 목록 보여줘야하므 list값도 같이 전송해서 게시글 목록 다시 불러오기 -----------------------------------
+//     const contentSize = 5 // 한페이지에 나올 개수
+//     const currentPage = Number(req.query.currentPage) || 1; //현재페이
+//     const {limit, offset} = getPagination(currentPage, contentSize);
 
-    console.log('-------이미지 등록???----------', req.file);
-    console.log('------------------게시글 등록-----------------', custRegister);
+//     const list =
+//         await models.custboard.findAll({
+//             raw: true,
+//             order: [
+//                 ["id", "DESC"]
+//             ],
+//             limit, offset
+//         });
+//     const listCount =
+//         await models.custboard.findAndCountAll({
+//             raw: true,
+//             order: [
+//                 ["id", "DESC"]
+//             ],
+//             limit, offset
+//         });
+//     console.log('======데이터 전체 count 수 전송전송=======1', listCount.count);
+//     const pagingData = getPagingData(listCount, currentPage, limit);
+//     let cri = currentPage;
 
-// ------------------게시글 등록하면 후기 게시판 목록 보여줘야하므 list값도 같이 전송해서 게시글 목록 다시 불러오기 -----------------------------------
-    const contentSize = 5 // 한페이지에 나올 개수
-    const currentPage = Number(req.query.currentPage) || 1; //현재페이
-    const {limit, offset} = getPagination(currentPage, contentSize);
+//     console.log('======데이터 전체 count 수 전송전송=======2', cri);
 
-    const list =
-        await models.custboard.findAll({
-            raw: true,
-            order: [
-                ["id", "DESC"]
-            ],
-            limit, offset
-        });
-    const listCount =
-        await models.custboard.findAndCountAll({
-            raw: true,
-            order: [
-                ["id", "DESC"]
-            ],
-            limit, offset
-        });
-    console.log('======데이터 전체 count 수 전송전송=======', listCount.count);
-    const pagingData = getPagingData(listCount, currentPage, limit);
-    let cri = currentPage;
-
-
-    res.render('user/board/tourlandCustBoard', {
-        custRegister,
-        Auth,
-        login,
-        Manager,
-        mypage,
-        searchkeyword,
-        list,
-        pagingData,
-        cri
-    });
+//     res.render('user/board/tourlandCustBoard', {
+//         custRegister,
+//         searchkeyword,
+//         list,
+//         pagingData,
+//         cri
+//     });
 });
 
 

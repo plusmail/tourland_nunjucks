@@ -19,15 +19,9 @@ module.exports = function(sequelize, DataTypes) {
       comment: "내용"
     },
     writer: {
-      type: DataTypes.STRING(5),
+      type: DataTypes.STRING(20),
       allowNull: true,
       comment: "작성자"
-    },
-    regdate: {
-      type: DataTypes.DATEONLY,
-      allowNull: true,
-      defaultValue: Sequelize.Sequelize.fn('curdate'),
-      comment: "작성일자"
     },
     passwd: {
       type: DataTypes.STRING(50),
@@ -35,9 +29,15 @@ module.exports = function(sequelize, DataTypes) {
       comment: "비밀번호"
     },
     image: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.JSON,
       allowNull: true,
       comment: "사진"
+    },
+    regdate: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+      defaultValue: Sequelize.Sequelize.fn('curdate'),
+      comment: "작성일자"
     }
   }, {
     sequelize,

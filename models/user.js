@@ -56,7 +56,7 @@ module.exports = function(sequelize, DataTypes) {
     role: {
       type: DataTypes.ENUM('customer','basic','supervisor','admin'),
       allowNull: true,
-      defaultValue: "customer",
+      defaultValue: "basic",
       comment: "권한여부"
     },
     postcode: {
@@ -76,7 +76,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     viewedProducts: {
-      type: DataTypes.JSON,
+      type: DataTypes.TEXT,
       allowNull: true
     }
   }, {

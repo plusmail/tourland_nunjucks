@@ -38,7 +38,7 @@ exports.viewedProducts = async (req,pno, next) =>{
 
 }
 
-exports.viewedProductsList = (req,next) =>{
+exports.viewedProductsList = (req,res, next) =>{
     let viewedProduct;
     if (req.isAuthenticated()) {
         // 로그인된 사용자의 경우 viewedProducts 배열에 추가합니다.
@@ -47,6 +47,11 @@ exports.viewedProductsList = (req,next) =>{
     } else {
     // 로그인되지 않은 사용자의 경우 쿠키를 사용하여 viewedProducts 배열에 추가합니다.
         viewedProduct = req.cookies.viewedProducts;
+
+        if(!viewedProduct){
+            viewedProduct = [];
+            res.cookie("viewedProducts", viewedProduct);
+        }
     }
     // console.log("viewedProductsList->", viewedProduct)
 

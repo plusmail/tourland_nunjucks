@@ -6,42 +6,33 @@
             {% if pagingData.totalPages !== 0  %}
             <div class="" style="text-align:center;">
                 <ul class="pagination">
-                    <li {% if pagingData.currentPage == 1  %} 
-                    class="disabled" 
-                    {% else %} 
-                    class="waves-effect" 
-                    {% endif %}
-                     >
-                        <a
-                                {% if pagingData.currentPage > 1 %}
-                                href="?currentPage={{pagingData.currentPage-1 }}"
-                                {% endif %}
-                        >
-                            <i class="material-icons">prev</i>
-                        </a>
+                    <li {% if pagingData.currentPage == 1  %}  class="disabled" {% else %} class="waves-effect"  {% endif %} >
+                            {% if pagingData.currentPage > 1 %}
+                                <a href="?currentPage={{pagingData.currentPage-1 }}">
+                            {% endif %}
+                                <i class="material-icons">prev</i>
+                            </a>
                     </li>
-                    {% for i in range(pagingData.pnStart, pagingData.pnEnd) %}
-                        <li
+                    {% for i in range(pagingData.pnStart, pagingData.pnEnd+1) %}
+                    <li
                         {% if i != pagingData.currentPage %} 
                             class="active"
                         {% endif %}
                         >
-                        <a href="?currentPage={{i}}">{{i}}</a></li>
+                        <a href="?currentPage={{i}}">{{i}}</a>
+                    </li>
                     {% endfor %}
-                        <li
-                        {% if pagingData.currentPage === pagingData.totalPages %} 
-                                class="disabled"
-                        {% else %} 
-                        class="waves-effect"
+                    <li {% if pagingData.currentPage === pagingData.totalPages %} class="disabled" style="color: green;font-size:1.2em"
+                        {% else %} class="waves-effect"
                         {% endif %} 
-                        >
-                        <a
-                                {% if pagingData.currentPage < pagingData.totalPages %}
-                                href="?currentPage={{pagingData.currentPage+1 }}"
-                                {% endif %}
-                                class="waves-effect">
-                            <i class="material-icons">next</i>
-                        </a>
+                    >
+                    <a
+                        {% if pagingData.currentPage < pagingData.totalPages %}
+                        href="?currentPage={{pagingData.currentPage+1 }}"
+                        {% endif %}
+                        class="waves-effect">
+                        <i class="material-icons">next</i>
+                    </a>
                     </li>
                 </ul>
             </div>

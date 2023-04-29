@@ -1,5 +1,6 @@
-
 /// 여행 후기 게시글 등록하기
+const exp = require("constants");
+const util = require("util");
 const multer = require("multer");
 const path = require("path");
 
@@ -8,32 +9,44 @@ const storage = multer.diskStorage({
         cb(null, 'displayFile/event/')
     },
     filename: function (req, file, cb) {
-        const ext = path.extname(file.originalname);  // 파일 확장자
+        const ext = path.extname(file.originalname); // 파일 확장자
         cb(null, '/' + path.basename(file.originalname, ext) + '-' + Date.now() + ext); // 새 파일명(기존 파일명 + 시간 + 확장자)} else
     },
-    limits : { filesize : 30 * 1024 * 1024 }, // 30KB
+    limits: {
+        filesize: 30 * 1024 * 1024
+    }, // 30KB
 })
 
-exports.upload = multer({storage : storage});
+exports.upload = multer({storage: storage});
 
-
-
-const storageMultifiles = multer.diskStorage({
-    destination: (req, file, callback) => {
-      callback(null, path.join(`${__dirname}/../../upload`));
-    },
-    filename: (req, file, callback) => {
-      const match = ["image/png", "image/jpeg"];
-  
-      if (match.indexOf(file.mimetype) === -1) {
-        var message = `<strong>${file.originalname}</strong> is invalid. Only accept png/jpeg.`;
-        return callback(message, null);
+exports.uploadMultiFiles = multer({
+    storage: multer.diskStorage({
+      destination: function (req, file, cb) {
+        console.log("uploadMulti----->", req.body.boardtype);
+        cb(null, 'displayFile/' + req.body.boardtype);
+      },
+      filename(req, file, done) {
+        const ext = path.extname(file.originalname);
+        const fileName = `${path.basename(
+            file.originalname,
+            ext
+        )}_${Date.now()}${ext}`;
+        done(null, fileName);
       }
+    }),
+    fileFilter : (req, file, cb) => {
+      const typeArray = file.mimetype.split('/');
+      const fileType = typeArray[1];
   
-      var filename = `${Date.now()}-${file.originalname}`;
-      callback(null, filename);
-    }
+      if (fileType == 'jpg' || fileType == 'png' || fileType == 'jpeg' || fileType == 'gif' || fileType == 'webp') {
+        req.fileValidationError = null;
+        cb(null, true);
+      } else {
+        req.fileValidationError = "jpg,jpeg,png,gif,webp 파일만 업로드 가능합니다.";
+        cb(null, false)
+      }
+    },
+    limits : { fileSize: 5 * 1024 * 1024 },
   });
   
-  const uploadFiles = multer({ storage: storageMultifiles }).fields("multi-files", 10);
-  const uploadFilesMiddleware = util.promisify(uploadFiles);
+// exports.uploadFilesMiddleware = util.promisify(uploadMultiFiles);
