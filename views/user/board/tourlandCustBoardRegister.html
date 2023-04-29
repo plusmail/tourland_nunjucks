@@ -38,69 +38,74 @@
 
                         <p>
                             <label>작성자</label>
-                            {% if (user !== null) { %}
-                                {%=Auth.username%}<br>
+                            {% if user !== null %}
+                                {{user.username}}<br>
                                 <input
                                     type="hidden"
                                     name="writer"
-                                    value="{%-Auth.username%}"
+                                    value="{{user.username}}"
                                     readonly="readonly">
-                                {% } %}
-
-                                </p>
-                                <p>
-                                    <label>제목</label>
                                     <input
-                                        type="text"
-                                        name="title"
-                                        class="form-control"
-                                        required="required"
-                                        style="border:none; border-bottom:1px solid black; width:400px;">
-                                </p>
-                                <p>
-                                    <label>내용</label>
-                                    <textarea
-                                        rows="15"
-                                        cols="100"
-                                        style="margin-top:10px;"
-                                        placeholder="  내용을 입력하세요"
-                                        name="content"
-                                        class="form-control"
-                                        required="required">{%=custBoardVO.content%}</textarea>
-                                </p>
-                                <!-- <p> <label>비밀번호 설정</label> <input type="text" name="passwd"
-                                class="form-control" required="required"> </p> -->
-                                <br>
-                                <label>이미지 첨부하기</label><br>
-                                <input type="file" name="image"/>
-                                <br>
-                                <div>
-                                    <button
-                                        type="submit"
-                                        class="btn btn-primary"
-                                        onclick="btnWrite()"
-                                        id="btnWrite">등록</button>
-                                    <button
-                                        type="button"
-                                        class="btn btn-primary"
-                                        onclick="location.href = 'tourlandCustBoard'"
-                                        id="btnReturnToList">목록으로</button>
-                                </div>
-                            </form>
+                                    type="hidden"
+                                    name="userid"
+                                    value="{{user.userid}}"
+                                    readonly="readonly">
+                            {% endif %}
 
+                        </p>
+                        <p>
+                            <label>제목</label>
+                            <input
+                                type="text"
+                                name="title"
+                                class="form-control"
+                                required="required"
+                                style="border:none; border-bottom:1px solid black; width:400px;">
+                        </p>
+                        <p>
+                            <label>내용</label>
+                            <textarea
+                                rows="15"
+                                cols="100"
+                                style="margin-top:10px;"
+                                placeholder="  내용을 입력하세요"
+                                name="content"
+                                class="form-control"
+                                required="required">{{custBoardVO.content}}</textarea>
+                        </p>
+                        <!-- <p> <label>비밀번호 설정</label> <input type="text" name="passwd"
+                        class="form-control" required="required"> </p> -->
+                        <br>
+                        <label>이미지 첨부하기</label><br>
+                        <input type="file" name="image"/>
+                        <br>
+                        <div>
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                                onclick="btnWrite()"
+                                id="btnWrite">등록</button>
+                            <button
+                                type="button"
+                                class="btn btn-primary"
+                                onclick="location.href = 'tourlandCustBoard'"
+                                id="btnReturnToList">목록으로</button>
                         </div>
+                    </form>
 
-                    </div>
+                </div>
 
-                </section>
-                <script>
+            </div>
 
-                    // function btnReturnToList() { 	location.href = 'tourlandCustBoard'; }
+        </section>
+        <script>
 
-                    function btnWrite() {
-                        location.href = 'tourlandCustBoard';
-                    }
-                </script>
-                {%- include("../../include/userFooter.html")%}
-            </body>
-        </html>
+            // function btnReturnToList() { 	location.href = 'tourlandCustBoard'; }
+
+            function btnWrite() {
+                location.href = 'tourlandCustBoard';
+            }
+        </script>
+        {%- include("../../include/userFooter.html")%}
+    </body>
+</html>
