@@ -1501,6 +1501,45 @@ router.get('/tourlandCustBoard', async (req, res, next) => {
     res.render('user/board/tourlandCustBoard', {searchkeyword, cri, list:tutorials, pagingData})
 })
 
+
+//-----------------------------------------여행후기여행후기여행후기여행후기여행후기여행후기여행후기여행후기여행후기----------------------------------------------------------------
+// 여행 후기 게시판 목록 API
+router.get('/api/tourlandCustBoardApi', async (req, res, next) => {
+    let searchkeyword = "";
+
+    const contentSize = 5 // 한페이지에 나올 개수
+    const currentPage = Number(req.query.currentPage) || 1; //현재페이
+    const {limit, offset} = getPagination(currentPage, contentSize);
+
+    const list =
+        await models.custboard.findAll({
+            raw: true,
+            order: [
+                ["id", "DESC"]
+            ],
+            limit, offset
+        });
+    const listCount =
+        await models.custboard.findAndCountAll({
+            raw: true,
+            order: [
+                ["id", "DESC"]
+            ],
+            limit, offset
+        });
+
+    const {count: totalItems, rows: tutorials} = listCount;
+
+    const pagingData = getPagingDataCount(totalItems, currentPage, limit);
+    let cri = currentPage;
+
+    if(totalItems > 0 ){
+        res.status(200).json({msg:"seccess", searchkeyword, cri, list:tutorials, pagingData})
+    }else{
+        res.status(401).json({mesg:"nothing"})
+    }
+})
+
 // 여행 후기 게시글 보기
 router.get('/tourlandCustBoardDetail/:id', async (req, res, next) => {
     // userHeader 에서 필요한 변수들
