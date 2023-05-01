@@ -1,0 +1,165 @@
+{% extends 'tourlandLayout.html' %}
+{% block header %}
+{% include '../../include/userHeader.html' %}
+{% endblock%}
+{% block CustBoardListSection %}
+<!--<link href="/stylesheets/paging.css" rel="stylesheet" type="text/css" />-->
+<link href="/stylesheets/boardStyle.css" rel="stylesheet" type="text/css" />
+<style>
+  section nav ul li:nth-child(3) {
+    /*background: mistyrose;*/
+  }
+
+  #btnWrite {
+    width: 100px;
+    padding: 5px;
+    background: mistyrose;
+    border: none;
+    margin-left: 40px;
+  }
+</style>
+<section>
+  <div>
+    <ul  id="post-list">
+    </ul>
+
+  </div>
+
+  <script>
+    function btnWrite() {
+      location.href = "tourlandCustBoardRegister";
+    }
+
+    let currentPage={{pagingData.currentPage}};
+  
+    // 초기 페이지 로딩 시 게시글 목록을 가져와서 렌더링합니다.
+    if(currentPage == null || currentPage == undefined){
+      currentPage= 1;
+    }
+  
+    // 게시글 목록을 가져오는 함수
+    function getPostList(currentPage) {
+      return axios
+        .get("/customer/api/tourlandCustBoardApi?currentPage="+currentPage)
+        .then((response) => {
+
+          console.log("2222222", response.data.list)
+
+          return response.data.list;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  
+    // 게시글 목록을 렌더링하는 함수
+    function renderPostList(data) {
+      // 이전 게시글 목록을 저장합니다.
+
+      let $prevPosts = $("#post-list").find(".post");
+  
+      console.log("3333333333", $prevPosts.text());
+
+      // 새 게시글 목록을 생성합니다.
+      let $newPosts = data.map(function (i, post) {
+
+        console.log("3333333333",post);
+
+        var $list = $('#post-list');
+        var $newItem = $('<li>');
+        var $titleSpan = $('<span>').text(i.title);
+        var $writerSpan = $('<span>').text(i.writer);
+        var $regDateSpan = $('<span>').text(i.redate);
+            $newItem.append($titleSpan);
+            $newItem.append($writerSpan);
+            $newItem.append($regDateSpan);
+        $list.append($newItem);
+
+      });
+  
+  
+
+      // 새 게시글을 추가합니다.
+      $("#post-list").append(newPosts.filter(":not(.post-deleted)"));
+    }
+  
+    // 게시글 목록을 갱신하는 함수
+    function refreshPostList(currentPage) {
+
+      getPostList(currentPage).then((data) => {
+        renderPostList(data);
+      });
+    }
+  
+    // 게시글 삭제 버튼 클릭 시 해당 게시글을 삭제합니다.
+    $(".delete-button").click(function () {
+      var postId = $(this).data("post-id");
+  
+      axios
+        .delete("/customer/api/posts/" + postId)
+        .then((response) => {
+          // 삭제된 게시글을 표시합니다.
+          $("#post-list")
+            .find('[data-post-id="' + postId + '"]')
+            .addClass("post-deleted");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    });
+
+    refreshPostList(currentPage);
+  </script>
+  
+  <script src="/jquery.twbsPagination.js" type="text/javascript"></script>
+
+  <section>
+  <div class="container">
+      <nav aria-label="Page navigation">
+          <ul class="pagination" id="pagination"></ul>
+      </nav>
+  </div>
+  </section>
+  <script type="text/javascript">
+          $('#pagination').twbsPagination({
+          totalPages: {{pagingData.totalPages}} ,	// 총 페이지 번호 수
+          visiblePages: 3,	// 하단에서 한번에 보여지는 페이지 번호 수
+          startPage : {{pagingData.currentPage}}, // 시작시 표시되는 현재 페이지
+          initiateStartPageClick: false,	// 플러그인이 시작시 페이지 버튼 클릭 여부 (default : true)
+              resetStartPage: true,
+              hideOnlyOnePage: true,
+  
+          first : "첫 페이지",	// 페이지네이션 버튼중 처음으로 돌아가는 버튼에 쓰여 있는 텍스트
+          prev : "이전 페이지",	// 이전 페이지 버튼에 쓰여있는 텍스트
+          next : "다음 페이지",	// 다음 페이지 버튼에 쓰여있는 텍스트
+          last : "마지막 페이지",	// 페이지네이션 버튼중 마지막으로 가는 버튼에 쓰여있는 텍스트
+          nextClass : "page-item next",	// 이전 페이지 CSS class
+          prevClass : "page-item prev",	// 다음 페이지 CSS class
+          lastClass : "page-item last",	// 마지막 페이지 CSS calss
+          firstClass : "page-item first",	// 첫 페이지 CSS class
+          pageClass : "page-item",	// 페이지 버튼의 CSS class
+          activeClass : "active",	// 클릭된 페이지 버튼의 CSS class
+          disabledClass : "disabled",	// 클릭 안된 페이지 버튼의 CSS class
+          anchorClass : "page-link",	//버튼 안의 앵커에 대한 CSS class
+          
+          onPageClick: function (event, page) {
+            //클릭 이벤트
+//            location.href="?currentPage="+page;
+            currentPage = page;
+            refreshPostList(page);
+
+          console.log("클릭");
+          }
+      });
+  </script>
+  
+</section>
+{% endblock %} 
+
+{% block Pagination %} 
+{% include '../../include/pagination.html'%} 
+{% endblock%}
+
+{% block Footer %}
+{% include '../../include/userFooter.html' %}
+{% endblock%}

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+</head>
+<link rel="stylesheet" type="text/css" href="/stylesheets/userHeader.css"/>
+<link rel="stylesheet" type="text/css" href="/stylesheets/tourlandLoginForm.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script  type="text/javascript">
+
+    $(document).ready(function(){
+
+        $("#btnLogin").click(function () {
+
+                const id = $("#id").val();
+                const pass = $("#pass").val();
+
+                $.ajax({
+                    url: "/customer/loginManagerForm",
+                    type: 'post',
+                    traditional: true,
+                    data: {id : id, pass:pass},
+                    dataType: "json",
+                    success: function (res) {
+                        console.log("11111111111111");
+                        if (res.responseText === "loginfail") {
+
+                            $("#errormsg").text("아이디와 비밀번호 확인 하세요.");
+
+                        }else if(res.responseText === "loginsuccess"){
+                            confirm("로그이 완료되었습니다.관리자 페이지로 이동합니다.");
+                            location.href = "/manager/statistics";
+                        }
+                        else return;
+
+                    },
+                    error: function (res) {
+                        alert("1111->" + res);
+                        console.log(res);
+                        if (res.responseText === "loginfail") {
+                            alert("로그인 실패");
+                            return;
+                        }
+                    }
+                })
+            })
+
+        }
+    );
+
+
+</script>
+<body>
+<section>
+    <div id="loginHead">
+        <h1>관리자 로그인 페이지 입니다.</h1>
+        <p>관계자외 로그인 불가합니다.</p>
+    </div>
+    <div id="loginBox">
+        <form>
+            {% if (registerSuccess != null) { %}
+                <h2>가입 완료 되었습니다. 로그인 수행하여 주십시오.</h2>
+            {% } %}
+            {% if (registerSuccess == null ) { %}
+                <h2>투어랜드</h2>
+            {% } %}
+            <div id="loginInnerBox">
+                <div id="inputBox">
+                    {% if(EmpStay != null) { %}
+                        <input type="text" name="id" id="id" placeholder="아이디" value="{%= EmpStay.empid %}">
+                        <input type="password" name="pass" id="pass" placeholder="비밀번호" value="{%= EmpStay.empass %}">
+                    {% } else  { %}
+                        <input type="text" name="id" id="id" placeholder="아이디">
+                        <input type="password" name="pass" id="pass" placeholder="비밀번호">
+                    {% } %}
+                </div>
+                <div id="submitBox">
+                    <input type="button" id="btnLogin" value="입력">
+                </div>
+                {% if(error != null) { %}
+                    <p class="error">{%= error %}</p>
+                {% } %}
+                <div id="errormsg"></div>
+            </div>
+        </form>
+        <div id="loginBtns">
+            <button id="join" style="cursor: pointer">회원가입</button>
+            <button id="findIDPW" style="cursor: pointer">아이디/비밀번호 찾기</button>
+        </div>
+        <div id="loginAPI">
+            <button id="naver" class="api" style="cursor: pointer">
+                <span>NAVER</span> 로그인
+            </button>
+            <button id="kakao" class="api" style="cursor: pointer">
+                <span>kakao</span> 로그인
+            </button>
+        </div>
+    </div>
+
+</section>
+<script>
+    $("#join").click(function () {
+        location.href = "/customer/tourlandRegister";
+    })
+    $("#findIDPW").click(function () {
+        location.href = "/customer/tourlandFindIdPw";
+    })
+</script>
+</body>
+</html>
