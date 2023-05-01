@@ -30,8 +30,9 @@
 		    anchorClass : "page-link",	//버튼 안의 앵커에 대한 CSS class
 		    
 		    onPageClick: function (event, page) {
-		    	//클릭 이벤트
-                location.href="?currentPage="+page;
+            currentPage = page;
+            // refreshPostList(page);
+            getPosts(currentPage);
 
 				console.log("클릭");
 		    }

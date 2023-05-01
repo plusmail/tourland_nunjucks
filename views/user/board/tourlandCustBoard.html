@@ -1,6 +1,9 @@
-{% extends 'tourlandLayout.html' %} {% block header %} {% include
-'../../include/userHeader.html' %} {% endblock%} {% block CustBoardListSection
-%}
+{% extends 'tourlandLayout.html' %}
+{% block header %}
+{% include
+'../../include/userHeader.html' %}
+{% endblock%}
+{% block CustBoardListSection %}
 <link href="/stylesheets/paging.css" rel="stylesheet" type="text/css" />
 <link href="/stylesheets/boardStyle.css" rel="stylesheet" type="text/css" />
 <style>
@@ -9,104 +12,510 @@
   }
 
   #btnWrite {
-    width: 100px;
+    /*width: 100px;*/
     padding: 5px;
     background: mistyrose;
     border: none;
     margin-left: 40px;
   }
+
+
+  .post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .post-item {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    border: 1px solid #ddd;
+    padding: 10px;
+  }
+
+  .post-item:hover {
+    background-color: #f5f5f5;
+  }
+
+  .post-number {
+    width: 50px;
+    text-align: center;
+    border: 1px solid #ddd;
+    display:inline-block;
+  }
+
+  .post-title {
+    display:inline-block;
+    flex-grow: 1;
+    width: 200px;
+    border: 1px solid #ddd;
+  }
+
+  .post-writer, .post-date {
+    display:inline-block;
+    width: 150px;
+    border: 1px solid #ddd;
+  }
+
+  /* 모달 다이얼로그 스타일 */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+  }
+
+  /* 모달 다이얼로그 스타일 */
+  .modalyesno {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+  }
+
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 10px;
+    border: 1px solid #888;
+    width: 20%;
+  }
+
+  .close-button {
+    float: right;
+  }
+
+  .modal-header h2 {
+    margin: 0;
+  }
+
+  .modal-body input[type="text"] {
+    width: 100%;
+    padding: 14px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .modal-body button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .modal-body button:hover {
+    background-color: #45a049;
+  }
+
+  .modal-body button:focus {
+    outline: none;
+  }
+
+  .modal-body p {
+    margin-bottom: 20px;
+  }
+
+  .button-group {
+    display: flex;
+    justify-content: center;
+  }
+
+  .button-group button {
+    margin-right: 10px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .button-group button:hover {
+    background-color: #45a049;
+  }
+
+  .button-group button:focus {
+    outline: none;
+  }
+
 </style>
 <section>
-  <div>
-    <ul  id="post-list">
-    </ul>
+  <div class='errormsg' id="errormsg"></div>
+  <ul id="post-list">
+  </ul>
+  <button id="create-post">Create post</button>
+  <div id="edit-post">
+    <h2 id="post-title"></h2>
+    <input type="hidden" id="post-id-input">
+    <div>
+      <label>Title:</label>
+      <input type="text" id="post-title-input">
+    </div>
+    <div>
+      <label>Content:</label>
+      <textarea id="post-content-input"></textarea>
+    </div>
+    <div>
+      <label>Author:</label>
+      <input type="text" id="post-author-input">
+    </div>
+    <div>
+      <label>Password:</label>
+      <input type="text" id="post-password-input">
+    </div>
+    <div class="form-group">
+      <label for="example-input-file"> </label>
+      <input type="file" name="multi-files" multiple id="input-multi-files" class="form-control-file border"/>
+    </div>
 
+    <button id="update-post">Update</button>
+    <button id="cancel-edit">Cancel</button>
   </div>
 
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="preview-images"></div>
+    </div>
+  </div>
+
+  <ul id="pagination">
+  </ul>
+
+  <div class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="close-button">&times;</span>
+        <h2>다이얼로그 박스</h2>
+      </div>
+      <div class="modal-body">
+        <input type="password" id="bpassword">
+        <button id="confirmButton">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modalyesno">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="close-button">&times;</span>
+        <h2>Yes/No 다이얼로그 창</h2>
+      </div>
+      <div class="modal-body">
+        <p>정말로 삭제하시겠습니까?</p>
+        <div class="button-group">
+          <button id="yesButton">Yes</button>
+          <button id="noButton">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
   <script>
+
+    $(document).ready(function() {
+      let imagesPreview = function(input, placeToInsertImagePreview) {
+        if (input.files) {
+          let filesAmount = input.files.length;
+          for (i = 0; i < filesAmount; i++) {
+            let reader = new FileReader();
+            reader.onload = function(event) {
+              $($.parseHTML("<img>"))
+                      .attr("src", event.target.result)
+                      .appendTo(placeToInsertImagePreview);
+            };
+            reader.readAsDataURL(input.files[i]);
+          }
+        }
+      };
+      $("#input-multi-files").on("change", function() {
+        imagesPreview(this, "div.preview-images");
+      });
+    });
+
+
     function btnWrite() {
       location.href = "tourlandCustBoardRegister";
     }
-  
-    // 게시글 목록을 가져오는 함수
-    function getPostList() {
-      return axios
-        .get("/customer/api/tourlandCustBoardApi")
-        .then((response) => {
 
-          console.log("2222222", response.data.list)
+    let currentPage={{pagingData.currentPage}};
 
-          return response.data.list;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  
-    // 게시글 목록을 렌더링하는 함수
-    function renderPostList(data) {
-      // 이전 게시글 목록을 저장합니다.
+    const postError = document.getElementById('errormsg');
+    const postList = document.getElementById('post-list');
+    const createPostButton = document.getElementById('create-post');
+    const editPost = document.getElementById('edit-post');
+    const postIdInput = document.getElementById('post-id-input');
+    const postTitle = document.getElementById('post-title');
+    const postTitleInput = document.getElementById('post-title-input');
+    const postContentInput = document.getElementById('post-content-input');
+    const postAuthorInput = document.getElementById('post-author-input');
+    const postPasswordInput = document.getElementById('post-password-input');
+    const fileInput = document.querySelector('#input-multi-files');
 
-      let $prevPosts = $("#post-list").find(".post");
-  
-      console.log("3333333333", $prevPosts.text());
 
-      // 새 게시글 목록을 생성합니다.
-      let $newPosts = data.map(function (i, post) {
+    const updatePostButton = document.getElementById('update-post');
+    const cancelEditButton = document.getElementById('cancel-edit');
+    const pagination = document.getElementById('pagination');
 
-        console.log("3333333333",post);
 
-        var $list = $('#post-list');
-        var $newItem = $('<li>');
-        var $newSpan = $('<span>').text(i.title);
-        $newItem.append($newSpan);
-        $list.append($newItem);
+    const modal = document.querySelector('.modal');
+    const closeButton = document.querySelector('.close-button');
+    const confirmButton = document.getElementById('confirmButton');
+    const bpasswordInput = document.getElementById('bpassword');
 
-      });
-  
-  
+    const modalyesno = document.querySelector('.modalyesno');
+    const yesButton = document.getElementById('yesButton');
+    const noButton = document.getElementById('noButton');
 
-      // 새 게시글을 추가합니다.
-//      $("#post-list").append(newPosts.filter(":not(.post-deleted)"));
-      $("#post-list").append($newPosts);
-    }
-  
-    // 게시글 목록을 갱신하는 함수
-    function refreshPostList() {
-
-      getPostList().then((data) => {
-        console.log("11111111111111", data);
-        renderPostList(data);
-      });
-    }
-  
-    // 게시글 삭제 버튼 클릭 시 해당 게시글을 삭제합니다.
-    $(".delete-button").click(function () {
-      var postId = $(this).data("post-id");
-  
-      axios
-        .delete("/customer/api/posts/" + postId)
-        .then((response) => {
-          // 삭제된 게시글을 표시합니다.
-          $("#post-list")
-            .find('[data-post-id="' + postId + '"]')
-            .addClass("post-deleted");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    closeButton.addEventListener('click', () => {
+      modal.style.display = 'none';
     });
-  
-    // 초기 페이지 로딩 시 게시글 목록을 가져와서 렌더링합니다.
-    refreshPostList();
+
+    modalyesno.style.display = 'none';
+
+
+
+    const pageSize = 10;
+
+    function getPosts(page = 1) {
+      axios.get(`/customer/api/tourlandCustBoardApi?currentPage=${page}&pageSize=${pageSize}`)
+              .then(res => {
+                const posts = res.data.list;
+                console.log(posts);
+                totalPages = {{pagingData.totalPages}};
+                if (posts && Symbol.iterator in Object(posts)) {
+                  renderPostList(posts);
+                  renderPagination(currentPage, totalPages);
+                } else {
+                  console.error('Invalid posts data');
+                }
+                renderPagination(currentPage);
+              }).catch((err)=>{
+                console.error(err);
+      });
+    }
+
+    function createPost() {
+
+      const formData = new FormData();
+      formData.append('title', postTitleInput.value);
+      formData.append('content', postContentInput.value);
+      formData.append('userid', postAuthorInput.value);
+      formData.append('password', postPasswordInput.value);
+
+      for (const file of fileInput.files) {
+        formData.append('files', file);
+      }
+
+      axios.post('/customer/tourlandCustBoardRegisterApi', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },}).then(res => {
+                getPosts(currentPage);
+              }).catch((error)=>{
+                console.error(error);
+              })
+
+    }
+
+    function editPostById(id) {
+      axios.get(`/customer/tourlandCustBoardDetailApi/${id}`)
+              .then(res => {
+                const post = res.data.list;
+                postTitle.innerHTML = `Post ${post.id}`;
+                postIdInput.value= post.id;
+                postTitleInput.value = post.title;
+                postContentInput.value = post.content;
+                postAuthorInput.value = post.writer;
+                editPost.style.display = 'block';
+      });
+    }
+
+    function updatePostById(id) {
+
+      const formData = new FormData();
+      formData.append('id', postIdInput.value);
+      formData.append('title', postTitleInput.value);
+      formData.append('content', postContentInput.value);
+      formData.append('userid', postAuthorInput.value);
+      formData.append('password', postPasswordInput.value);
+
+      for (const file of fileInput.files) {
+        formData.append('files', file);
+      }
+
+      axios.put(`/customer/tourlandCustBoardRegisterEditApi/${postIdInput.value}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      })
+              .then(res => {
+                // editPost.style.display = 'none';
+                getPosts(currentPage);
+              })
+              .catch((error) => {
+                console.error(error);
+              });
+
+
+    }
+
+    function deletePostById(id, password) {
+
+      modalyesno.style.display = 'block';
+
+      closeButton.addEventListener('click', () => {
+        modalyesno.style.display = 'none';
+      });
+
+      yesButton.addEventListener('click', () => {
+        // Yes 버튼 클릭 시 처리할 코드
+        modalyesno.style.display = 'none';
+        axios.delete(`/customer/tourlandCustBoard/${id}`,{
+          headers: {
+            'Content-Type': `application/json`,
+          },
+          data: { password },
+        })
+                .then(res => {
+                  if(res.status === 200){
+                    const deletedPost = document.querySelector(`li[data-post-id="${id}"]`);
+                    postList.removeChild(deletedPost);
+                    getPosts(currentPage);
+                  }else if( res.status === 500){
+                    postError.textContent= `게시물 삭제 할 수 없습니다. ${res.msg}`;
+                    console.error(error);
+                  }
+                }).catch((error)=>{
+                  postError.textContent= `비밀번호 오류. ${error}`;
+                  console.error(error);
+        });
+
+      });
+
+      noButton.addEventListener('click', () => {
+        // No 버튼 클릭 시 처리할 코드
+        modalyesno.style.display = 'none';
+      });
+
+    }
+
+    function renderPostList(posts) {
+      postList.innerHTML = '';
+      for (const post of posts) {
+
+        const postIdDivLink = document.createElement('div');
+        postIdDivLink.textContent = post.id;
+        postIdDivLink.className ="post-number"
+
+
+        const postDivLink = document.createElement('div');
+        postDivLink.className ="post-title"
+
+        const postLink = document.createElement('a');
+        postLink.textContent = post.title;
+        // postLink.setAttribute('data-post-id',`${post.id}`);
+        postLink.href = `#${post.id}`;
+        postLink.addEventListener('click', () => {
+          editPostById(post.id);
+        });
+
+        postDivLink.appendChild(postLink);
+
+        const writerLink = document.createElement('div');
+        writerLink.textContent = post.writer;
+        writerLink.href = `#${post.id}`;
+        writerLink.className="post-writer";
+
+        const regDateLink = document.createElement('div');
+        regDateLink.textContent = post.regdate;
+        regDateLink.href = `#${post.id}`;
+        regDateLink.className = "post-date";
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click',(event) => {
+          event.preventDefault();
+
+          modal.style.display = 'block';
+
+          confirmButton.addEventListener('click', () => {
+            const bpassword = bpasswordInput.value;
+            console.log("비번->", bpassword);
+            if(bpassword){
+              // 입력된 값(value)을 처리하는 코드
+              modal.style.display = 'none';
+              // 입력된 비밀번호를 사용하여 처리할 코드
+              deletePostById(post.id, bpassword);
+            }else{
+              postError.textContent= `비밀번호가 비워져 있습니다.`;
+            }
+
+          });
+
+        });
+        const postItem = document.createElement('li');
+        postItem.setAttribute('id','post-number');
+        postItem.setAttribute('data-post-id', post.id);
+        postItem.appendChild(postIdDivLink);
+        postItem.appendChild(postDivLink);
+        postItem.appendChild(writerLink);
+        postItem.appendChild(regDateLink);
+        postItem.appendChild(deleteButton);
+
+        postList.appendChild(postItem);
+      }
+    }
+
+    window.onload = () => {
+      getPosts(currentPage);
+
+      createPostButton.addEventListener('click', createPost);
+      updatePostButton.addEventListener('click', () => {
+        const updatePost = document.querySelector("li");
+        const postId = updatePost.dataset.postID;
+        updatePostById(postId);
+      });
+      cancelEditButton.addEventListener('click', () => {
+        editPost.style.display = 'none';
+      });
+    };
+
   </script>
-  
+  <script src="/jquery.twbsPagination.js" type="text/javascript"></script>
 
-</section>
-{% endblock %} 
+  <section>
+  <div class="container">
+      <nav aria-label="Page navigation">
+          <ul class="pagination" id="pagination"></ul>
+      </nav>
+  </div>
+  </section>
+  <script type="text/javascript">
 
-{% block Pagination %} 
-{% include '../../include/pagination.html'%} 
+  </script>
+
+{% endblock %}
+
+{% block Pagination %}
+{% include '../../include/pagination.html'%}
 {% endblock%}
 
 {% block Footer %} {% include '../../include/userFooter.html' %} {% endblock%}

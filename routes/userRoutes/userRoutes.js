@@ -1540,6 +1540,155 @@ router.get('/api/tourlandCustBoardApi', async (req, res, next) => {
     }
 })
 
+
+router.post('/tourlandCustBoardRegisterApi', uploadMultiFiles.array("files"), async (req, res, next) => {
+// userHeader 에서 필요한 변수들
+    let searchkeyword = "";
+
+    let {boardtype, userid, title, content, password} = req.body;
+
+    console.log("CustBoard->>>>>", req.files);
+    const files = [];
+    for (const file of req.files) {
+        files.push({filename: file.filename, url: `/custimg/${file.filename}`});
+    }
+    body = {
+        raw: true,
+        title,
+        content,
+        writer: userid,
+        passwd: password,
+        image: files,
+    }
+
+    const custRegister = await models.custboard.create(body);
+
+    return res.status(200).json({"msg" : "success"});
+
+});
+
+
+
+// 여행 후기 게시글 보기
+router.get('/tourlandCustBoardDetailApi/:id', async (req, res, next) => {
+    // userHeader 에서 필요한 변수들
+
+    console.log('=---쿼리에서 id 추출 ---', req.params.id);
+    const {id} = req.params;
+    const {searchkeyword, searchtype} = req.query
+
+    let custBoardVO =
+        await models.custboard.findOne({
+            raw: true,
+            where: {
+                id
+            }
+        });
+    console.log('----게시글보기====', custBoardVO);
+    return res.status(200).json({"list": custBoardVO, "msg" : "success"});
+
+})
+
+
+
+// 여행후기 수정하기 전송
+router.put('/tourlandCustBoardRegisterEditApi/:id', parser, upload.array("files"), async (req, res, next) => {
+
+    const {id} = req.params;
+    const {searchkeyword, searchtype} = req.query
+    let {boardtype, userid, title, content, password} = req.body;
+
+    console.info("CustBoardEdit 1->", req.body);
+
+    console.log("CustBoard->>>>>", req.files);
+    const files = [];
+    for (const file of req.files) {
+        files.push({filename: file.filename, url: `/custimg/${file.filename}`});
+    }
+
+    console.info("CustBoardEdit 2->", files);
+
+    const checkPwd = await models.custboard.findOne({
+        attributes: ["passwd"],
+        where : {
+            id
+        }
+    })
+
+    console.info("CustBoardEdit 3->", password, checkPwd.passwd);
+
+    if( password === checkPwd.passwd){
+        const body = {
+            raw: true,
+            title,
+            content,
+            writer: userid,
+            passwd: password,
+            image: files,
+        }
+
+        const update = await models.custboard.update(body, {
+            where: {
+                id,
+            }
+        });
+
+        console.info("CustBoardEdit 4->", update);
+
+        if(update){
+            return res.status(200).json({"msg": "success"});
+        }else{
+            return res.status(204).json({"msg":"password not equal"});
+        }
+    }else{
+        console.info("CustBoardEdit 5->", "비번 불일치");
+
+        return res.status(405).json({"msg": "notexist"})
+    }
+
+});
+
+
+
+// 여행후기 삭제하기
+router.delete('/tourlandCustBoard/:id', async (req, res, next) => {
+
+    const {id} = req.params;
+    const {password} = req.body;
+    let boardId = req.query.id
+
+    console.log("delete----->", password);
+
+    const checkPwd = await models.custboard.findOne({
+        attributes: ["passwd"],
+        where : {
+            id
+        }
+    })
+
+    if( checkPwd !== null && password === checkPwd.passwd){
+        models.custboard.destroy({
+            where: {
+                id,
+            }
+        }).then((result) => {
+            console.log(result);
+            return res.status(200).json({"msg":"deletesuccess"});
+        }).catch((err) => {
+            return res.status(500).json({"msg":"deletefiled"});
+            console.log(err);
+            next(err);
+        })
+    }else{
+        return res.status(300).json({"msg":"passwordcheck"});
+    }
+
+
+
+});
+
+
+
 // 여행 후기 게시글 보기
 router.get('/tourlandCustBoardDetail/:id', async (req, res, next) => {
     // userHeader 에서 필요한 변수들
@@ -1616,42 +1765,6 @@ router.post('/tourlandCustBoardRegister', uploadMultiFiles.array("files"), async
 
     res.redirect("/customer/tourlandCustBoard")
 
-//     console.log('------------------게시글 등록-----------------', custRegister);
-
-// // ------------------게시글 등록하면 후기 게시판 목록 보여줘야하므 list값도 같이 전송해서 게시글 목록 다시 불러오기 -----------------------------------
-//     const contentSize = 5 // 한페이지에 나올 개수
-//     const currentPage = Number(req.query.currentPage) || 1; //현재페이
-//     const {limit, offset} = getPagination(currentPage, contentSize);
-
-//     const list =
-//         await models.custboard.findAll({
-//             raw: true,
-//             order: [
-//                 ["id", "DESC"]
-//             ],
-//             limit, offset
-//         });
-//     const listCount =
-//         await models.custboard.findAndCountAll({
-//             raw: true,
-//             order: [
-//                 ["id", "DESC"]
-//             ],
-//             limit, offset
-//         });
-//     console.log('======데이터 전체 count 수 전송전송=======1', listCount.count);
-//     const pagingData = getPagingData(listCount, currentPage, limit);
-//     let cri = currentPage;
-
-//     console.log('======데이터 전체 count 수 전송전송=======2', cri);
-
-//     res.render('user/board/tourlandCustBoard', {
-//         custRegister,
-//         searchkeyword,
-//         list,
-//         pagingData,
-//         cri
-//     });
 });
 
 
