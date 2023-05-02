@@ -392,7 +392,7 @@
           headers: {
             'Content-Type': `application/json`,
           },
-          data: { password },
+          data: { "password":passswd },
         })
                 .then(res => {
                   if(res.status === 200){
@@ -502,11 +502,7 @@
   <script src="/jquery.twbsPagination.js" type="text/javascript"></script>
 
   <section>
-  <div class="container">
-      <nav aria-label="Page navigation">
-          <ul class="pagination" id="pagination"></ul>
-      </nav>
-  </div>
+
   </section>
   <script type="text/javascript">
 
