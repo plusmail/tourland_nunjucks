@@ -1,11 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Insert title here</title>
-    <link href="/stylesheets/paging.css" rel="stylesheet" type="text/css" />
-    <link href="/stylesheets/boardStyle.css" rel="stylesheet" type="text/css" />
-</head>
+{% extends 'boardlayout.html' %}
+
+{% block header %}
+{% include '../../include/userHeader.html' %}
+{% endblock%}
+
+
+{% block Stylesheet %}
 <style>
     .FAQContent{
         width: 100%;
@@ -19,8 +19,9 @@
     }
 
 </style>
-<body>
-{%- include("../../include/userHeader.html")%}
+{% endblock %}
+
+{% block Section %}
 <section>
     {%- include("../../include/userBoardMenu.html")%}
     <div id="myreserv">
@@ -83,53 +84,64 @@
 
     </div>
 </section>
+{% endblock %}
 
+{% block Pagination %}
 {%- include("../../include/pagination.html") %}
+{% endblock %}
+
+{% block SearchScript %}
+
 <script>
-    var makeOption = function(searchType) {
+    const makeOption = function(searchType) {
+        let option = null;
+        let option1= null;
+        let option2= null;
+        let option3= null;
+        let option4= null;
         switch(searchType) {
             case "D":
-                var option = $("<option value='J'>").html("제주여행");
+                option = $("<option value='J'>").html("제주여행");
                 $("#searchType2").append(option);
                 break;
             case "I":
-                var option = $("<option value=''>").html("전체");
-                var option1 = $("<option value='P'>").html("여행상품");
-                var option2 = $("<option value='V'>").html("여권 및 비자");
-                var option3 = $("<option value='T'>").html("환율");
-                var option4 = $("<option value='E'>").html("기타");
+                option = $("<option value=''>").html("전체");
+                option1 = $("<option value='P'>").html("여행상품");
+                option2 = $("<option value='V'>").html("여권 및 비자");
+                option3 = $("<option value='T'>").html("환율");
+                option4 = $("<option value='E'>").html("기타");
                 $("#searchType2").append(option).append(option1).append(option2).append(option3).append(option4);
                 break;
             case "R":
-                var option = $("<option value=''>").html("전체");
-                var option1 = $("<option value='B'>").html("예약 및 취소");
-                var option2 = $("<option value='R'>").html("결제 및 환불");
+                option = $("<option value=''>").html("전체");
+                option1 = $("<option value='B'>").html("예약 및 취소");
+                option2 = $("<option value='R'>").html("결제 및 환불");
                 $("#searchType2").append(option).append(option1).append(option2);
                 break;
             case "U":
-                var option = $("<option value='C'>").html("쿠폰,이벤트");
+                option = $("<option value='C'>").html("쿠폰,이벤트");
                 $("#searchType2").append(option);
                 break;
             default :
-                var option = $("<option value=''>").html("-----------");
+                option = $("<option value=''>").html("-----------");
                 $("#searchType2").append(option);
         }
     }
-    var fixSearchTypeAndKeyword = function() {
-        var searchType = "{{cri.searchType}}";
-        var searchType2 = "{{cri.searchType2}}";
-        var keyword = "{{cri.keyword}}";
+    const fixSearchTypeAndKeyword = function() {
+        let searchType = "{{cri.searchType}}";
+        let searchType2 = "{{cri.searchType2}}";
+        let keyword = "{{cri.keyword}}";
         $("#searchType2").empty();
         makeOption(searchType);
         $("#searchType option").each(function(i, obj) {
-            var value = $(this).val();
+            let value = $(this).val();
             if(value==searchType) {
                 $(this).prop("selected",true);
                 return;
             }
         })
         $("#searchType2 option").each(function(i, obj) {
-            var value = $(this).val();
+            let value = $(this).val();
             if(value==searchType2) {
                 $(this).prop("selected",true);
                 return;
@@ -139,7 +151,7 @@
     };
     $(document).on("click",".faqList",function(){
         $(".FAQContent").css("display","none");
-        var no = $(this).attr("data-no");
+        let no = $(this).attr("data-no");
         $(this).children().children(".FAQContent").css("display","block");
 
     })
@@ -163,7 +175,8 @@
 
     fixSearchTypeAndKeyword();
 </script>
+{% endblock %}
 
-{%- include("../../include/userFooter.html") %}
-</body>
-</html>
+{% block Footer %}
+{% include '../../include/userFooter.html' %}
+{% endblock%}

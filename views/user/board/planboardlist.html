@@ -1,0 +1,67 @@
+{% extends 'boardlayout.html' %}
+
+{% block header %}
+{% include '../../include/userHeader.html' %}
+{% endblock%}
+
+{% block Section %}
+<section>
+	{%- include("../../include/userBoardMenu.html")%}
+
+		<div id="myreserv" >
+		<h1>상품 문의 사항</h1><br>
+		<button id="btnWrite">글쓰기</button>
+			<table id="reserv" style="margin-top:15px;">
+				<tr>
+					<th class="nono">번호</th>
+					<th style="width:400px;">제목</th>
+					<th>작성자</th>
+					<th>작성일자</th>
+					<th class="lastTh">답변상태</th>
+				</tr>
+				{% for planBoard in listCounts %}
+
+				<tr class="planBoardList" data-no="{{planBoard.id}}">
+					<td class="nono">{{planBoard.id}}</td>
+					<td style="width:400px;"><a href="/plan/detail/{{planBoard.id}}?currentPage={{pagingData.currentPage}}" style="text-decoration: none;">{{planBoard.title}}</a></td>
+					<td>{{planBoard.writer}}</td>
+					<td>{{planBoard.regdate}}</td>
+						{% if planBoard.answer == 0  %}
+						<td><span class="badge bg-orange">답변미완료</span></td>
+						{% endif %}
+						{% if planBoard.answer == 1 %}
+						<td><span class="badge bg-blue">답변완료</span></td>
+						{% endif %}
+				{% endfor %}
+			</table>
+			<!--        pageMaker 부분-->
+
+			<center>
+				<ul class="pagination" id="pagination"></ul>
+			</center>
+
+
+		</div>
+
+</section>
+
+{% endblock %}
+
+{% block SearchScript %}
+<script>
+	//글쓰기 버튼 누르면
+$("#btnWrite").click(function(){
+	location.href="/plan/add";
+})
+</script>
+{% endblock %}
+
+
+{% block Pagination %}
+{%- include("../../include/pagination.html") %}
+{% endblock %}
+
+
+{% block Footer %}
+{% include '../../include/userFooter.html' %}
+{% endblock%}

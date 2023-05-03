@@ -8,9 +8,9 @@ module.exports = () => {
     passport.use(new LocalStrategy({
         usernameField: 'id',
         passwordField: 'pass',
-        passReqToCallback: false,
+        passReqToCallback: true,
         viewedProducts: ['null'],
-    }, async (userid, password, done) => {
+    }, async (req, userid, password, done) => {
         try {
             const exUser = await user.findOne({ where: { userid:userid } });
             console.log("exUser11111111111->", exUser.userid);
@@ -18,11 +18,15 @@ module.exports = () => {
             if (exUser) {
                 const result = await bcrypt.compare(password, exUser.userpass);
                 if (result) {
-                    console.log("local->", exUser.usersecess);
+                    console.log("passport----1>", exUser.usersecess);
+                    console.log("passport----2>", req.session.previousUrl);
 
                     if(exUser.usersecess == false || null){
                         done(null, false, { errorCode:409, message: '탈퇴한 회원 입니다. 재 가입하세요.' });
                     }else{
+                        exUser.dataValues.previousUrl = req.session.previousUrl;
+                        console.log("passport----3>", exUser);
+
                         done(null, exUser);
                     }
 

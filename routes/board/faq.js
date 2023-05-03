@@ -13,6 +13,10 @@ const moment = require("moment");
 const {faq} = require('../../models');
 
 
+router.use((req, res, next)=>{
+    res.locals.user = req.user;
+    next();
+});
 
 
 const {getPagination, getPagingDataCount, getPagingData} = require('../../controller/pagination')

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>TourLand</title>
+</head>
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Nanum+Gothic&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+<script src="https://kit.fontawesome.com/6f2f0f2d95.js"></script>
+<link href="/stylesheets/boardStyle.css" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/tourlandMain.css" rel="stylesheet" type="text/css" />
+
+{% block registerFormCss %}
+{% endblock %}
+
+<body>
+{% block header %}
+{% endblock %}
+
+{% block Stylesheet %}
+{% endblock %}
+<div id="container">
+    {% block Section %}
+    {% endblock %}
+
+    {% block Pagination %}
+    {% endblock %}
+
+</div>
+
+{% block SearchScript %}
+{% endblock %}
+
+{% block Footer%}
+{% endblock%}
+</body>
+</html>

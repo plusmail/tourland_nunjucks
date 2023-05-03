@@ -1,0 +1,81 @@
+{% extends 'boardlayout.html' %}
+
+{% block header %}
+{% include '../../include/userHeader.html' %}
+{% endblock%}
+
+{% block Stylesheet %}
+<style>
+#datailRealContent{
+	width: 700px;
+    margin: 0 auto;
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+#respond{
+	background-color: #D5D5D5;
+    margin-top: 52px;
+    padding: 75px;
+}
+</style>
+{% endblock %}
+{% block Section %}
+<section>
+	{%- include("../../include/userBoardMenu.html")%}
+	<div id="detailDiv">
+		<div>
+		  <br>
+		  <p>고객님의 문의사항 입니다. </p>
+		</div>
+		<div id="detailContent">
+		   <ul id="datailUl">
+		   <li> {{plans.id}}</li>
+		   <li class="detailLi"> {{plans.title}} </li>
+		   <li> {{plans.writer}}</li>
+		   <li> {{plans.regdate}}</li>
+		   </ul>
+		   <div id="datailRealContent">
+
+			   {{plans.content}}
+		   </div>
+
+			<!-- 답변이 있을때 나오게 -->
+			{% if plans.answer ==1 %}
+		   <hr>
+				<div id="respond">
+						{{plans.respond}}}
+				</div>
+			{% endif %}
+<!--					로그인한 사람이 매니저 이면, 답변관리 메뉴 보이기-->
+<!--					그 외는 안보이게 하기 -->
+		   <!-- 답변  -->
+			{% if user.role === "admin"  %}
+				<div id="detailComment">
+					<button id="reply">답변관리</button>
+				</div>
+			{% endif %}
+		</div>
+	 </div>
+</section>
+{% endblock %}
+
+{% block SearchScript %}
+
+<script>
+	$("#reply").click(function(){
+		let answer ="{{plans.answer}}";
+		let id = "{{plans.id}}";
+		let respond = "{{plans.respond}}";
+		let currentPage = "{{currentPage}}";
+		if(answer == 0){
+			location.href = "/manager/planBoardDetail/"+id;
+		}else if(answer == 1){
+			location.href = "/manager/planBoardModify/"+id+"?respond="+respond;
+		}
+	})
+</script>
+{% endblock %}
+
+{% block Footer %}
+{% include '../../include/userFooter.html' %}
+{% endblock%}

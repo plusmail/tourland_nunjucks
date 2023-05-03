@@ -303,49 +303,14 @@ router.post('/EditPasswordCheck1', async (req, res, next) => {
 
 // 로그인 폼
 router.get('/loginForm', async (req, res, next) => {
-    let {Auth, Manager, login} = sessionCheck(req, res);
     let {registerSuccess, id} = req.query;
     let UserStay = {userid: id};
 
-    let EmpStay = {};
-    let error = "";
     let searchkeyword = "";
 
 
     res.render("user/tourlandLoginForm", {
-        Auth,
-        login,
-        Manager,
         searchkeyword,
-        registerSuccess,
-        UserStay,
-        EmpStay,
-        error
-    });
-});
-
-// 매니저 로그인 폼
-router.get('/loginManagerForm', async (req, res, next) => {
-
-    let {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
-
-    let {registerSuccess, id} = req.query;
-    let EmpStay = {empid: id};
-    let UserStay = {};
-    let error = "";
-    let searchkeyword = "";
-
-
-    res.render("user/tourlandLoginManagerForm", {
-        Auth,
-        AuthEmp,
-        login,
-        Manager,
-        searchkeyword,
-        UserStay,
-        registerSuccess,
-        EmpStay,
-        error
     });
 });
 
@@ -433,7 +398,6 @@ router.post('/loginForm', (req, res, next) => {
             }
         }
         return req.login(user, loginErr => { // 이 부분 callback 실행
-            console.log('req.login callback');
             if (loginErr) {
                 let error = "usernotfind";
                 res.status(405).json({"responseText":error});
@@ -442,11 +406,18 @@ router.post('/loginForm', (req, res, next) => {
             const fillteredUser = { ...user.dataValues };
 
 
+            console.log('req.login callback-->', req.session.previousUrl);
             delete fillteredUser.userpass;
-            console.log('req.login callback->', fillteredUser);
+            fillteredUser.previousUrl = req.session.previousUrl;
 
-            return res.status(200).json({"responseText":"loginsuccess"});
+            console.log('req.login callback-2>', user.dataValues.previousUrl);
 
+
+            const previousUrl = req.session.previousUrl || '/';
+            console.log('req.login callback session->', req.session.previousUrl);
+
+            delete req.session.previousUrl;
+            res.status(200).json({"previousUrl": user.dataValues.previousUrl, "responseText":"loginsuccess"});
             // return res.json(fillteredUser);
         });
     })(req, res, next);
@@ -636,7 +607,7 @@ router.get("/tourlandProductKRList", async (req, res, next) => {
         let date = '';
         let capa = '';
 
-        console.log("KRList------>", list);
+        // console.log("KRList------>", list);
 
 
         if (list != null) {

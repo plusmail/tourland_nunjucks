@@ -14,6 +14,12 @@ const {notice} = require('../../models/index');
 
 const {getPagination, getPagingDataCount, getPagingData} = require('../../controller/pagination')
 
+
+router.use((req, res, next)=>{
+    res.locals.user = req.user;
+    next();
+});
+
 // 공지사항 전체 목록
 router.get("/list", async (req, res, next) => {
     let {searchType, keyword} = req.query;
@@ -58,8 +64,6 @@ router.get("/detail/:no", async (req, res, next) => {
                 no
             }
         });
-    console.log(notice);
-    console.log(req.query);
 
     let searchkeyword = "";
 

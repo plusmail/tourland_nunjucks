@@ -16,7 +16,7 @@ const userRoutes = require("./routes/userRoutes/userRoutes");
 const managerRoutes = require("./routes/managerRoutes/managerRoutes");
 const noticeRouter = require("./routes/board/notice.js");
 const faqRouter = require("./routes/board/faq.js");
-const questionRouter = require("./routes/board/question.js");
+const planRouter = require("./routes/board/plan.js");
 
 
 
@@ -93,9 +93,19 @@ app.use("/customer", userRoutes);
 app.use("/manager", managerRoutes);
 app.use("/notice", noticeRouter);
 app.use("/faq", faqRouter);
-app.use("/question", faqRouter);
+app.use("/plan", planRouter);
 
 
+// 이전 URL 저장 미들웨어 등록
+app.use((req, res, next) => {
+    if (req.method === 'GET' && req.path !== '/customer/loginForm/' && req.path !== '/customer/login/') {
+        req.session.previousUrl = req.originalUrl;
+    }
+
+    console.log("app.user ----->", req.session.previousUrl);
+
+    next();
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

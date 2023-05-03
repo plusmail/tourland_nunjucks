@@ -26,11 +26,12 @@
                   }).then((res)=>{
                     console.log("axios1->", res);
                     console.log("axios2->", res.data.responseText);
-                    console.log("axios3->", res.status);
+                    console.log("axios3->", res.data.previousUrl);
+                    console.log("axios4->", res.status);
 
                     if(res.data.responseText === "loginsuccess"){
                         confirm("로그이 완료되었습니다.첫 페이지로 이동합니다.");
-                        location.href = "/customer";
+                        location.href = encodeURI(res.data.previousUrl);
                     }
                   }) .catch((error)=> {
                     console.log("555555->", error.response.status);
