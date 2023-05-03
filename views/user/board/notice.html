@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="/stylesheets/paging.css" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/boardStyle.css" rel="stylesheet" type="text/css" />
+<style>
+  section nav ul li:first-child {
+	background: mistyrose;
+}
+.fixedTop { display:block;  height: 20px; background: maroon; color: #fff; }
+</style>
+</head>
+
+<body>
+	{%- include("../../include/userHeader.html")%}
+		<section>
+<!--			여기가 게시판 내용 들어가는곳임------------------ -->
+		{%- include("../../include/userBoardMenu.html")%}
+				<div id="myreserv">
+				<h1>공지사항</h1>
+					<br>
+					<table id="reserv">
+						<tr>
+							<th></th>
+							<th class="nono">번호</th>
+							<th class="thTitle">제목</th>
+							<th>작성자</th>
+							<th class="lastTh">작성일자</th>
+						</tr>
+						{% for nf in noticeLists  %}
+								{% if nf.fixed === 1 %}
+							<tr>
+								<td><span class="fixedTop">공지</span></td>
+
+									<td class="nono">{{nf.no}}</td>
+								<td class="thTitle"><a href="/notice/detail/{{nf.no}}?page={{cri.page}}" style="text-decoration: none;">{{nf.title}}</a></td>
+								<td>{{nf.writer}}</td>
+								<td>{{nf.regdate}}</td>
+							</tr>
+								{% endif %}
+						{% endfor %}
+
+						{% for n in noticeLists %}
+								{% if n.fixed === 0 %}
+							<tr>
+								<td></td>
+								<td class="nono">{{n.no}}</td>
+								<td class="thTitle"><a href="/notice/detail/{{n.no}}?page={{cri.page}}" style="text-decoration: none;">{{n.title}}</a></td>
+								<td>{{n.writer}}</td>
+								<td>{{n.regdate}}</td>
+							</tr>
+							{% endif%}
+
+						{% endfor %}
+					</table><br>
+
+					<center><ul class="pagination" id="pagination"></ul></center>
+
+				</div>
+				<div>
+
+				</div>
+		</section>
+
+<script>
+	$("#btnSearch").click(function(){
+		var searchType = $("#searchType").val();
+		var keyword = $("#keywordInput").val();
+		location.href = "tourlandBoardNotice?searchType="+searchType+"&keyword="+keyword;
+		//searchBoardController의 listPage GET 으로 받음
+
+	})
+
+</script>
+
+{%- include("../../include/pagination.html") %}
+
+{%- include("../../include/userFooter.html")%}
+</body>
+</html>

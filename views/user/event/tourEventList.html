@@ -20,7 +20,7 @@
 	<div id="eventMainDiv">
 		{% for eventList in eventLists %}
 		<div class="eventBox" data-click="{{eventList.id}}">
-			<img src="/displayFile/event{{eventList.pic}}" class="eventImgs">
+			<img src="/displayFile/event?filename={{eventList.pic}}" class="eventImgs">
 			<p>{{eventList.title}}</p>
 		</div>
 		{% endfor %}

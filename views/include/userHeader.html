@@ -15,13 +15,13 @@
     <nav id="nav1">
         <ul>
             {% if user ===  undefined %}
-                <li><a href="/customer/tourlandBoardNotice">고객센터</a></li>
+                <li><a href="/notice/list">고객센터</a></li>
                 <li><a href="/customer/tourlandRegister">회원가입</a></li>
                 <li><a href="/customer/loginForm" class="balance">로그인</a></li>
                 <li><a href="/customer/loginManagerForm" class="balance">관리자로그인</a></li>
             {%  else %}
                 <li><a href="/customer/logout" class="balance">로그아웃</a></li>
-                <li><a href="/customer/tourlandBoardNotice">고객센터</a></li>
+                <li><a href="/notice/list">고객센터</a></li>
                 {% if user.role === 'user'  %}
                 <li><a href="/customer/EditPassword">마이페이지</a></li>
                 <p id="userAuth">[ {{Auth.username }} ]님! 반갑습니다.</p>

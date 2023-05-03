@@ -20,9 +20,9 @@
 
 </style>
 <body>
-{%- include("../../include/userHeader.ejs")%}
+{%- include("../../include/userHeader.html")%}
 <section>
-    {%- include("../../include/userBoardMenu.ejs")%}
+    {%- include("../../include/userBoardMenu.html")%}
     <div id="myreserv">
         <h1>자주 묻는 질문</h1>
         <table id="reserv">
@@ -33,56 +33,58 @@
                 <th>분류</th>
                 <th class="lastTh">펼쳐보기</th>
             </tr>
-            {% list.forEach( faq => { %}
-            <tr class="faqList" data-no="{%=faq.no%}">
-                <td class="nono">{%=faq.no%}</td>
-                <td class="thTitle" style="margin-top:15px;"><i class="fab fa-quora"></i>  {%=faq.title%}
+            {% for faq in noticeLists  %}
+            <tr class="faqList" data-no="{{faq.no}}">
+                <td class="nono">{{faq.no}}</td>
+                <td class="thTitle" style="margin-top:15px;"><i class="fab fa-quora"></i>  {{faq.title}}
                     <div class="FAQContent">
                         <br><br>
-                        <i class="fas fa-bullhorn"></i>   {%=faq.content%}
+                        <i class="fas fa-bullhorn"></i>   {{faq.content}}
                     </div>
                 </td>
-                <td>{%=faq.lcate == 'D'?'국내패키지상품':faq.lcate == 'I'?'해외패키지상품':faq.lcate == 'R'?'상품 예약 및 결제':'회원혜택안내'%}</td>
-                <td>{%=faq.mcate == 'P'?'여행상품':faq.mcate == 'V'?'여권 및 비자':faq.mcate == 'T'?'환율':faq.mcate == 'J'?'제주여행':faq.mcate == 'B'?'예약 및 취소':faq.mcate == 'R'?'결제 및 환불':faq.mcate == 'C'?'쿠폰 및 이벤트':'기타'%}</td>
+                <td>{% if fqa.lcate == "D" %}
+                    국내패키지상품
+                    {% elif  fqa.lcate == "I" %}
+                    해외패키지상품
+                    {% elif  fqa.lcate == "R" %}
+                    상품 예약 및 결제
+                    {% else %}
+                    회원혜택안내
+                    {% endif %}
+                </td>
+
+                <td>{% if fqa.mcate == "P" %}
+                    여행상품
+                    {% elif  fqa.mcate == "V" %}
+                    여권 및 비자
+                    {% elif  fqa.mcate == "T" %}
+                    환율
+                    {% elif  fqa.mcate == "J" %}
+                    제주여행
+                    {% elif  fqa.mcate == "B" %}
+                    예약 및 취소
+                    {% elif  fqa.mcate == "R" %}
+                    결제 및 환불
+                    {% elif  fqa.mcate == "C" %}
+                    쿠폰 및 이벤트
+                    {% else %}
+                    기타
+                    {% endif %}
+                </td>
+
                 <td><i class="fas fa-angle-down"></i></td>
             </tr>
 
-            {% }) %}
+            {% endfor %}
         </table>
-        <!--  부트 스트랩으로 사용  -->
-        <div class='text-center'>
-            <ul class="pagination">
-                {% if (pagingData.totalPages != 0) { %}
-                <div class="" style="text-align:center;">
-                    <ul class="pagination">
-                        <li {%if(pagingData.currentPage == 1){%} class="disabled" {%}else{%}class="waves-effect" {%}%} >
-                            <a {%if(pagingData.currentPage > 1){%} href="?currentPage={%=pagingData.currentPage-1%}" {%}%}>
-                                <i class="material-icons">prev</i>
-                            </a>
-                        </li>
-                        {% for(var i=pagingData.pnStart; i<=pagingData.pnEnd; i++){ %}
-                        <li {%if(i===pagingData.currentPage){%} class="active"
-                                {%}%}>
-                            <a href="?currentPage={%=i%}">{%=i%}</a>
-                        </li>
-                        {% } %}
 
-                        <li {%if(pagingData.currentPage == pagingData.totalPages){%} class="disabled" {%}else{%} class="waves-effect" {%}%}>
-                            <a {%if(pagingData.currentPage < pagingData.totalPages){%} href="?currentPage={%=pagingData.currentPage+1%}" {%}%} class="waves-effect">
-                                <i class="material-icons">next</i>
-                            </a>
-                        </li>
-                    </ul>
+	    <center><ul class="pagination" id="pagination"></ul></center>
 
-                </div>
-                {% } %}
 
-            </ul>
-        </div>
     </div>
 </section>
 
-
+{%- include("../../include/pagination.html") %}
 <script>
     var makeOption = function(searchType) {
         switch(searchType) {
@@ -114,9 +116,9 @@
         }
     }
     var fixSearchTypeAndKeyword = function() {
-        var searchType = "{%=cri.searchType%}";
-        var searchType2 = "{%=cri.searchType2%}";
-        var keyword = "{%=cri.keyword%}";
+        var searchType = "{{cri.searchType}}";
+        var searchType2 = "{{cri.searchType2}}";
+        var keyword = "{{cri.keyword}}";
         $("#searchType2").empty();
         makeOption(searchType);
         $("#searchType option").each(function(i, obj) {
@@ -162,6 +164,6 @@
     fixSearchTypeAndKeyword();
 </script>
 
-{%- include("../../include/userFooter.ejs") %}
+{%- include("../../include/userFooter.html") %}
 </body>
 </html>

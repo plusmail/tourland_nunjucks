@@ -1,12 +1,6 @@
 <script src="/jquery.twbsPagination.js" type="text/javascript"></script>
+<link href="/stylesheets/paging.css" rel="stylesheet" type="text/css" />
 
-<section>
-<div class="container">
-    <nav aria-label="Page navigation">
-        <ul class="pagination" id="pagination"></ul>
-    </nav>
-</div>
-</section>
 <script type="text/javascript">
         $('#pagination').twbsPagination({
 		    totalPages: {{pagingData.totalPages}} ,	// 총 페이지 번호 수
@@ -14,7 +8,7 @@
 		    startPage : {{pagingData.currentPage}}, // 시작시 표시되는 현재 페이지
 		    initiateStartPageClick: false,	// 플러그인이 시작시 페이지 버튼 클릭 여부 (default : true)
             resetStartPage: true,
-            hideOnlyOnePage: true,
+            {# hideOnlyOnePage: true, #}
 
 		    first : "첫 페이지",	// 페이지네이션 버튼중 처음으로 돌아가는 버튼에 쓰여 있는 텍스트
 		    prev : "이전 페이지",	// 이전 페이지 버튼에 쓰여있는 텍스트
@@ -30,9 +24,8 @@
 		    anchorClass : "page-link",	//버튼 안의 앵커에 대한 CSS class
 		    
 		    onPageClick: function (event, page) {
-            currentPage = page;
             // refreshPostList(page);
-            getPosts(currentPage);
+            location.href="/notice/list/?currentPage="+page;
 
 				console.log("클릭");
 		    }

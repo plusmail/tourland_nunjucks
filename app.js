@@ -14,6 +14,12 @@ const indexRouter = require("./routes/index");
 const apiRouter = require("./routes/indexApi");
 const userRoutes = require("./routes/userRoutes/userRoutes");
 const managerRoutes = require("./routes/managerRoutes/managerRoutes");
+const noticeRouter = require("./routes/board/notice.js");
+const faqRouter = require("./routes/board/faq.js");
+const questionRouter = require("./routes/board/question.js");
+
+
+
 const bodyParser = require("express");
 const FileStore = require("session-file-store")(session);
 const passport = require("passport");
@@ -85,6 +91,11 @@ app.use(
 
 app.use("/customer", userRoutes);
 app.use("/manager", managerRoutes);
+app.use("/notice", noticeRouter);
+app.use("/faq", faqRouter);
+app.use("/question", faqRouter);
+
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

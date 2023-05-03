@@ -7,9 +7,9 @@
 
 </head>
 <body>   
-	{%- include("../../include/userHeader.ejs")%}
+	{%- include("../../include/userHeader.html")%}
 		<section>
-		{%- include("../../include/userBoardMenu.ejs")%}
+		{%- include("../../include/userBoardMenu.html")%}
 		    <div id="detailDiv">
 				<div>
 				  <br>
@@ -17,13 +17,13 @@
 				</div>
 				<div id="detailContent">
 				   <ul id="datailUl">
-				   <li> {%=notice.no%} </li>
-				   <li class="detailLi"> {%=notice.title%} </li>
-				   <li> {%=notice.writer%} </li>
-				   <li> {%=notice.regdate%} </li>
+				   <li> {{notices.no}} </li>
+				   <li class="detailLi"> {{notices.title}} </li>
+				   <li> {{notices.writer}} </li>
+				   <li> {{notices.regdate}} </li>
 				   </ul>
 				   <div id="datailRealContent">
-				       {%=notice.content%}
+				       {{notices.content}}
 				   </div>
 				</div>
 				
@@ -35,11 +35,11 @@
 	$("#btnSearch").click(function(){
 		var searchType = $("#searchType").val();
 		var keyword = $("#keywordInput").val();
-		location.href = "tourlandBoardNotice?searchType="+searchType+"&keyword="+keyword;
+		location.href = "notice?searchType="+searchType+"&keyword="+keyword;
 		//searchBoardController의 listPage GET 으로 받음 
 		
 	})
 </script>
-		{%- include("../../include/userFooter.ejs") %}
+		{%- include("../../include/userFooter.html") %}
 </body>
 </html>
