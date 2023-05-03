@@ -1545,14 +1545,14 @@ router.post('/tourlandCustBoardRegisterApi', uploadMultiFiles.array("files"), as
 // userHeader 에서 필요한 변수들
     let searchkeyword = "";
 
-    let {boardtype, userid, title, content, password} = req.body;
+    let {userid, title, content, password} = req.body;
 
     console.log("CustBoard->>>>>", req.files);
     const files = [];
     for (const file of req.files) {
         files.push({filename: file.filename, url: `/custimg/${file.filename}`});
     }
-    body = {
+    const body = {
         raw: true,
         title,
         content,
@@ -1899,7 +1899,7 @@ router.delete('/tourlandCustBoardDetail', async (req, res, next) => {
 // 이벤트 목록 (현재 진행중인 이벤트들 나옴)
 router.get("/tourlandEventList/ingEvent", async (req, res, next) => {
 
-    const eventList = await models.event.findAll({
+    const eventLists = await models.event.findAll({
         raw: true,
         where: {
             enddate: {[Op.gt]: new Date()},
@@ -1913,7 +1913,7 @@ router.get("/tourlandEventList/ingEvent", async (req, res, next) => {
     let {Auth, AuthEmp, Manager, login} = sessionCheck(req, res);
     let searchkeyword = "";
 
-    res.render("user/event/tourEventList", {Auth, AuthEmp, login, Manager, searchkeyword, eventList, mistyrose});
+    res.render("user/event/tourEventList", {Auth, AuthEmp, login, Manager, searchkeyword, eventLists, mistyrose});
 });
 
 // 만료된 이벤트 목록
