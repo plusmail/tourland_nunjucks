@@ -10,11 +10,15 @@ const MemoryStore = require('memorystore')(session);
 const {QueryTypes, where} = require("sequelize");
 const moment = require("moment");
 const {isLoggedIn, isNotLoggedIn, previousUrl} = require('../../middlewares');
+const bodyParser = require('body-parser');
+const parser = bodyParser.urlencoded({extended: false});
+
 
 const {planboard} = require('../../models/index');
 const {getPagination, getPagingDataCount, getPagingData} = require('../../controller/pagination')
 
-
+router.use(bodyParser.urlencoded({ extended: false }));
+router.use(bodyParser.json());
 
 router.use((req, res, next)=>{
     res.locals.user = req.user;
@@ -70,7 +74,7 @@ router.get('/detail/:id', async (req, res, next) => {
 })
 
 // 상품 문의사항 글 등록하는 화면임
-router.get('/add', isLoggedIn, (req, res, next) => {
+router.get('/add', (req, res, next) => {
 
     let searchkeyword = "";
 
@@ -78,40 +82,34 @@ router.get('/add', isLoggedIn, (req, res, next) => {
 })
 
 // 상품 문의 사항 등록하기
-router.post('/add', isLoggedIn, async (req, res, next) => {
+router.post('/add', async (req, res, next) => {
     let searchkeyword = "";
-    const { title, content, writer, regdate, passwd} = req.body;
+
+    const formData = req.body;
+    console.log("----------->", formData);
+
+    const { title, content, username, userid, lcate, mcate} = req.body;
+
+    console.log("plan/add ----->", title, content, username, userid, lcate, mcate);
 
     const PlanRegister = await planboard.create({
         raw: true,
         title,
         content,
-        writer,
-        regdate,
+        username,
+        lcate,
+        mcate,
         answer: 0,
 
     });
-    const contentSize = 5 // 한페이지에 나올 개수
-    const currentPage = Number(req.query.currentPage) || 1; //현재페이
-    const {limit, offset} = getPagination(currentPage, contentSize);
 
-    const listAndCounts =
-        await planboard.findAndCountAll({
-            raw: true,
-            order: [
-                ["id", "DESC"]
-            ],
-            limit, offset
-        });
-    const {count:totalItems, rows: listCounts} = listAndCounts;
-    const pagingData = getPagingDataCount(totalItems, currentPage, limit);
-    let cri = currentPage;
-    res.render('user/board/tourlandPlanBoard', {
-        searchkeyword,
-        listCounts,
-        pagingData,
-        cri
-    });
+    if(PlanRegister){
+        return res.status(200).json({"msg":"success"});
+    }else{
+        return res.status(400).json({"msg":"failed"});
+
+    }
+ 
 });
 
 

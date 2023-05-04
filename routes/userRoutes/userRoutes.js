@@ -35,6 +35,8 @@ const {fixed} = require("lodash/fp/_falseOptions");
 const path = require("path");
 const bodyParser = require('body-parser');
 const parser = bodyParser.urlencoded({extended: false});
+
+
 const {upload, uploadMultiFiles} = require("../../controller/fileupload");
 const passport = require("passport");
 const {isLoggedIn, isNotLoggedIn, saveReferer} = require("../../middlewares");

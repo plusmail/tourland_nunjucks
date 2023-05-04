@@ -1,67 +1,201 @@
-{% extends 'boardlayout.html' %}
+{% extends 'boardlayout.html' %} {% block header %} {% include
+'../../include/userHeader.html' %} {% endblock%} {% block Stylesheet %}
+<style>
+  #btnSearch {
+    width: 72px;
+    margin-left: 30px;
+  }
+  #searchType {
+    padding: 3px;
+  }
+  #searchType2 {
+    padding: 2px;
+    margin: 0px 8px;
+  }
+  #keywordInput {
+    padding: 2px;
+  }
+</style>
 
-{% block header %}
-{% include '../../include/userHeader.html' %}
-{% endblock%}
-
-{% block Section %}
+{% endblock %} {% block Section %}
 <section>
-	{%- include("../../include/userBoardMenu.html")%}
+  {%- include("../../include/userBoardMenu.html")%}
 
-		<div id="myreserv" >
-		<h1>상품 문의 사항</h1><br>
-		<button id="btnWrite">글쓰기</button>
-			<table id="reserv" style="margin-top:15px;">
-				<tr>
-					<th class="nono">번호</th>
-					<th style="width:400px;">제목</th>
-					<th>작성자</th>
-					<th>작성일자</th>
-					<th class="lastTh">답변상태</th>
-				</tr>
-				{% for planBoard in listCounts %}
+  <div id="myreserv">
+    <h1>상품 문의 사항</h1>
+    <br />
+    <button id="btnWrite">글쓰기</button>
+    <div class="box-body" style="text-align: center">
+      <select name="searchType" id="searchType">
+        <option value="">전체</option>
+        <option value="D">국내패키지상품</option>
+        <option value="I">해외패키지상품</option>
+        <option value="R">상품 예약 및 결제</option>
+        <option value="U">회원혜택안내</option>
+      </select>
+      <select name="searchType2" id="searchType2">
+        <option value="N">===========</option>
+      </select>
+      <input type="text" name="keyword" id="keywordInput" />
+      <button id="btnSearch">검색</button>
+    </div>
 
-				<tr class="planBoardList" data-no="{{planBoard.id}}">
-					<td class="nono">{{planBoard.id}}</td>
-					<td style="width:400px;"><a href="/plan/detail/{{planBoard.id}}?currentPage={{pagingData.currentPage}}" style="text-decoration: none;">{{planBoard.title}}</a></td>
-					<td>{{planBoard.writer}}</td>
-					<td>{{planBoard.regdate}}</td>
-						{% if planBoard.answer == 0  %}
-						<td><span class="badge bg-orange">답변미완료</span></td>
-						{% endif %}
-						{% if planBoard.answer == 1 %}
-						<td><span class="badge bg-blue">답변완료</span></td>
-						{% endif %}
-				{% endfor %}
-			</table>
-			<!--        pageMaker 부분-->
+    <table id="reserv" style="margin-top: 15px">
+      <tr>
+        <th class="nono">번호</th>
+        <th style="width: 400px">제목</th>
+        <th>작성자</th>
+        <th>작성일자</th>
+        <th class="lastTh">답변상태</th>
+      </tr>
+      {% for planBoard in listCounts %}
 
-			<center>
-				<ul class="pagination" id="pagination"></ul>
-			</center>
+      <tr class="planBoardList" data-no="{{planBoard.id}}">
+        <td class="nono">{{planBoard.id}}</td>
+        <td style="width: 400px">
+          <a
+            href="/plan/detail/{{planBoard.id}}?currentPage={{pagingData.currentPage}}"
+            style="text-decoration: none"
+            >{{planBoard.title}}</a
+          >
+        </td>
+        <td>{{planBoard.writer}}</td>
+        <td>{{planBoard.regdate}}</td>
+        {% if planBoard.answer == 0 %}
+        <td><span class="badge bg-orange">답변미완료</span></td>
+        {% endif %} {% if planBoard.answer == 1 %}
+        <td><span class="badge bg-blue">답변완료</span></td>
+        {% endif %} {% endfor %}
+      </tr>
+    </table>
 
-
-		</div>
-
+    <center>
+      <ul class="pagination" id="pagination"></ul>
+    </center>
+  </div>
 </section>
 
-{% endblock %}
+{% endblock %} {% block SearchScript %}
 
-{% block SearchScript %}
 <script>
-	//글쓰기 버튼 누르면
-$("#btnWrite").click(function(){
-	location.href="/plan/add";
-})
+  const makeDetailOption = function (searchType) {
+    switch (searchType) {
+      case "D":
+        let option = $("<option value='J'>").html("제주여행");
+        $("#searchType2").append(option);
+        break;
+      case "I":
+        let option = $("<option value=''>").html("전체");
+        let option1 = $("<option value='P'>").html("여행상품");
+        let option2 = $("<option value='V'>").html("여권 및 비자");
+        let option3 = $("<option value='T'>").html("환율");
+        let option4 = $("<option value='E'>").html("기타");
+        $("#searchType2")
+          .append(option)
+          .append(option1)
+          .append(option2)
+          .append(option3)
+          .append(option4);
+        break;
+      case "R":
+        let option = $("<option value=''>").html("전체");
+        let option1 = $("<option value='B'>").html("예약 및 취소");
+        let option2 = $("<option value='R'>").html("결제 및 환불");
+        $("#searchType2").append(option).append(option1).append(option2);
+        break;
+      case "U":
+        let option = $("<option value='C'>").html("쿠폰,이벤트");
+        $("#searchType2").append(option);
+        break;
+      default:
+        let option = $("<option value=''>").html("-----------");
+        $("#searchType2").append(option);
+    }
+  };
+  const fixSearchTypeAndKeyword = function () {
+    let searchType = "";
+    let searchType2 = "";
+    let keyword = "";
+    $("#searchType2").empty();
+    makeOption(searchType);
+    $("#searchType option").each(function (i, obj) {
+      const value = $(this).val();
+      if (value == searchType) {
+        $(this).prop("selected", true);
+        return;
+      }
+    });
+    $("#searchType2 option").each(function (i, obj) {
+      const value = $(this).val();
+      if (value == searchType2) {
+        $(this).prop("selected", true);
+        return;
+      }
+    });
+    $("#keywordInput").val(keyword);
+  };
+
+  $("#searchType").change(function () {
+    $("#searchType2").empty();
+    makeDetailOption($("#searchType option:selected").val());
+    $("#keywordInput").val("");
+  });
+
+  $(".planBoardList").click(function () {
+    let no = $(this).attr("data-no");
+    let respond = $(this).attr("data-respond");
+    let page = "1";
+    let searchType = "";
+    let searchType2 = "";
+    let keyword = "";
+    if (respond == null || respond == "") {
+      location.href =
+        "planBoardDetail?no=" +
+        no +
+        "&page=" +
+        page +
+        "&searchType=" +
+        searchType +
+        "&searchType2=" +
+        searchType2 +
+        "&keyword=" +
+        keyword;
+    } else {
+      location.href =
+        "planBoardModify?no=" +
+        no +
+        "&page=" +
+        page +
+        "&searchType=" +
+        searchType +
+        "&searchType2=" +
+        searchType2 +
+        "&keyword=" +
+        keyword +
+        "&respond=" +
+        respond;
+    }
+  });
+  $("#btnSearch").click(function () {
+    let searchType = $("#searchType option:selected").val();
+    let searchType2 = $("#searchType2 option:selected").val();
+    let keyword = $("#keywordInput").val();
+    location.href =
+      "planBoardList?searchType=" +
+      searchType +
+      "&searchType2=" +
+      searchType2 +
+      "&keyword=" +
+      keyword;
+  });
 </script>
-{% endblock %}
 
-
-{% block Pagination %}
-{%- include("../../include/pagination.html") %}
-{% endblock %}
-
-
-{% block Footer %}
-{% include '../../include/userFooter.html' %}
-{% endblock%}
+<script>
+  //글쓰기 버튼 누르면
+  $("#btnWrite").click(function () {
+    location.href = "/plan/add";
+  });
+</script>
+{% endblock %} {% block Pagination %} {%-
+include("../../include/pagination.html") %} {% endblock %} {% block Footer %} {%
+include '../../include/userFooter.html' %} {% endblock%}

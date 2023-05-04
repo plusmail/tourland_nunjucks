@@ -24,6 +24,21 @@
 					<h2 class="box-title">상품 문의사항</h2>
 				</div>
 				<div class="box-body">
+					<select name="searchType" id="searchType">
+						<option value="">전체</option>
+						<option value="D">국내패키지상품</option>
+						<option value="I">해외패키지상품</option>
+						<option value="R">상품 예약 및 결제</option>
+						<option value="U">회원혜택안내</option>
+					</select>
+					<select name="searchType2" id="searchType2">
+						<option value="N">-----------</option>
+					</select>
+					<input type="text" name="keyword" id="keywordInput">
+					<button id="btnSearch">검색</button>
+				</div>
+
+				<div class="box-body">
 					<table class="table table-bordered">
 						<tr>
 							<th>번호</th>

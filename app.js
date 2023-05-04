@@ -47,8 +47,10 @@ env.addGlobal("jsonify", function (str) {
 app.use(logger("dev"));
 app.use(express.json());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(express.urlencoded({ extended: false }));
+
 app.use(cookieParser("1234"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser(process.env.COOKIE_SECRET));
