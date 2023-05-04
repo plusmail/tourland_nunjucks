@@ -65,9 +65,16 @@ app.use(
   })
 );
 
+
+
+
+
 //passport 초기화 및 세션사용
 app.use(passport.initialize());
 app.use(passport.session());
+
+
+
 
 // sequelize.sync({ force: false })
 // 서버 실행시마다 테이블을 재생성할건지에 대한 여부
@@ -89,6 +96,7 @@ app.use(
   apiRouter
 );
 
+
 app.use("/customer", userRoutes);
 app.use("/manager", managerRoutes);
 app.use("/notice", noticeRouter);
@@ -96,16 +104,8 @@ app.use("/faq", faqRouter);
 app.use("/plan", planRouter);
 
 
-// 이전 URL 저장 미들웨어 등록
-app.use((req, res, next) => {
-    if (req.method === 'GET' && req.path !== '/customer/loginForm/' && req.path !== '/customer/login/') {
-        req.session.previousUrl = req.originalUrl;
-    }
 
-    console.log("app.user ----->", req.session.previousUrl);
 
-    next();
-});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

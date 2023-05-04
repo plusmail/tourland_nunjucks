@@ -14,6 +14,7 @@ const {notice} = require('../../models/index');
 
 const {getPagination, getPagingDataCount, getPagingData} = require('../../controller/pagination')
 
+const {previousUrl} = require('../../middlewares');
 
 router.use((req, res, next)=>{
     res.locals.user = req.user;
@@ -21,7 +22,7 @@ router.use((req, res, next)=>{
 });
 
 // 공지사항 전체 목록
-router.get("/list", async (req, res, next) => {
+router.get("/list",previousUrl, async (req, res, next) => {
     let {searchType, keyword} = req.query;
 
     const contentSize = Number(process.env.CONTENTSIZE); // 한페이지에 나올 개수

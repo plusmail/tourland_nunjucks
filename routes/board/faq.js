@@ -18,8 +18,10 @@ router.use((req, res, next)=>{
     next();
 });
 
-
 const {getPagination, getPagingDataCount, getPagingData} = require('../../controller/pagination')
+const {previousUrl} = require('../../middlewares');
+
+router.use(previousUrl);
 
 // 공지사항 전체 목록
 router.get("/list", async (req, res, next) => {

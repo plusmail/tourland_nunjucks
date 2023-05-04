@@ -57,3 +57,19 @@ exports.verifyToken = (req, res, next) =>{
     }
 }
 
+exports.previousUrl= ((req, res, next) => {
+
+    req.session.previousUrl= req.originalUrl;
+  
+    console.log("app.use ----->", req.session.previousUrl);
+  
+    next();
+})
+
+
+exports.saveReferer = (req, res, next)=>{
+    if (req.method === 'GET') {
+      req.session.returnTo = req.headers.referer;
+    }
+    next();
+}

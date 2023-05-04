@@ -37,7 +37,7 @@ const bodyParser = require('body-parser');
 const parser = bodyParser.urlencoded({extended: false});
 const {upload, uploadMultiFiles} = require("../../controller/fileupload");
 const passport = require("passport");
-const {isLoggedIn, isNotLoggedIn} = require("../../middlewares");
+const {isLoggedIn, isNotLoggedIn, saveReferer} = require("../../middlewares");
 const {viewedProducts,viewedProductsList} = require("../../controller/userRoutesContorller");
 
 router.use((req, res, next)=>{
@@ -383,7 +383,6 @@ const fetchEmpData = async (req) => {
 // 로그인 전송
 router.post('/loginForm', (req, res, next) => {
 
-    console.log('/loginForm-> ', req.body);
     passport.authenticate('local', (err, user, info) => {
         console.log('passport.authenticalte callback ');
         if (err) {
@@ -405,16 +404,8 @@ router.post('/loginForm', (req, res, next) => {
             }
             const fillteredUser = { ...user.dataValues };
 
-
-            console.log('req.login callback-->', req.session.previousUrl);
             delete fillteredUser.userpass;
             fillteredUser.previousUrl = req.session.previousUrl;
-
-            console.log('req.login callback-2>', user.dataValues.previousUrl);
-
-
-            const previousUrl = req.session.previousUrl || '/';
-            console.log('req.login callback session->', req.session.previousUrl);
 
             delete req.session.previousUrl;
             res.status(200).json({"previousUrl": user.dataValues.previousUrl, "responseText":"loginsuccess"});

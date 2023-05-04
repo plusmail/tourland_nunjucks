@@ -9,16 +9,19 @@ const session = require('express-session');
 const MemoryStore = require('memorystore')(session);
 const {QueryTypes, where} = require("sequelize");
 const moment = require("moment");
-const {isLoggedIn, isNotLoggedIn} = require('../../middlewares');
+const {isLoggedIn, isNotLoggedIn, previousUrl} = require('../../middlewares');
 
 const {planboard} = require('../../models/index');
 const {getPagination, getPagingDataCount, getPagingData} = require('../../controller/pagination')
+
+
 
 router.use((req, res, next)=>{
     res.locals.user = req.user;
     next();
 });
 
+router.use(previousUrl);
 
 //-------------------------------------상품 문의 사항 상품 문의 사항 상품 문의 사항 상품 문의 사항 상품 문의 사항 상품 문의 사항 --------------------------------------------------
 // 상품 문의 사항

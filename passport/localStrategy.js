@@ -13,14 +13,10 @@ module.exports = () => {
     }, async (req, userid, password, done) => {
         try {
             const exUser = await user.findOne({ where: { userid:userid } });
-            console.log("exUser11111111111->", exUser.userid);
 
             if (exUser) {
                 const result = await bcrypt.compare(password, exUser.userpass);
                 if (result) {
-                    console.log("passport----1>", exUser.usersecess);
-                    console.log("passport----2>", req.session.previousUrl);
-
                     if(exUser.usersecess == false || null){
                         done(null, false, { errorCode:409, message: '탈퇴한 회원 입니다. 재 가입하세요.' });
                     }else{
