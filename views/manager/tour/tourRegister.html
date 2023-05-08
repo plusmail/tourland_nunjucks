@@ -1,60 +1,16 @@
 {%- include ('../../include/header.html') %}
 <link
-        href="/resources/plugins/datepicker/datepicker3.css"
+        href="/plugins/datepicker/datepicker3.css"
         rel="stylesheet" type="text/css">
 <script type="text/javascript"
-        src="/resources/plugins/datepicker/bootstrap-datepicker.js"></script>
+        src="/plugins/datepicker/bootstrap-datepicker.js"></script>
 <link rel="stylesheet"
       href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 <link rel="stylesheet"
-      href="/resources/plugins/bootstrap-slider/slider.css">
-<script src="/resources/plugins/bootstrap-slider/bootstrap-slider.js"></script>
-<script>
-    $(function() {
-        $("#startDate").datepicker({
-            format : "yyyy-mm-dd",
-            autoclose : true
-        }).datepicker("setDate", 'now');
-        $("#endDate").datepicker({
-            format : "yyyy-mm-dd",
-            autoclose : true
-        }).datepicker("setDate", 'now');
-        $("#etime").timepicker({
-            timeFormat : 'HH:mm:ss',
-            interval : 10,
-            minTime : '00:10:00',
-            maxTime : '23:50:00'
-        })
-        $("#capacity").slider({
-            formatter : function(value) {
-                return '현재 값 : ' + value;
-            }
-        })
-        $("#capacity").on("slide",function(slidEvt){
-            $("#miniVal").text(slideEvt.value);
-        })
-        $("#div").change(function() {
-            $("#location").empty();
-            if ($("#div option:selected").val() == '1') {
-                var option1 = $("<option value='도쿄'>").html("도쿄");
-                var option2 = $("<option vlaue='베이징'>").html("베이징");
-                $("#location").append(option1).append(option2);
-            } else {
-                var option1 = $("<option value='제주'>").html("제주");
-                $("#location").append(option1);
-            }
-        })
-        $("form").submit(function(){
-            var price = $("#price").val();
-            var priceReg = /^[0-9]*$/;
-            if(!priceReg.test(price)) {
-                alert("숫자만 입력하세요")
-                return false;
-            }
-        })
-    })
-</script>
+      href="/plugins/bootstrap-slider/slider.css">
+<script src="/plugins/bootstrap-slider/bootstrap-slider.js"></script>
+
 <div class="content">
     <div class="row">
         <div class="col-sm-12">
@@ -65,10 +21,6 @@
                 <form role="form" action="tourRegister" method="post">
                     <div class="box-body">
                         <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>번호</label> <input type="text" value="{%=no+1%}" name="no"
-                                                         class="form-control" readonly="readonly">
-                            </div>
                             <div class="form-group">
                                 <label>지역구분</label> <select class="form-control" name="ldiv"
                                                             id="div">
@@ -124,4 +76,57 @@
         </div>
     </div>
 </div>
+<script>
+    $(function() {
+        $("#startDate").datepicker({
+            format : "yyyy-mm-dd",
+            autoclose : true
+        }).datepicker("setDate", 'now');
+
+        $("#endDate").datepicker({
+            format : "yyyy-mm-dd",
+            autoclose : true
+        }).datepicker("setDate", 'now');
+
+        $("#etime").timepicker({
+            timeFormat : 'HH:mm:ss',
+            interval : 10,
+            minTime : '00:10:00',
+            maxTime : '23:50:00'
+        })
+
+        $("#capacity").slider({
+            formatter : function(value) {
+                return '현재 값 : ' + value;
+            }
+        })
+
+        $("#capacity").on("slide",function(slidEvt){
+            $("#miniVal").text(slideEvt.value);
+        })
+
+        $("#div").change(function() {
+            $("#location").empty();
+            if ($("#div option:selected").val() == '1') {
+                var option1 = $("<option value='도쿄'>").html("도쿄");
+                var option2 = $("<option vlaue='베이징'>").html("베이징");
+                $("#location").append(option1).append(option2);
+            } else {
+                var option1 = $("<option value='제주'>").html("제주");
+                $("#location").append(option1);
+            }
+        })
+
+        $("form").submit(function(){
+            var price = $("#price").val();
+            var priceReg = /^[0-9]*$/;
+            if(!priceReg.test(price)) {
+                alert("숫자만 입력하세요")
+                return false;
+            }
+        })
+    })
+</script>
+
+
 {%- include ('../../include/footer.html') %}

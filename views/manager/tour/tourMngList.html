@@ -64,12 +64,12 @@
                             <td>{{tour.id }}</td>
                             <td>{{tour.tname }}</td>
                             <td>{{tour.tlocation }}</td>
-                            <td>{{ tour.startDate |date('YYYY-MM-DD') }}</td>
-                            <td>{{ tour.endDate |date('YYYY-MM-DD') }}</td>
+                            <td>{{tour.startdate |date('YYYY-MM-DD') }}</td>
+                            <td>{{tour.enddate |date('YYYY-MM-DD') }}</td>
                             <td>{{tour.taddr }}</td>
                             <td>{{tour.etime }}</td>
                             <td>{{tour.capacity }}</td>
-                            <td>{{tour.tprice }}</td>
+                            <td>{{tour.tprice | numeral }}</td>
                             <td>{% if tour.ldiv%} 해외 {%else%} 국내 {%endif%}</td>
                         </tr>
                         {% endfor %}

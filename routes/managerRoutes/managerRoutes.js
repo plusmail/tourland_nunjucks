@@ -13,6 +13,7 @@ const {employee,
     airplane,
     hotel,
     tour,
+    rentcar,
 } = require("../../models");
 
 
@@ -660,11 +661,7 @@ router.get('/tourMngList', async (req, res, next) => {
 
 router.get('/tourRegister', async (req, res, next) => {
 
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
-
-    let no = '';
-
-    res.render("manager/tour/tourRegister", {Manager, AuthEmp, no});
+    res.render("manager/tour/tourRegister");
 });
 
 router.post("/tourRegister", async (req, res, next) => {
@@ -675,8 +672,8 @@ router.post("/tourRegister", async (req, res, next) => {
         ldiv: req.body.ldiv,
         tlocation: req.body.tlocation,
         tname: req.body.tname,
-        startDate: req.body.startDate,
-        endDate: req.body.endDate,
+        startdate: req.body.startDate,
+        enddate: req.body.endDate,
         taddr: req.body.taddr,
         etime: req.body.etime,
         capacity: req.body.capacity,
@@ -782,7 +779,6 @@ router.get('/tourDelete', async (req, res, next) => {
 // 🚗 렌트카 관리-----------------
 // 렌트카 관리 전체 목록
 router.get('/rentcarMngList', async (req, res, next) => {
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
 
     let {searchType, keyword} = req.query;
 
@@ -792,24 +788,26 @@ router.get('/rentcarMngList', async (req, res, next) => {
 
     keyword = keyword ? keyword : "";
 
-    const list = await models.rentcar.findAll({
+    const list = await rentcar.findAll({
         // raw : true,
         nest: true,
         attributes: ['id', 'cdiv', 'cno', 'rentddate', 'returndate', 'rentaddr', 'returnaddr', 'price', 'capacity', 'insurance', 'ldiv'],
         where: {},
         limit, offset
     });
-    let dataCountAll = await models.tour.findAndCountAll({
+    let dataCountAll = await tour.findAndCountAll({
         where: {},
         limit, offset
     });
 
 
-    const pagingData = getPagingData(dataCountAll, currentPage, limit);
+    const {count:totalItems, rows: lists} = dataCountAll;
+    const pagingData = getPagingDataCount(totalItems, currentPage, limit);
+
 
     let cri = {searchType, keyword};
 
-    res.render("manager/rentcar/rentcarMngList", {cri, list, pagingData, Manager, AuthEmp});
+    res.render("manager/rentcar/rentcarMngList", {cri, lists, pagingData});
 });
 
 router.get('/rentcarRegister', async (req, res, next) => {

@@ -11,6 +11,7 @@ const MemoryStore = require("memorystore")(session);
 const nunjucks = require("nunjucks");
 const moment = require('moment');
 const dateFilter = require('nunjucks-date-filter');
+const numeralFilter = require('nunjucks-numeral-filter');
 
 const indexRouter = require("./routes/index");
 const apiRouter = require("./routes/indexApi");
@@ -44,6 +45,8 @@ const env = nunjucks.configure("views", {
 env.addFilter('date', function(date, format) {
   return moment(date).format(format);
 });
+
+env.addFilter('numeral', numeralFilter);
 
 env.addGlobal("jsonify", function (str) {
   return JSON.stringify(str);
