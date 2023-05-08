@@ -1,0 +1,166 @@
+
+{%- include("../../include/header.html") %}
+<style>
+	/* #opa { width: 100%; height: 100%; background: gray; opacity: 0.2; } */
+	table .table table-bordered th,td,th{
+       text-align: center;
+    }
+    .userList:hover {
+    	background-color : lightgrey;
+    }
+</style>
+<!-- <div id="opa">dummy</div> -->
+<div class="content">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="box box-primary">
+				<div class="box-header">
+					<h2 class="box-title">고객 관리</h2>
+				</div>
+				<div class="box-body">
+				<!-- 검색 작업에서 유지될 데이터
+					1. 현재 페이지의 번호
+					2. 페이지당 보여지는 데이터의 수
+					3. 검색의 종류
+					4. 검색의 키워드
+				 -->
+					<select name="searchType" id="searchType" style="width:200px; height: 25px;">
+						{% if cri.searchType === null %}
+						{% set selectednull="selected" %}
+						{% else %}
+						{% set selectednull = '' %}
+						{% endif %}
+
+						<option value="n" {{selectednull}} >-----</option>
+						{% if cri.searchType === 'userId' %}
+						{% set selecteduserid='selected' %}
+						{% else %}
+						{% set selecteduserid = '' %}
+						{% endif %}
+
+						<option value="userId"  {{selecteduserid}} >유저아이디</option>
+
+						{% if cri.searchType === 'userName' %}
+						{% set selectedusername='selected' %}
+						{% else %}
+						{% set selectedusername = '' %}
+						{% endif %}
+						<option value="userName" {{selectedusername}} >유저명</option>
+
+					</select>
+					<input type="text" name="keyword" id="keywordInput" value="{{cri.keyword}}">
+					<button id="btnSearch">Search</button>
+					<button id="btnReset">리셋</button>
+				</div>
+				<div class="box-body">
+
+				    <button id="twowayBtn">
+						{% if lists.usersecess === 1 %}
+						회원 리스트
+						{% else %}
+						탈퇴회원 조회
+						{% endif %}
+					</button>
+
+				</div>
+				<div class="box-body">
+					<table class="table table-bordered">
+						<tr>
+							<th style="width:100px;">유저번호</th>
+							<th>유저명</th>
+							<th>생년월일</th>
+							<th>여권등록여부</th>
+							<th>유저아이디</th>
+						</tr>
+						<!-- 반복 돌면서 list가져오기 -->
+						{% for userList in lists %}
+						    <tr data-click="{{userList.id}}" class="userList"> <!-- 전체 줄 클릭했을 때 디테일로 넘어가도록 처리할 data-click 속성 선언 -->
+						    <td>{{userList.id}}</td>
+						    <td>{{userList.username}}</td>
+						    <td>{{userList.userbirth}}</td>
+
+								{% if userList.userpassport === null %}
+								{% set color = "pink" %}
+								{% else %}
+								{% set color = "yellow" %}
+								{% endif %}
+						    <td style="background-color: {{color}}">
+
+						    {% if userList.userpassport === null %}
+						    등록필요
+						    {% else %}
+						    등록완료
+						    {% endif %}
+						    </td>
+						    <td>{{userList.userid}}</td>
+						    </tr>
+						{% endfor %}
+					</table>
+
+					<center>
+                    <ul class="pagination" id="pagination"></ul>
+					</center>
+				</div>
+
+
+				</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+	$("#btnSearch").click(function(){
+		let searchType = $("#searchType").val();
+		let keyword = $("#keywordInput").val();
+
+		{% if lists.usersecess === 1 %}
+			{% set btnName = "탈퇴회원 조회" %}
+		{% else %}
+			{% set btnName ="회원 리스트" %}
+		{% endif %}
+
+
+		if("{{btnName}}"=="탈퇴회원 조회"){ //일반 고객 리스트에서 검색한 경우
+			location.href = "/manager/userMngList/0?searchType="+searchType+"&keyword="+keyword;
+		}else{
+			location.href = "/manager/userMngList/1?searchType="+searchType+"&keyword="+keyword;
+		}
+
+	})
+
+	//일반회원 리스트, 탈퇴회원 조회
+	$("#twowayBtn").click(function(){
+		//버튼 이름이 탈퇴회원 조회
+		let btnName = "{{btnName}}";
+		if(btnName == "탈퇴회원 조회"){
+			location.href ="/manager/userMngList/1";
+		}else{
+			location.href ="/manager/userMngList/0";
+		}
+	})
+
+	//각 리스트를 클릭했을 때 디테일로 넘어가는 부분
+	$(".userList").click(function(){
+		let id = $(this).attr("data-click");
+		let searchType = "{{cri.searchType}}";
+		let keyword = "{{cri.keyword}}";
+		location.href = "/manager/userDetailForm/"+id+"?usersecess={{lists.usersecess}}&page={{pagingData.currentPage }}&searchType="+searchType+"&keyword="+keyword;
+	})
+
+	$("#btnReset").click(function(){
+		location.href = "/manager/userMngList/{{ lists.usersecess}}";
+	})
+	//추가 버튼 누르면
+	$("#btnRegister").click(function(){
+		location.href = "/manager/userRegister";
+	})
+</script>
+
+	{% block Pagination %}
+	{%- include("../../include/pagination.html") %}
+	{% endblock %}
+
+
+
+	{%- include('../../include/footer.html')%}

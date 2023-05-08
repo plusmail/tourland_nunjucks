@@ -2,6 +2,42 @@
 {% block header %}
 {% include '../../include/userHeader.html' %}
 {% endblock%}
+{% block Stylesheet %}
+<style>
+  #boardRegister,
+  #btnReturnToList {
+    width: 100px;
+    height: 30px;
+    border: none;
+    background: mistyrose;
+  }
+  #ptag {
+    padding: 20px 20px;
+    color: gray;
+  }
+  #writerP {
+    padding-bottom: 10px;
+  }
+  #titleP {
+    padding-top: 15px;
+  }
+  #btnSearch {
+    width: 72px;
+    margin-left: 30px;
+  }
+  #searchType {
+    padding: 3px;
+  }
+  #searchType2 {
+    padding: 2px;
+    margin: 0px 8px;
+  }
+  #keywordInput {
+    padding: 2px;
+  }
+</style>
+{% endblock %}
+
 {% block Section %}
 <section>
   {%- include("../../include/userBoardMenu.html")%}
@@ -12,7 +48,10 @@
       <br />
     </div>
     <div id="detailContent">
-      <form  action="">
+      <form
+        method="post"
+        id="planBoardForm"
+      >
         <div class="box-body" style="text-align: center">
           <select name="lcate" id="lcate">
             <option value="">전체</option>
@@ -32,19 +71,19 @@
           <span>[ {{user.username}} ]</span>
           <input type="hidden" name="username" id="username" value="{{user.username}}" />
           <input
-                  type="hidden"
-                  name="userid"
-                  id="userid"
-                  class="form-control"
-                  value="{{user.userid}}"
+            type="hidden"
+            name="userid" 
+			id="userid"
+            class="form-control"
+            value="{{user.userid}}"
           />
           {% else %}
           <span></span>
           <input
-                  type="text"
-                  name="username"
-                  id="username"
-                  style="border: none; border-bottom: 1px solid black; width: 100px"
+            type="text"
+            name="username"
+			id="username"
+            style="border: none; border-bottom: 1px solid black; width: 100px"
           />
           <input type="hidden" name="userid" id="userid" value="customer" class="form-control" />
           {% endif %}
@@ -52,40 +91,42 @@
         <div id="titlaP">
           <label>제목</label>
           <input
-                  type="text"
-                  name="title"
-                  id="title"
-                  class="form-control"
-                  required="required"
-                  style="border: none; border-bottom: 1px solid black; width: 400px"
+            type="text"
+            name="title"
+			id="title"
+            class="form-control"
+            required="required"
+            style="border: none; border-bottom: 1px solid black; width: 400px"
           />
         </div>
         <div>
           <textarea
-                  rows="15"
-                  cols="100"
-                  style="margin-top: 10px"
-                  placeholder="  내용을 입력하세요"
-                  name="content"
-                  id="content"
-                  class="form-control"
-                  required="required"
+            rows="15"
+            cols="100"
+            style="margin-top: 10px"
+            placeholder="  내용을 입력하세요"
+            name="content"
+			id="content"
+            class="form-control"
+            required="required"
           ></textarea>
         </div>
-<!--        <div>-->
-<!--          <label>비밀번호 설정</label>-->
-<!--          <input-->
-<!--                  type="text"-->
-<!--                  name="passwd"-->
-<!--                  class="form-control"-->
-<!--                  required="required"-->
-<!--          />-->
-<!--        </div>-->
+        {#
+        <div>
+          <label>비밀번호 설정</label>
+          <input
+            type="text"
+            name="passwd"
+            class="form-control"
+            required="required"
+          />
+        </div>
+        #}
         <div style="text-align: center">
-          <button  class="btn btn-primary" id="boardRegister">
+          <button type="button" class="btn btn-primary" id="boardRegister">
             등록
           </button>
-          <button class="btn btn-primary" id="btnReturnToList">
+          <button type="button" class="btn btn-primary" id="btnReturnToList">
             목록으로
           </button>
         </div>
@@ -93,16 +134,14 @@
     </div>
   </div>
 </section>
-{% endblock %}
-
-{% block SearchScript %}
+{% endblock %} {% block SearchScript %}
 
 <script>
-  let option = null;
-  let option1 = null;
-  let option2 = null;
-  let option3 = null;
-  let option4 = null;
+let option = null; 
+let option1 = null;
+let option2 = null;
+let option3 = null;
+let option4 = null;
   const makeDetailOption = function (lcate) {
     switch (lcate) {
       case "D":
@@ -116,11 +155,11 @@
         option3 = $("<option value='T'>").html("환율");
         option4 = $("<option value='E'>").html("기타");
         $("#mcate")
-                .append(option)
-                .append(option1)
-                .append(option2)
-                .append(option3)
-                .append(option4);
+          .append(option)
+          .append(option1)
+          .append(option2)
+          .append(option3)
+          .append(option4);
         break;
       case "R":
         option = $("<option value=''>").html("전체");
@@ -164,63 +203,60 @@
     makeDetailOption($("#lcate option:selected").val());
   });
 
-
+ 
 </script>
 
-
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
-  const titleInput = document.getElementById("title");
-  const lcateInput = document.getElementById("lcate");
-  const mcateInput = document.getElementById("mcate");
-  const contentInput = document.getElementById("content");
-  const usernameInput = document.getElementById("username");
-  const useridInput = document.getElementById("userid");
-  const form = document.getElementById("form");
-  const btn = document.getElementById("boardRegister");
 
-
-  const btnlist = document.getElementById("btnReturnToList");
-
-  btnlist.addEventListener("click",(e)=>{
-    location.href="/plan/list";
+  $("#btnReturnToList").click(function () {
+    location.href = "/plan/list";
   });
 
+	const form = document.querySelector('form');
+	const lcateInput = document.querySelector('#lcate');
+	const mcateInput = document.querySelector('#mcate');
+	const titleInput = document.querySelector('#title');
+	const contentInput = document.querySelector('#content');
+	const usernameInput = document.querySelector('#username');
+	const useridInput = document.querySelector('#userid');
+	const boardRegister = document.querySelector('#boardRegister');
+
+	{# const fileInput = document.querySelector('#input-multi-files'); #}
+
+  form.addEventListener('click', (e) => {
+
+        e.preventDefault();
+		const formData = new FormData();
+		formData.append('title', titleInput.value);
+		formData.append('content', contentInput.value);
+		formData.append('username', usernameInput.value);
+		formData.append('userid', useridInput.value);
+		formData.append('lcate', lcateInput.value);
+		formData.append('mcate', mcateInput.value);
+
+		console.log("formData->", formData.get("title"),  titleInput.value);
+        const config = {
+          headers: {
+            'Content-Type': 'multipart/json'
+          }
+        };
+        const data = {
+          title: titleInput.value
+        }
+
+		axios.post('/plan/add',data, config).then((res)=>{
+          console.log("axios---------1>");
+
+				if(res.status === 200){
+				}
+
+			}).catch((error)=>{
+				console.error(error);
+			})
 
 
-
-
-  btn.addEventListener("click", async (e) => {
-    e.preventDefault();
-    const title = titleInput.value;
-    const lcate = lcateInput.value;
-    const mcate = mcateInput.value;
-    const content = contentInput.value;
-    const username = usernameInput.value;
-    const userid = useridInput.value;
-    // const password = passwordInput.value;
-
-    console.log("axios --------1>", title);
-
-    await  axios.post("/plan/add", {
-      title,
-      lcate,
-      mcate,
-      content,
-      username,
-      userid
-    })
-            .then((response) => {
-              console.log("axios --------2>", response.data);
-              console.log(response);
-            });
-  });
-
-
+   	});
 </script>
 
-{% endblock %}
-
-{% block Footer %}
-{% include '../../include/userFooter.html' %}
+{% endblock %} {% block Footer %} {% include '../../include/userFooter.html' %}
 {% endblock%}

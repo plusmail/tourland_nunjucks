@@ -3,12 +3,14 @@ const router = express.Router();
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
 
+const {employee,user, coupon,usercoupon} = require("../../models");
+
+
 const cookieParser = require("cookie-parser");
-const models = require("../../models");
 const fs = require('fs');
 const querystring = require('querystring');
 const crypto = require('crypto'); //추가됐음
-const {getPagingData, getPagination} = require('../../controller/pagination');
+const {getPagingData, getPagination,getPagingDataCount} = require('../../controller/pagination');
 const {makePassword, comparePassword} = require('../../controller/passwordCheckUtil');
 const {product} = require("../../models");
 const moment = require("moment");
@@ -17,16 +19,26 @@ const parser = bodyParser.urlencoded({extended: false});
 const {upload} = require("../../controller/fileupload");
 const {sessionEmpCheck} = require('../../controller/sessionCtl');
 
+const { isNotLoggedIn, isLoggedIn } = require('../../middlewares')
+router.use((req, res, next)=>{
+    res.locals.user = req.user;
+    next();
+});
+
+router.get('/', async function (req, res, next) {
+    res.redirect('/manager/statistics');
+});
+
 
 // ------------------------------------- 관리자 페이지 메인 -------------------------------------
 router.get('/statistics', (req, res, next) => {
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
-    if(Manager == undefined) res.redirect("/customer");
+    // if(req.user === undefined) res.redirect("/customer");
+    const Manager = {
+        right:0
+    };
 
     console.log('-----관리자페이지메인------',);
-    console.log('------Auth???-------', Auth);
-    console.log('------AuthEmp-------', AuthEmp);
-    res.render("manager/main/statistics", {Manager, Auth, AuthEmp, login});
+    res.render("manager/main/statistics",{Manager});
 });
 
 router.get('/userlist', (req, res, next) => {
@@ -42,9 +54,6 @@ router.get('/userlist', (req, res, next) => {
 //----------------------------- 고객관리 ---------------------------------------
 // 고객 관리 전체 목록
 router.get('/userMngList/:usersecess', async (req, res, next) => {
-    //usersecess 정상회원, 탈퇴회원 구분
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
-    if(Manager == undefined) res.redirect("/customer");
 
     const usersecess = req.params.usersecess;
     let {searchType, keyword} = req.query;
@@ -55,27 +64,7 @@ router.get('/userMngList/:usersecess', async (req, res, next) => {
 
     keyword = keyword ? keyword : "";
 
-    let dataAll = await models.user.findAll({
-        where: {
-            [Op.and]: [
-                {
-                    usersecess: usersecess
-                }
-            ],
-            [Op.or]: [
-                {
-                    userid: {[Op.like]: "%" + keyword + "%"}
-                },
-                {
-                    username: {[Op.like]: "%" + keyword + "%"}
-                }
-            ]
-
-        },
-        limit, offset
-    })
-
-    let dataCountAll = await models.user.findAndCountAll({
+    let listAndCounts = await user.findAndCountAll({
         where: {
             [Op.and]: [
                 {
@@ -94,24 +83,80 @@ router.get('/userMngList/:usersecess', async (req, res, next) => {
         limit, offset
     })
 
-    const pagingData = getPagingData(dataCountAll, currentPage, limit);
+    const {count:totalItems, rows: lists} = listAndCounts;
+    const pagingData = getPagingDataCount(totalItems, currentPage, limit);
 
     let cri = {searchType, keyword};
 
     let btnName = (Boolean(Number(usersecess)) ? "회원 리스트" : "탈퇴회원 조회");
 
     console.log("usersecbtt->", btnName)
-    let list = dataAll;
 
-    res.render("manager/user/userMngList", {cri, list, btnName, pagingData, Manager, usersecess, AuthEmp});
+    res.render("manager/user/userMngList", {cri, lists, btnName, pagingData, usersecess});
 });
+
+// 고객 정보 상세 보기
+router.get('/userDetailForm/:id', async (req, res, next) => {
+    const id = req.params.id;
+    let {currentPage, searchType, keyword} = req.query;
+    console.log("userDetailForm--->", req.params.id);
+
+    let userVO = await user.findOne({
+        raw: true,
+
+        where: {id: id}
+    })
+
+    let couponLists = await user.findOne({
+        raw: true,
+        nest : true,
+        attributes: ['id', 'username', 'usersecess'],
+        include: [
+            {
+                model: coupon,
+                attributes: ['cno', 'cname', 'pdate', 'edate','ccontent','mrate'],
+                as: 'cno_coupons',
+                nest: true,
+                paranoid: true,
+                required: false,
+            }],
+        where: {id: id}
+    })
+
+    console.log("userDetailForm-1>", userVO);
+    console.log("userDetailForm-2>", couponLists);
+
+    let cri = {};
+
+    res.render("manager/user/userDetailForm", {userVO, cri});
+});
+
+
+
+
+router.get('/employeeRegister', (req, res, next)=>{
+
+    return res.render('manager/employee/employeeRegister');
+})
+
+
+router.post("/employeeRegister", async (req, res, next) => {
+    const {empno,empbirth,emptel,empauth,empretired,userid}= req.body;
+    console.log('내용내용내용내용내용내용1', req.body);
+    req.body.empretired = 1;
+
+    const register = await employee.create(req.body)
+    console.log('내용내용내용내용내용내용', register);
+
+    res.redirect("/manager/employeeMngList");
+})
+
 
 // ------------------------------------------------ 직원관리 --------------------------------------------------------
 // 직원 관리 전체 목록
-router.get('/employeeMngList/:empretired', async (req, res, next) => {
+router.get('/employeeMngList', async (req, res, next) => {
     //empretired 정상사원, 퇴사사원 구분
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
-    const empretired = req.params.empretired;
+    // const empretired = req.params.empretired;
     let {searchType, keyword} = req.query;
 
     const contentSize = Number(process.env.CONTENTSIZE); // 한페이지에 나올 개수
@@ -120,56 +165,47 @@ router.get('/employeeMngList/:empretired', async (req, res, next) => {
 
     keyword = keyword ? keyword : "";
 
-    let dataAll = await models.employee.findAll({
+    let listAndCounts = await employee.findAndCountAll({
+        raw: true,
+        nest : true,
+        attributes : ['empno', 'empbirth', 'emptel', 'empauth','empretired'],
+        include: [
+            {
+                model: user,
+                attributes: ['userid', 'username', 'usersecess'],
+                as: 'user',
+                nest: true,
+                paranoid: true,
+                required: false,
+            }],
         where: {
-            [Op.and]: [
-                {
-                    empretired: empretired
-                }
-            ],
+            // [Op.and]: [
+            //     {
+            //         empretired: empretired
+            //     }
+            // ],
             [Op.or]: [
                 {
-                    empid: {[Op.like]: "%" + keyword + "%"}
-                },
-                {
-                    empname: {[Op.like]: "%" + keyword + "%"}
-                }
-            ]
-
-        },
-        limit, offset
-    })
-
-    let dataCountAll = await models.employee.findAndCountAll({
-        where: {
-            [Op.and]: [
-                {
-                    empretired: empretired
-                }
-            ],
-            [Op.or]: [
-                {
-                    empid: {[Op.like]: "%" + keyword + "%"}
-                },
-                {
-                    empname: {[Op.like]: "%" + keyword + "%"}
+                    empno: {[Op.like]: "%" + keyword + "%"}
                 }
             ]
         },
         limit, offset
     })
 
-    const pagingData = getPagingData(dataCountAll, currentPage, limit);
+    const {count:totalItems, rows: lists} = listAndCounts;
+    const pagingData = getPagingDataCount(totalItems, currentPage, limit);
 
     let cri = {searchType, keyword};
 
-    let btnName = (Boolean(Number(empretired)) ? "직원 리스트" : "퇴사사원 조회");
+    // let btnName = (Boolean(Number(empretired)) ? "직원 리스트" : "퇴사사원 조회");
 
-    console.log("usersecbtt->", btnName)
-    let list = dataAll;
+    console.log("employeeMngList---->", lists)
 
-    res.render("manager/employee/employeeMngList", {cri, list, btnName, pagingData, Manager, empretired, Auth, AuthEmp, login});
+    res.render("manager/employee/employeeMngList", {cri, lists,pagingData});
 });
+
+
 // 직원 상세보기
 router.get('/employeeDetailForm/:empretired', async (req, res, next) => {
     //empretired 일반사원, 퇴사사원 구분
@@ -212,27 +248,6 @@ router.post('/employeeDetailForm/:empretired', async (req, res, next) => {
     res.render("manager/employee/employeeDetailForm", {empVO, cri, Manager, Auth, empretired, success, AuthEmp});
 });
 
-// 고객 정보 상세 보기
-router.get('/userDetailForm/:usersecess', async (req, res, next) => {
-    //usersecess 정상회원, 탈퇴회원 구분
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
-    if(Manager == undefined) res.redirect("/customer");
-    const usersecess = req.params.usersecess;
-    let {id, currentPage, searchType, keyword} = req.query;
-
-    let userVO = await models.user.findOne({
-        raw: true,
-
-        where: {id: id}
-    })
-    console.log("userid->", userVO);
-
-    let cri = {};
-
-    let couponLists = [{}];
-
-    res.render("manager/user/userDetailForm", {userVO, cri, Manager, AuthEmp, usersecess, couponLists});
-});
 
 
 // --------------------------------------------------------------- 예약 관리 ---------------------------------------------------------------
@@ -905,7 +920,7 @@ router.get('/productMngList', async (req, res, next) => {
         nest: true, attributes: ['id', 'pname', 'pcontent', 'pexpire', 'pprice', 'ppic'],
         include: [
             {
-                model: models.airplane,
+                model: airplane,
                 attributes: ['price', 'ano'],
                 as: 'airplaneId_airplanes',
                 nest: true,

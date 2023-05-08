@@ -15,7 +15,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      comment: "쿠폰번호"
+      comment: "쿠폰번호",
+      references: {
+        model: 'coupon',
+        key: 'cno'
+      }
     }
   }, {
     sequelize,

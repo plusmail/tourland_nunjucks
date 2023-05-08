@@ -29,7 +29,7 @@ module.exports = function(sequelize, DataTypes) {
       comment: "비밀번호"
     },
     image: {
-      type: DataTypes.JSON,
+      type: DataTypes.TEXT,
       allowNull: true,
       comment: "사진"
     },

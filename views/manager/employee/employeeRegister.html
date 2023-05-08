@@ -1,0 +1,131 @@
+{%- include("../../include/header.html")%}
+<style>
+    label {
+        float: left;
+        width: 150px;
+        margin-left:20px;
+    }
+    span.errorMsg{
+        color: tomato;
+        display: none;
+    }
+
+</style>
+<script>
+
+    let didUcheckId = false;
+    let validId = true;
+
+
+    $(function(){
+        //정규 표현식 ,빈칸인 경우는 부트 스트랩의 기본 설정으로 이미 설정되어있음
+        $("form").submit(function(e){
+
+
+            // empno empbirth  emptel	empauth	empretired userid
+            $(this).attr("onsubmit","");
+            $(".errorMsg").css("display", "none");
+            let empno = $("input[name='empno']").val();
+            let empbirth = $("input[name='empbirth']").val();
+            let emptel = $("input[name='emptel']").val();
+            let empauth = $("input[name='empauth']").val();
+
+
+            //사원번호 정규식
+            let empnoReg = /^(\d{4})(\d{4})$/;// 입사년도 뒤 2자리와 순번
+
+            alert(empnoReg.test(empno));
+
+            if (empnoReg.test(empno) == false) {
+                $("input[name='empno']").next().css("display", "inline");
+                return false;
+            }
+
+             //생년월일정규표현식
+            let birthReg = /^(1|2)[0-9]{3}-(01|02|03|04|05|06|07|08|09|10|11|12)-(01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31)$/;
+            if (birthReg.test(empbirth) == false) {
+                $("input[name='empbirth']").next().css("display", "inline");
+                return false;
+            }
+            //전화번호 정규 표현식
+            let phoneReg = /^(010|011|019|018|017)-[0-9]{3,4}-[0-9]{4}$/;
+            if (phoneReg.test(emptel) == false) {
+                $("input[name='emptel']").next().css("display", "inline");
+                return false;
+            }
+
+            //권한 정규 표현식
+            let authReg = /^(0|1)$/;
+            if(authReg.test(empauth) == false){
+                $("input[name='empauth']").next().css("display", "inline");
+                return false;
+            }
+
+            // //사원 아이디 정규 표현식, 회원 아이디 규칙과 동일
+            // let idReg = /^[a-z0-9]{5,12}$/i; //영어, 숫자 6-15
+            // if (idReg.test(empid) == false) {
+            //     $("input[name='empid']").next().css("display", "inline");
+            //     return false;
+            // }
+
+
+        })
+
+        //리스트로 버튼 눌렀을 때 리스트로 돌아가기
+        $("#btnReturnToList").click(function(){
+            location.href="/manager/empMngList/0";
+        })
+
+
+    })
+
+</script>
+<div class="content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title">사원 추가</h3>
+                </div>
+<!--                // empno empbirth  emptel	empauth	empretired userid-->
+
+                <form role="form" action="/manager/employeeRegister" method="post">
+                    <div class="box-body">
+                        <input type="hidden" value="" id="forSubmit">
+                        <div class="form-group">
+                            <label>사원 번호</label>
+                            <input type="text" name="empno" required="required"  id="empno" value="20240506" style="background:lavender;" >
+                        </div>
+                        <div class="form-group">
+                            <label>생년월일</label>
+                            <input type="text" name="empbirth" required="required"  placeholder="2000-02-02" value="2001-12-01">
+                            <span class="errorMsg">생년월일 형식에 맞게 넣어주세요. 예시: 2000-02-02</span>
+                        </div>
+                        <div class="form-group">
+                            <label>전화번호</label>
+                            <input type="text" name="emptel" required="required"  placeholder=" 010-4334-4321" value="010-1234-5678">
+                            <span class="errorMsg">형식에 맞게 넣어주세요 예시: 010-4334-4321</span>
+                        </div>
+                        <div class="form-group">
+                            <label>권한</label>
+                            <input type="text" name="empauth" required="required"  placeholder=" 일반사원은 0" value="0">
+                            <span class="errorMsg">0또는 1을 넣어주세요 일반 사원은 0</span>
+                        </div>
+                        <div class="form-group">
+                            <label>아이디</label>
+<!--                            수정필요 user 조인-->
+                            <input type="text" name="userid" required="required"  value="{{user.userid}}" placeholder="로그인 아이디">
+                            <span class="errorMsg">0또는 1을 넣어주세요 일반 사원은 0</span>
+                        </div>
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">등록</button>
+                            <button type="button" class="btn btn-primary" id="btnReturnToList">목록으로</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%- include("../../include/footer.html")%}

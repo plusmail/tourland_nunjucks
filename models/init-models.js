@@ -59,6 +59,7 @@ function initModels(sequelize) {
   var usertest = _usertest(sequelize, DataTypes);
 
   airplane.belongsToMany(product, { as: 'productId_products', through: pairstatus, foreignKey: "airplaneId", otherKey: "productId" });
+  coupon.belongsToMany(user, { as: 'userno_users', through: usercoupon, foreignKey: "cno", otherKey: "userno" });
   hotel.belongsToMany(product, { as: 'productId_product_photelstatuses', through: photelstatus, foreignKey: "hotelId", otherKey: "productId" });
   product.belongsToMany(airplane, { as: 'airplaneId_airplanes', through: pairstatus, foreignKey: "productId", otherKey: "airplaneId" });
   product.belongsToMany(hotel, { as: 'hotelId_hotels', through: photelstatus, foreignKey: "productId", otherKey: "hotelId" });
@@ -66,8 +67,11 @@ function initModels(sequelize) {
   product.belongsToMany(tour, { as: 'tourId_tours', through: ptourstatus, foreignKey: "productId", otherKey: "tourId" });
   rentcar.belongsToMany(product, { as: 'productId_product_prentstatuses', through: prentstatus, foreignKey: "rentcarId", otherKey: "productId" });
   tour.belongsToMany(product, { as: 'productId_product_ptourstatuses', through: ptourstatus, foreignKey: "tourId", otherKey: "productId" });
+  user.belongsToMany(coupon, { as: 'cno_coupons', through: usercoupon, foreignKey: "userno", otherKey: "cno" });
   pairstatus.belongsTo(airplane, { as: "airplane", foreignKey: "airplaneId"});
   airplane.hasMany(pairstatus, { as: "pairstatuses", foreignKey: "airplaneId"});
+  usercoupon.belongsTo(coupon, { as: "cno_coupon", foreignKey: "cno"});
+  coupon.hasMany(usercoupon, { as: "usercoupons", foreignKey: "cno"});
   photelstatus.belongsTo(hotel, { as: "hotel", foreignKey: "hotelId"});
   hotel.hasMany(photelstatus, { as: "photelstatuses", foreignKey: "hotelId"});
   cart.belongsTo(product, { as: "pno_product", foreignKey: "pno"});
@@ -92,6 +96,8 @@ function initModels(sequelize) {
   tour.hasMany(ptourstatus, { as: "ptourstatuses", foreignKey: "tourId"});
   cart.belongsTo(user, { as: "userno_user", foreignKey: "userno"});
   user.hasMany(cart, { as: "carts", foreignKey: "userno"});
+  employee.belongsTo(user, { as: "user", foreignKey: "userid"});
+  user.hasMany(employee, { as: "employees", foreignKey: "userid"});
   reservation.belongsTo(user, { as: "userno_user", foreignKey: "userno"});
   user.hasMany(reservation, { as: "reservations", foreignKey: "userno"});
   review.belongsTo(user, { as: "userno_user", foreignKey: "userno"});

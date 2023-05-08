@@ -366,13 +366,13 @@
           'Content-Type': 'multipart/form-data',
         }
       })
-              .then(res => {
-                // editPost.style.display = 'none';
-                getPosts(currentPage);
-              })
-              .catch((error) => {
-                console.error(error);
-              });
+      .then(res => {
+        // editPost.style.display = 'none';
+        getPosts(currentPage);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
 
     }
@@ -394,19 +394,19 @@
           },
           data: { "password":passswd },
         })
-                .then(res => {
-                  if(res.status === 200){
-                    const deletedPost = document.querySelector(`li[data-post-id="${id}"]`);
-                    postList.removeChild(deletedPost);
-                    getPosts(currentPage);
-                  }else if( res.status === 500){
-                    postError.textContent= `게시물 삭제 할 수 없습니다. ${res.msg}`;
-                    console.error(error);
-                  }
-                }).catch((error)=>{
-                  postError.textContent= `비밀번호 오류. ${error}`;
-                  console.error(error);
-        });
+          .then(res => {
+            if(res.status === 200){
+              const deletedPost = document.querySelector(`li[data-post-id="${id}"]`);
+              postList.removeChild(deletedPost);
+              getPosts(currentPage);
+            }else if( res.status === 500){
+              postError.textContent= `게시물 삭제 할 수 없습니다. ${res.msg}`;
+              console.error(error);
+            }
+          }).catch((error)=>{
+            postError.textContent= `비밀번호 오류. ${error}`;
+            console.error(error);
+          });
 
       });
 

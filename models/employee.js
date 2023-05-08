@@ -2,15 +2,11 @@ const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('employee', {
     empno: {
+      autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       comment: "사번"
-    },
-    empname: {
-      type: DataTypes.STRING(5),
-      allowNull: true,
-      comment: "사원명"
     },
     empbirth: {
       type: DataTypes.DATEONLY,
@@ -22,30 +18,23 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       comment: "전화번호"
     },
-    empaddr: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-      comment: "주소"
-    },
     empauth: {
       type: DataTypes.BOOLEAN,
       allowNull: true,
-      comment: "권한"
-    },
-    empid: {
-      type: DataTypes.STRING(12),
-      allowNull: true,
-      comment: "아이디"
-    },
-    emppass: {
-      type: DataTypes.STRING(100),
-      allowNull: true,
-      comment: "비밀번호"
+      comment: "직급"
     },
     empretired: {
       type: DataTypes.BOOLEAN,
       allowNull: true,
       comment: "퇴사여부"
+    },
+    userid: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'user',
+        key: 'id'
+      }
     }
   }, {
     sequelize,
@@ -58,6 +47,13 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "empno" },
+        ]
+      },
+      {
+        name: "employee_FK",
+        using: "BTREE",
+        fields: [
+          { name: "userid" },
         ]
       },
     ]

@@ -10,15 +10,12 @@ const MemoryStore = require('memorystore')(session);
 const {QueryTypes, where} = require("sequelize");
 const moment = require("moment");
 const {isLoggedIn, isNotLoggedIn, previousUrl} = require('../../middlewares');
+
 const bodyParser = require('body-parser');
 const parser = bodyParser.urlencoded({extended: false});
 
-
-const {planboard} = require('../../models/index');
+const {planboard} = require('../../models');
 const {getPagination, getPagingDataCount, getPagingData} = require('../../controller/pagination')
-
-router.use(bodyParser.urlencoded({ extended: false }));
-router.use(bodyParser.json());
 
 router.use((req, res, next)=>{
     res.locals.user = req.user;
@@ -84,13 +81,10 @@ router.get('/add', (req, res, next) => {
 // 상품 문의 사항 등록하기
 router.post('/add', async (req, res, next) => {
     let searchkeyword = "";
-
-    const formData = req.body;
-    console.log("----------->", formData);
-
     const { title, content, username, userid, lcate, mcate} = req.body;
 
-    console.log("plan/add ----->", title, content, username, userid, lcate, mcate);
+    console.log("plan/add-------1>", req.body);
+    console.log("plan/add -----2>", title, content, username, userid, lcate, mcate);
 
     const PlanRegister = await planboard.create({
         raw: true,

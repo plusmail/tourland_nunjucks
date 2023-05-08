@@ -72,7 +72,6 @@
                     $("#jpw").find(".weatherImgBox").append($img3);
 
                 }
-                /* 섭씨 온도 : 273.15를 빼줌 */
                 $("#jpw").find(".tempNum").html(Math.ceil((rs.list[1].main.temp - 273.15)));
                 $("#jpw").find(".cloudSunny").html(cloudSunny);
             }
