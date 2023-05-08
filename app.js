@@ -9,6 +9,8 @@ const { user, sequelize } = require("./models/index"); // 시퀄라이즈
 const session = require("express-session");
 const MemoryStore = require("memorystore")(session);
 const nunjucks = require("nunjucks");
+const moment = require('moment');
+const dateFilter = require('nunjucks-date-filter');
 
 const indexRouter = require("./routes/index");
 const apiRouter = require("./routes/indexApi");
@@ -33,12 +35,15 @@ passportConfig();
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "html");
-nunjucks.configure("views", {
+const env = nunjucks.configure("views", {
   express: app,
   watch: true,
+  autoescape: true,
 });
 
-const env = new nunjucks.Environment();
+env.addFilter('date', function(date, format) {
+  return moment(date).format(format);
+});
 
 env.addGlobal("jsonify", function (str) {
   return JSON.stringify(str);

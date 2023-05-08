@@ -26,12 +26,12 @@
                 </div>
                 <div class="box-body">
                     <select name="searchType" id="searchType">
-                        <option value="total" {%= cri.searchType == 'total' ? 'selected' : '' %}>전체</option>
-                        <option value="hname" {%= cri.searchType == 'hname' ? 'selected' : '' %}>호텔이름</option>
-                        <option value="haddr" {%= cri.searchType == 'haddr' ? 'selected' : '' %}>호텔주소</option>
-                        <option value="bookedup" {%= cri.searchType == 'bookedup' ? 'selected' : '' %}>객실체크여부</option>
+                        <option value="total" {% if cri.searchType == 'total' %} 'selected' {% else %} '' {% endif %}%}>전체</option>
+                        <option value="hname" {% if cri.searchType == 'hname' %} 'selected' {% else %} '' {% endif %}%}>호텔이름</option>
+                        <option value="haddr" {% if cri.searchType == 'haddr' %} 'selected' {% else %} '' {% endif %}%}>호텔주소</option>
+                        <option value="bookedup" {% if cri.searchType == 'bookedup' %} 'selected' :{%else%}'' {% endif %}%}>객실체크여부</option>
                     </select>
-                    <input type="text" name="keyword" id="keyword" value="{%= cri.keyword %}">
+                    <input type="text" name="keyword" id="keyword" value="{{cri.keyword }}">
                     <button id="btnSearch">검색</button>
                     <button id="btnRegister">호텔상품 추가</button>
                 </div>
@@ -40,11 +40,11 @@
                         <span><i class="far fa-calendar-alt"></i> 체크인 </span>
                         <span class="picker"><input type="date" class="datepicker" name="checkin"
                                                     placeholder="날짜를 선택하려면 클릭." style="height:30px;"
-                                                    value="{%= cri.keyword2 %}"></span>
+                                                    value="{{cri.keyword2 }}"></span>
                         <span><i class="far fa-calendar-alt"></i> ~  체크아웃 </span>
                         <span class="picker"><input type="date" class="datepicker" name="checkout"
                                                     placeholder="날짜를 선택하려면 클릭." style="height:30px;"
-                                                    value="{%= cri.keyword3 %}"></span>
+                                                    value="{{cri.keyword3 }}"></span>
                         <span id="pickSearch"><a href="#"><i class="fas fa-search"></i></a></span>
                     </p>
                     <table class="table table-bordered" id="listTable">
@@ -63,92 +63,72 @@
                             <th>전체인원</th>
                             <th>관리</th>
                         </tr>
-                        {% list.forEach( hotel => { %}
+                        {% for hotel in lists %}
                             <tr>
-                                <td class="firstNo">{%= hotel.id %}</td>
-                                <td>{%= hotel.hname %}</td>
-                                <td>{%= hotel.haddr %}</td>
-                                <td>{%= moment(hotel.checkin).format('YYYY-MM-DD') %}</td>
-                                <td>{%= moment(hotel.checkout).format('YYYY-MM-DD') %}</td>
-                                <td>{%= hotel.capacity %}<span>인</span></td>
-                                <td>{%= hotel.price %}</td>
-                                <td>{%= hotel.roomcapacity %}<span>실</span></td>
+                                <td class="firstNo">{{hotel.id }}</td>
+                                <td>{{ hotel.hname }}</td>
+                                <td>{{ hotel.haddr }}</td>
+                                <td>{{ hotel.checkin | date('YYYY-MM-DD') }}</td>
+                                <td>{{ hotel.checkout | date('YYYY-MM-DD') }}</td>
+                                <td>{{ hotel.capacity }}<span>인</span></td>
+                                <td>{{ hotel.price }}</td>
+                                <td>{{ hotel.roomcapacity }}<span>실</span></td>
 
-                                {% if(hotel.roomtype == 'N') { %}
+                                {% if hotel.roomtype == 'N' %}
                                     <td style="color:#5D5D5D;" id="n">노말</td>
-                                {% } else if(hotel.roomtype == 'D') { %}
+                                {% elif hotel.roomtype == 'D' %}
                                     <td style="color:#F29661;" id="d">디럭스</td>
-                                <% } else { %}
+                                {% else %}
                                     <td style="color:#D941C5;" id="s">스위트</td>
-                                <% } %}
+                                {% endif %}
 
-                                <% if(hotel.ldiv == 0) { %}
+                                {% if hotel.ldiv == 0 %}
                                     <td>해외</td>
-                                <% } %}
-                                <% if(hotel.ldiv == 1) { %}
+                                {% endif %}
+                                {% if hotel.ldiv == 1 %}
                                     <td>국내</td>
-                                <% } %}
+                                {% endif %}
 
-                                <% if(hotel.bookedup == 0) { %}
+                                {% if hotel.bookedup == 0 %}
                                     <td><span class="badge bg-orange"> 예약가능 </span></td>
-                                <% } else if(hotel.bookedup == 1) { %}
+                                {% elif hotel.bookedup == 1 %}
                                     <td>
                                         <span class="badge bg-blue">예약불가능</span>
                                     </td>
-                                <% } %}
-                                <td><%= hotel.totalcapacity %}</td>
+                                {% endif %}
+                                <td>{{hotel.totalcapacity }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-primary active btn-sm " id="btnModify"
-                                            data-no="<%= hotel.id %}">수정
+                                    <button type="button" class="btn btn-primary active btn-sm" id="btnModify"
+                                            data-no="{{hotel.id}}">수정
                                     </button>
-                                    <button type="button" class="btn btn-primary btn-danger btn-sm " id="btnDelete"
-                                            data-no="<%= hotel.id %}">삭제
+                                    <button type="button" class="btn btn-primary btn-danger btn-sm" id="btnDelete"
+                                            data-no="{{hotel.id}}">삭제
                                     </button>
                                 </td>
                             </tr>
-                        <% }) %}
+                        {% endfor %} 
                     </table>
                 </div>
-                <div class='text-center'>
-                    <ul class="pagination">
-                        <% if (pagingData.totalPages != 0) { %}
-                        <div class="" style="text-align:center;">
-                            <ul class="pagination">
-                                <li <%if(pagingData.currentPage == 1){%} class="disabled" <%}else{%}class="waves-effect" <%}%} >
-                                    <a <%if(pagingData.currentPage > 1){%} href="?currentPage=<%=pagingData.currentPage-1%}" <%}%}>
-                                        <i class="material-icons">prev</i>
-                                    </a>
-                                </li>
-                                <% for(var i=pagingData.pnStart; i<=pagingData.pnEnd; i++){ %} <li <%if(i===pagingData.currentPage){%} class="active"
-                                        <%}%>><a href="?currentPage=<%=i%>"><%=i%></a></li>
-                                <% } %>
-                                <li <%if(pagingData.currentPage == pagingData.totalPages){%> class="disabled" <%}else{%> class="waves-effect" <%}%>>
-                                    <a <%if(pagingData.currentPage < pagingData.totalPages){%> href="?currentPage=<%=pagingData.currentPage+1%>" <%}%> class="waves-effect">
-                                        <i class="material-icons">next</i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <% } %>
 
-                    </ul>
-                </div>
+				<center>
+				<ul class="pagination" id="pagination"></ul>
+				</center>
             </div>
         </div>
     </div>
 </div>
 <script>
-    $("i.fas.fa-search").click(function () {
-        var checkin = $("input[name='checkin']").val();
-        var checkout = $("input[name='checkout']").val();
-        location.href = "/manager/hotelMngList ? searchType = checkDate"+" & keyword2 = "+checkin+" & keyword3 = "+checkout;
+$("i.fas.fa-search").click(function () {
+    const checkin = $("input[name='checkin']").val();
+    const checkout = $("input[name='checkout']").val();
+    location.href = "/manager/hotelMngList?searchType=checkDate"+" & keyword2 = "+checkin+" & keyword3 = "+checkout;
 
 })
 
-var keywordChange = function() {
+const keywordChange = function() {
 
-var searchType = "<%=cri.searchType%>";
-var keyword = "<%=cri.keyword%>";
+    const searchType = "{{cri.searchType}}";
+    const keyword = "{{cri.keyword}}";
 
     $("#searchType option").each(function (i, obj) {
         var value = $(this).val();
@@ -171,13 +151,13 @@ $("#btnRegister").click(function () {
     location.href = "hotelRegister";
 })
 
-$("#btnModify").click(function(){
+$(".btn").click(function(){
     var id = $(this).attr("data-no");
-    var page = "<%=cri.page%>";
-    location.href = "hotelModify?id="+id+"&page="+page;
+    alert(id);
+    location.href = "hotelModify?id="+id+"&currentPage="+{{pagingData.currentPage}};
 })
 
-$("btnDelete").click(function(){
+$(".btn").click(function(){
     var id = $(this).attr("data-no");
     var res = confirm("삭제하시겠습니까?");
     if (res) {
@@ -186,4 +166,10 @@ $("btnDelete").click(function(){
     }
 });
 </script>
+
+{% block Pagination %} {%-
+include("../../include/pagination.html") %}
+{% endblock %} 
+
+
 <%- include ("../../include/footer.html") %>

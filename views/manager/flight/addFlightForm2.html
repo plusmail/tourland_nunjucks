@@ -7,9 +7,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.0/locale/ko.js"></script>
     ​<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="/resources/bootstrap/js/bootstrap-datetimepicker.js">
+    <script src="/bootstrap/js/bootstrap-datetimepicker.js">
     </script>
-    <link rel="stylesheet" type="text/css" href="/resources/bootstrap/css/datetimepickerstyle.css" />
+    <link rel="stylesheet" type="text/css" href="/bootstrap/css/datetimepickerstyle.css" />
 </head>
 <style>
     h2 { font-weight: bold;
@@ -190,17 +190,17 @@
 
         //출발 스케줄 확정 클릭 시
         $("#confirm").click(function(){
-            var dloca = $("#dlocation_d").val(); //출발지
-            var rloca = $("#rlocation_d").val(); //도착지
-            var seat = $("#seat_d").val();//좌석
-            var ddate = $("#ddate_d").val();//출발일자
-            var dtime = $("#dtime_d").val();//출발 시간
-            var rtime = $("#rtime_d").val();//도착 시간
-            var price = $("#price_d").val();//가격
-            var tourDays = $("#tourDays_d").val();//여행일
-            var capacity = $("#capacity_d").val();
-            var FCode = $("#FCode_d").val();//항공사 코드
-            var FName = $("#FName_d").val(); //편명
+            let dloca = $("#dlocation_d").val(); //출발지
+            let rloca = $("#rlocation_d").val(); //도착지
+            let seat = $("#seat_d").val();//좌석
+            let ddate = $("#ddate_d").val();//출발일자
+            let dtime = $("#dtime_d").val();//출발 시간
+            let rtime = $("#rtime_d").val();//도착 시간
+            let price = $("#price_d").val();//가격
+            let tourDays = $("#tourDays_d").val();//여행일
+            let capacity = $("#capacity_d").val();
+            let FCode = $("#FCode_d").val();//항공사 코드
+            let FName = $("#FName_d").val(); //편명
 
 
             if(dloca=="출발지 선택" || rloca=="도착지 선택" || seat=="좌석 선택" || price=="" || dtime==""||rtime==""){
@@ -210,8 +210,8 @@
                 if(dloca=="인천"){
 
                     //출발일자를 설정 -> 여행일 설정 -> 여행일에 따라 도착 일자가 더해짐
-                    var numArray = [3,5,7];
-                    var num;
+                    let numArray = [3,5,7];
+                    let num;
                     if(tourDays =="3"){
                         num = 2;
                     }else if(tourDays =="5"){
@@ -221,18 +221,18 @@
                     }
 
                     //input에서 가져온 출발 일자 string을 년, 월, 일로 나눠서 새로운 date 생성
-                    var ddateY = ddate.substring(0, ddate.indexOf("-"));//2020
-                    var ddateM = ddate.substring(ddate.indexOf("-")+1,ddate.lastIndexOf("-"));//05
-                    var ddateD = ddate.substring(ddate.lastIndexOf("-")+1);//01
+                    let ddateY = ddate.substring(0, ddate.indexOf("-"));//2020
+                    let ddateM = ddate.substring(ddate.indexOf("-")+1,ddate.lastIndexOf("-"));//05
+                    let ddateD = ddate.substring(ddate.lastIndexOf("-")+1);//01
 
-                    var date = new Date(ddateY,ddateM,ddateD);   // 2020-05-01
-                    var newdate = new Date(date); //완성된 출발일자
+                    let date = new Date(ddateY,ddateM,ddateD);   // 2020-05-01
+                    let newdate = new Date(date); //완성된 출발일자
                     newdate.setDate(newdate.getDate()+num);  //여행일에 따라 달라지는 num 숫자를 날짜에 더해줌
-                    var nd = new Date(newdate); //더해진 날짜 가져옴
+                    let nd = new Date(newdate); //더해진 날짜 가져옴
                     nd = getFormatDate(nd); //자바스크립트 함수로 fomatting 해줌 (yyyy-MM-dd 형식)
 
                     //국내, 해외 구분
-                    var ldiv = 0;
+                    let ldiv = 0;
 
                     //도착스케줄 인천으로 고정
                     $("#rlocation_r").val("인천");
@@ -354,7 +354,7 @@
                     var anoData = FCode+FName;
                     $("#anoData_d").val(anoData);
                     //번호
-                    var noData = "{%=airTotalCnt%>"
+                    var noData = "{{totalItems}}"
                     $("#noData_d").val(noData);
                     //도착 스케줄 데이터 input hidden에 저장
                     //좌석
@@ -375,7 +375,7 @@
                     var anoData_r = FCode_r+FName_r;
                     $("#anoData_r").val(anoData_r);
                     //번호
-                    var noData_r = "{%=airTotalNextCnt%>"
+                    var noData_r = "{{totalItems}}"
                     $("#noData_r").val(noData_r);
 
 
@@ -407,6 +407,8 @@
                                 <select class="form-control" id="dlocation_d">
                                     <option>출발지 선택</option>
                                     <option>인천</option>
+                                    <option>제주</option>
+                                    <option>김포</option>
                                 </select>
                                 <input type="hidden" id="dlocaData_d" name="list[0].dlocation">
                             </div>
@@ -627,4 +629,4 @@
 </div>
 </body>
 </html>
-{%- include ("../../include/footer.html")%>
+{%- include ("../../include/footer.html") %}

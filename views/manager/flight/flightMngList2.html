@@ -1,4 +1,4 @@
-{%- include ("../../include/header.html") %}
+{%- include("../../include/header.html") %}
 <style>
     table th, td {
         text-align: center;
@@ -52,206 +52,9 @@
         font-size: 13px;
     }
 </style>
-<link href="/resources/plugins/datepicker/datepicker3.css" rel="stylesheet" type="text/css">
-<script type="text/javascript" src="/resources/plugins/datepicker/bootstrap-datepicker.js"></script>
-<script>
+<link href="/plugins/datepicker/datepicker3.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="/plugins/datepicker/bootstrap-datepicker.js"></script>
 
-
-    function getFormatDate(date) {
-        var year = date.getFullYear() + "-";              //yyyy
-        var month = (date.getMonth() + 1) + "-";          //M
-        month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
-        var day = date.getDate();                   //d
-        day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
-        return year + '' + month + '' + day;
-    }
-
-    //국내 항공편만 검색하는 ajax
-    //page를 넣으면 해당 페이지 출력
-    function getDomList(page) {
-        var searchType = "{%= cri.searchType %>";
-        var keyword = "{%= cri.keyword %>";
-        $.ajax({
-            url: "flightDomList/" + page,
-            type: "get",
-            dataType: "json",
-            data: {searchType: searchType, keyword: keyword},
-            success: function (rs) {
-                $(".forEachTr").remove();
-                $(rs.list).each(function (i, obj) {
-                    var date1 = new Date(obj.ddate);
-                    var date2 = new Date(obj.rdate);
-
-                    var ddate = getFormatDate(date1);
-                    var rdate = getFormatDate(date2);
-
-                    $tr = $("<tr>").addClass("forEachTr");
-
-                    $td1 = $("<td>").html(obj.id);
-                    $td2 = $("<td>");
-                    $td3 = $("<td>").html(obj.dlocation);
-                    $td4 = $("<td>").html(obj.rlocation);
-                    $td5 = $("<td>").html(ddate);
-                    $td6 = $("<td>").html(rdate);
-                    if (obj.ldiv == 0) {
-                        $td7 = $("<td>해외</td>");
-                    } else {
-                        $td7 = $("<td>국내</td>");
-                    }
-                    $td8 = $("<td>").html(obj.capacity);
-                    if (obj.seat == 'F') {
-                        $td9 = $("<td>").html("First-Class").addClass("first");
-                    } else if (obj.seat == 'B') {
-                        $td9 = $("<td>").html("Business-Class").addClass("bus");
-                    } else {
-                        $td9 = $("<td>").html("Economy-Class").addClass("eco");
-                    }
-                    $td10 = $("<td>").html(obj.price);
-
-                    $a = $("<a>").attr("href", "/manager/flightDetail?no=" + obj.no).html(obj.ano);
-
-                    $td2.append($a);
-                    $tr.append($td1);
-                    $tr.append($td2);
-                    $tr.append($td3);
-                    $tr.append($td4);
-                    $tr.append($td5);
-                    $tr.append($td6);
-                    $tr.append($td7);
-                    $tr.append($td8);
-                    $tr.append($td9);
-                    $tr.append($td10);
-
-                    $("table").append($tr);
-
-                })
-                $(".pagination").empty();
-
-                if (rs.pagingData.currentPage == 1) {
-                    var $li1 = $("<li>");
-                    var $a1 = $("<a>").attr("href", "flightMngList?page={%= pagingData.pnStart -1 %>&searchType={%= cri.searchType %>&keyword={%= cri.keyword %>").html("&laquo");
-                    $li1.append($a1);
-                }
-
-
-                if (rs.pagingData.currentPage == rs.pagingData.totalPages) {
-                    var $li3 = $("<li>");
-                    var $a3 = $("<a>").attr("href", "flightMngList?page={%= pagingData.pnStart -1 %>&searchType={%= cri.searchType %>&keyword={%= cri.keyword %>").html("&laquo");
-
-                    $li3.append($a3);
-                }
-
-                for (var j = rs.pagingData.pnStart; j <= rs.pagingData.pnEnd; j++) {
-                    $li2 = $("<li>");
-                    $a2 = $("<a>").html(j).addClass("domList");
-                    if (j == rs.pagingData.currentPage) {
-                        $li2.addClass("active");
-                    }
-                    $li2.append($a2);
-
-
-                    $(".pagination").append($li1);
-                    $(".pagination").append($li2);
-                    $(".pagination").append($li3);
-                }
-            }
-        })
-    }
-
-
-    //해외 항공편만 검색하는 ajax
-    //page를 넣으면 해당 페이지 출력
-    function getAbroadList(page) {
-        var searchType = "{%= cri.searchType %>";
-        var keyword = "{%= cri.keyword %>";
-        $.ajax({
-            url: "flightAbroadList/" + page,
-            type: "get",
-            dataType: "json",
-            data: {searchType: searchType, keyword: keyword},
-            success: function (rs) {
-                $(".forEachTr").remove();
-                $(rs.list).each(function (i, obj) {
-                    var date1 = new Date(obj.ddate);
-                    var date2 = new Date(obj.rdate);
-
-                    var ddate = getFormatDate(date1);
-                    var rdate = getFormatDate(date2);
-
-                    $tr = $("<tr>").addClass("forEachTr");
-
-                    $td1 = $("<td>").html(obj.id);
-                    $td2 = $("<td>");
-                    $td3 = $("<td>").html(obj.dlocation);
-                    $td4 = $("<td>").html(obj.rlocation);
-                    $td5 = $("<td>").html(ddate);
-                    $td6 = $("<td>").html(rdate);
-                    if (obj.ldiv == 0) {
-                        $td7 = $("<td>해외</td>");
-                    } else {
-                        $td7 = $("<td>국내</td>");
-                    }
-                    $td8 = $("<td>").html(obj.capacity);
-                    if (obj.seat == 'F') {
-                        $td9 = $("<td>").html("First-Class").addClass("first");
-                    } else if (obj.seat == 'B') {
-                        $td9 = $("<td>").html("Business-Class").addClass("bus");
-                    } else {
-                        $td9 = $("<td>").html("Economy-Class").addClass("eco");
-                    }
-                    $td10 = $("<td>").html(obj.price);
-
-                    $a = $("<a>").attr("href", "/manager/flightDetail?no=" + obj.id).html(obj.ano);
-
-                    $td2.append($a);
-                    $tr.append($td1);
-                    $tr.append($td2);
-                    $tr.append($td3);
-                    $tr.append($td4);
-                    $tr.append($td5);
-                    $tr.append($td6);
-                    $tr.append($td7);
-                    $tr.append($td8);
-                    $tr.append($td9);
-                    $tr.append($td10);
-
-                    $("table").append($tr);
-
-                })
-                $(".pagination").empty();
-
-                if (rs.pagingData.currentPage == 1) {
-                    var $li1 = $("<li>");
-                    var $a1 = $("<a>").attr("href", "flightMngList?page={%= pagingData.pnStart -1 %>&searchType={%= cri.searchType %>&keyword={%= cri.keyword %>").html("&laquo");
-                    $li1.append($a1);
-                }
-
-                if (rs.pagingData.currentPage == rs.pagingData.totalPages) {
-                    var $li3 = $("<li>");
-                    var $a3 = $("<a>").attr("href", "flightMngList?page={%= pagingData.pnStart -1 %>&searchType={%= cri.searchType %>&keyword={%= cri.keyword %>").html("&laquo");
-
-                    $li3.append($a3);
-                }
-
-                for (var j = rs.pagingData.pnStart; j <= rs.pagingData.pnEnd; j++) {
-                    $li2 = $("<li>");
-                    $a2 = $("<a>").html(j).addClass("domList");
-                    if (j == rs.pagingData.currentPage) {
-                        $li2.addClass("active");
-                    }
-                    $li2.append($a2);
-
-
-                    $(".pagination").append($li1);
-                    $(".pagination").append($li2);
-                    $(".pagination").append($li3);
-                }
-            }
-        })
-    }
-
-
-</script>
 
 <div class="content">
     <div class="row">
@@ -268,10 +71,10 @@
                         4. 검색의 키워드
                      -->
                     <select name="searchType" id="searchType">
-                        <option value="n" {%= (cri.searchType ==null)?'selected':'' %>>선택하세요</option>
-                        <option value="id" {%= (cri.searchType =='id')?'selected':'' %>>번호</option>
-                        <option value="ano" {%= (cri.searchType =='ano')?'selected':'' %>>항공기 번호</option>
-                        <option value="rloca" {%= (cri.searchType =='rloca')?'selected':'' %>>도착 지역</option>
+                        <option value="n" {% if cri.searchType ==null %} 'selected' {% else %} '' {% endif%}>선택하세요</option>
+                        <option value="id" {% if cri.searchType =='id' %} 'selected' {% else %} '' {% endif %}>번호</option>
+                        <option value="ano" {% if cri.searchType =='ano' %} 'selected' {%else %} '' {% endif %}>항공기 번호</option>
+                        <option value="rloca" {% if cri.searchType =='rloca' %} 'selected' {% else %} '' {%endif%}>>도착 지역</option>
                     </select>
                     <input type="text" name="keyword" id="keywordInput" placeholder="검색어를 입력하세요">
                     <button id="btnSearch">Search</button>
@@ -305,62 +108,41 @@
                             <th>좌석</th>
                             <th>가격</th>
                         </tr>
-                        {% flightList.forEach( f => { %>
+                        {% for list in lists  %}
                         <tr class="forEachTr">
-                            <td>{%= f.id %></td>
-                            <td><a href="/manager/flightDetail?no={%= f.id %>&page={%= pagingData.currentPage %>">{%= f.ano %></a>
+                            <td>{{list.id}}</td>
+                            <td><a href="/manager/flightDetail/{{list.id}}?currentPage={{pagingData.currentPage}}">{{list.ano }}</a>
                             </td>
-                            <td>{%= f.dlocation %></td>
-                            <td>{%= f.rlocation %></td>
-                            <td>{%= moment(f.ddate).format('YYYY-MM-DD') %></td>
-                            <td>{%= moment(f.rdate).format('YYYY-MM-DD') %></td>
-                            {% if(f.ldiv == 0) { %>
+                            <td>{{list.dlocation}}</td>
+                            <td>{{list.rlocation}}</td>
+                            <td>{{list.ddate | date('YYYY-MM-DD') }}</td>
+                            <td>{{list.rdate | date('YYYY-MM-DD') }}</td>
+
+                            {% if list.ldiv == 0 %}
                                 <td>해외</td>
-                            {% } %>
-                            {% if(f.ldiv == 1) { %>
+                            {% endif %}
+                            {% if list.ldiv == 1 %}
                                 <td>국내</td>
-                            {% } %>
-                            <td>{%= f.capacity %></td>
-                            {% if(f.seat == 'F') { %>
+                            {% endif %}
+                            <td>{{list.capacity}}</td>
+                            {% if list.seat == 'F' %}
                                 <td class="first">First-Class</td>
-                            {% } %>
-                            {% if(f.seat == 'B') { %>
+                            {% endif %}
+                            {% if list.seat == 'B'  %}
                                 <td class="bus">Business-Class</td>
-                            {% } %>
-                            {% if(f.seat == 'E') { %>
+                            {% endif %}
+                            {% if list.seat == 'E' %}
                                 <td class="eco">Economy-Class</td>
-                            {% } %>
-                            <td>{%= f.price %></td>
+                            {% endif %}
+                            <td>{{list.price}}</td>
                         </tr>
-                        {% }) %>
+                        {% endfor %}
                     </table>
                 </div>
                 <div class="box-footer">
-                    <!--  부트 스트랩으로 사용  -->
-                    <div class='text-center'>
-                        <ul class="pagination">
-                            {% if (pagingData.totalPages != 0) { %>
-                            <div class="" style="text-align:center;">
-                                <ul class="pagination">
-                                    <li {%if(pagingData.currentPage == 1){%> class="disabled" {%}else{%>class="waves-effect" {%}%> >
-                                        <a {%if(pagingData.currentPage > 1){%> href="?currentPage={%=pagingData.currentPage-1%>" {%}%>>
-                                            <i class="material-icons">prev</i>
-                                        </a>
-                                    </li>
-                                    {% for(var i=pagingData.pnStart; i<=pagingData.pnEnd; i++){ %> <li {%if(i===pagingData.currentPage){%> class="active"
-                                            {%}%>><a href="?currentPage={%=i%>">{%=i%></a></li>
-                                    {% } %>
-                                    <li {%if(pagingData.currentPage == pagingData.totalPages){%> class="disabled" {%}else{%> class="waves-effect" {%}%>>
-                                        <a {%if(pagingData.currentPage < pagingData.totalPages){%> href="?currentPage={%=pagingData.currentPage+1%>" {%}%> class="waves-effect">
-                                            <i class="material-icons">next</i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            {% } %>
-
-                        </ul>
-                    </div>
+				<center>
+				<ul class="pagination" id="pagination"></ul>
+				</center>
                 </div>
             </div>
         </div>
@@ -450,6 +232,150 @@
         location.href = "addFlightForm";
     })
 </script>
+<script>
+
+    function getFormatDate(date) {
+        var year = date.getFullYear() + "-";              //yyyy
+        var month = (date.getMonth() + 1) + "-";          //M
+        month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+        var day = date.getDate();                   //d
+        day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+        return year + '' + month + '' + day;
+    }
+
+    //국내 항공편만 검색하는 ajax
+    //page를 넣으면 해당 페이지 출력
+    function getDomList(page) {
+        var searchType = "{{cri.searchType }}";
+        var keyword = "{{cri.keyword}}";
+        $.ajax({
+            url: "flightDomList/" + page,
+            type: "get",
+            dataType: "json",
+            data: {searchType: searchType, keyword: keyword},
+            success: function (rs) {
+                $(".forEachTr").remove();
+                $(rs.list).each(function (i, obj) {
+                    var date1 = new Date(obj.ddate);
+                    var date2 = new Date(obj.rdate);
+
+                    var ddate = getFormatDate(date1);
+                    var rdate = getFormatDate(date2);
+
+                    $tr = $("<tr>").addClass("forEachTr");
+
+                    $td1 = $("<td>").html(obj.id);
+                    $td2 = $("<td>");
+                    $td3 = $("<td>").html(obj.dlocation);
+                    $td4 = $("<td>").html(obj.rlocation);
+                    $td5 = $("<td>").html(ddate);
+                    $td6 = $("<td>").html(rdate);
+                    if (obj.ldiv == 0) {
+                        $td7 = $("<td>해외</td>");
+                    } else {
+                        $td7 = $("<td>국내</td>");
+                    }
+                    $td8 = $("<td>").html(obj.capacity);
+                    if (obj.seat == 'F') {
+                        $td9 = $("<td>").html("First-Class").addClass("first");
+                    } else if (obj.seat == 'B') {
+                        $td9 = $("<td>").html("Business-Class").addClass("bus");
+                    } else {
+                        $td9 = $("<td>").html("Economy-Class").addClass("eco");
+                    }
+                    $td10 = $("<td>").html(obj.price);
+
+                    $a = $("<a>").attr("href", "/manager/flightDetail?no=" + obj.no).html(obj.ano);
+
+                    $td2.append($a);
+                    $tr.append($td1);
+                    $tr.append($td2);
+                    $tr.append($td3);
+                    $tr.append($td4);
+                    $tr.append($td5);
+                    $tr.append($td6);
+                    $tr.append($td7);
+                    $tr.append($td8);
+                    $tr.append($td9);
+                    $tr.append($td10);
+
+                    $("table").append($tr);
+
+                })
+             }
+        })
+    }
 
 
-{%- include ("../../include/footer.html") %>
+    //해외 항공편만 검색하는 ajax
+    //page를 넣으면 해당 페이지 출력
+    function getAbroadList(page) {
+        var searchType = "{{cri.searchType }}";
+        var keyword = "{{cri.keyword }}";
+        $.ajax({
+            url: "flightAbroadList/" + page,
+            type: "get",
+            dataType: "json",
+            data: {searchType: searchType, keyword: keyword},
+            success: function (rs) {
+                $(".forEachTr").remove();
+                $(rs.list).each(function (i, obj) {
+                    var date1 = new Date(obj.ddate);
+                    var date2 = new Date(obj.rdate);
+
+                    var ddate = getFormatDate(date1);
+                    var rdate = getFormatDate(date2);
+
+                    $tr = $("<tr>").addClass("forEachTr");
+
+                    $td1 = $("<td>").html(obj.id);
+                    $td2 = $("<td>");
+                    $td3 = $("<td>").html(obj.dlocation);
+                    $td4 = $("<td>").html(obj.rlocation);
+                    $td5 = $("<td>").html(ddate);
+                    $td6 = $("<td>").html(rdate);
+                    if (obj.ldiv == 0) {
+                        $td7 = $("<td>해외</td>");
+                    } else {
+                        $td7 = $("<td>국내</td>");
+                    }
+                    $td8 = $("<td>").html(obj.capacity);
+                    if (obj.seat == 'F') {
+                        $td9 = $("<td>").html("First-Class").addClass("first");
+                    } else if (obj.seat == 'B') {
+                        $td9 = $("<td>").html("Business-Class").addClass("bus");
+                    } else {
+                        $td9 = $("<td>").html("Economy-Class").addClass("eco");
+                    }
+                    $td10 = $("<td>").html(obj.price);
+
+                    $a = $("<a>").attr("href", "/manager/flightDetail?no=" + obj.id).html(obj.ano);
+
+                    $td2.append($a);
+                    $tr.append($td1);
+                    $tr.append($td2);
+                    $tr.append($td3);
+                    $tr.append($td4);
+                    $tr.append($td5);
+                    $tr.append($td6);
+                    $tr.append($td7);
+                    $tr.append($td8);
+                    $tr.append($td9);
+                    $tr.append($td10);
+
+                    $("table").append($tr);
+
+                })
+            }
+        })
+    }
+
+
+</script>
+
+
+{% block Pagination %} {%-
+include("../../include/pagination.html") %}
+{% endblock %} 
+
+{%- include ("../../include/footer.html") %}

@@ -214,7 +214,6 @@
 		})
 	})
 </script>
-<!--예약이 확정되었습니다 if문 있는거 삭제했음  -->
 
 <div class="content">
 	<div class="row">
@@ -251,42 +250,69 @@
 							<th>예약 상태</th>
 							<th>예약 관리</th>
 						</tr>
-						{% if (noList != null) { %}
+						{% if lists === null  %}
 						<tr>
 							<td colspan="8" class="red">불러올 예약이 없습니다.</td>
 						</tr>
-						{% } %}
+						{% else %}
+						{% for list in lists %}
+						<tr>
+							<td>{{list.no}}</td>
+							<td>{{list.userno_user.username}}</td>
+							<td>
+								{% for userpstatuse in list.userpstatuses %}
+								{{userpstatuse.pno_product.pname}}
+								{% endfor %}
+								</td>
+							<td>항공편</td>
+							<td>출발 날짜</td>
+							<td>도착 날짜</td>
+
+                        {% if list.rstatus === '1' %}
+                            <td class="red">결제 가능</td>
+                        {% endif %}
+                        {% if list.rstatus === '2' %}
+                            <td class="blue">결제 완료 <br>(예약 확정 대기 중)</td>
+                        {% endif  %}
+                        {% if list.rstatus == '3' %}
+                            <td class="yellow">예약 확정</td>
+                        {% endif %}
+
+
+                        <td>
+                            {% if list.rstatus === '1'  %}
+                               	<button class="payNow">결제하기</button>
+                                <br>
+								{% endif %}
+                            {% if list.rstatus === '2' %}
+                               	<button class="writeReview">리뷰쓰기</button>
+							{% endif %}
+							{% if list.rstatus === '3' and reserv.review.no === null %}
+
+							{% endif %}
+							{% if list.rstatus === '3' and reserv.review.no !== null %}
+                               	<button class="seeReview">리뷰보기</button>
+							{% endif %}
+
+                            {% if reserv.rstatus=='1'  %}
+                                <button class="cancel">예약 취소</button>
+                            {% endif %}
+                            {% if reserv.rstatus=='2' %}
+                                -
+                            {% endif %}
+                        </td>
+						</tr>
+						{% endfor %}
+
+						{% endif %}
 
 					</table>
 
 				</div>
-				<!--  부트 스트랩으로 사용  -->
-				<div class='text-center'>
-					<ul class="pagination">
-						{% if (pagingData.totalPages != 0) { %}
-						<div class="" style="text-align:center;">
-							<ul class="pagination">
-								<li {%if(pagingData.currentPage == 1){%} class="disabled" {%}else{%}class="waves-effect" {%}%} >
-									<a {%if(pagingData.currentPage > 1){%} href="?currentPage={%=pagingData.currentPage-1%}" {%}%}>
-										<i class="material-icons">prev</i>
-									</a>
-								</li>
-								{% for(var i=pagingData.pnStart; i<=pagingData.pnEnd; i++){ %}
-								<li {%if(i===pagingData.currentPage){%} class="active"
-										{%}%}>
-									<a href="?currentPage={%=i%}">{%=i%}</a>
-								</li>
-								{% } %}
-								<li {%if(pagingData.currentPage == pagingData.totalPages){%} class="disabled" {%}else{%} class="waves-effect" {%}%}>
-									<a {%if(pagingData.currentPage < pagingData.totalPages){%} href="?currentPage={%=pagingData.currentPage+1%}" {%}%} class="waves-effect">
-										<i class="material-icons">next</i>
-									</a>
-								</li>
-							</ul>
-						</div>
-						{% } %}
-					</ul>
-				</div>
+
+				<center>
+				<ul class="pagination" id="pagination"></ul>
+				</center>
 			</div>
 		</div>
 	</div>
@@ -306,4 +332,9 @@
 		location.href = "register";
 	})
 </script>
+
+
+{% block Pagination %} {%-
+include("../../include/pagination.html") %}
+{% endblock %} 
 {%- include("../../include/footer.html")%}

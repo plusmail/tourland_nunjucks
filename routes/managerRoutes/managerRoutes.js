@@ -3,7 +3,17 @@ const router = express.Router();
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
 
-const {employee,user, coupon,usercoupon} = require("../../models");
+const {employee,
+    user, 
+    coupon,
+    usercoupon, 
+    reservation,
+    userpstatus,
+    product,
+    airplane,
+    hotel,
+    tour,
+} = require("../../models");
 
 
 const cookieParser = require("cookie-parser");
@@ -12,7 +22,6 @@ const querystring = require('querystring');
 const crypto = require('crypto'); //추가됐음
 const {getPagingData, getPagination,getPagingDataCount} = require('../../controller/pagination');
 const {makePassword, comparePassword} = require('../../controller/passwordCheckUtil');
-const {product} = require("../../models");
 const moment = require("moment");
 const bodyParser = require('body-parser');
 const parser = bodyParser.urlencoded({extended: false});
@@ -53,10 +62,9 @@ router.get('/userlist', (req, res, next) => {
 
 //----------------------------- 고객관리 ---------------------------------------
 // 고객 관리 전체 목록
-router.get('/userMngList/:usersecess', async (req, res, next) => {
+router.get('/userMngList', async (req, res, next) => {
 
-    const usersecess = req.params.usersecess;
-    let {searchType, keyword} = req.query;
+    let {usersecess, searchType, keyword} = req.query;
 
     const contentSize = Number(process.env.CONTENTSIZE); // 한페이지에 나올 개수
     const currentPage = Number(req.query.currentPage) || 1; //현재페이
@@ -68,7 +76,7 @@ router.get('/userMngList/:usersecess', async (req, res, next) => {
         where: {
             [Op.and]: [
                 {
-                    usersecess: usersecess
+                    // usersecess: usersecess
                 }
             ],
             [Op.or]: [
@@ -267,28 +275,56 @@ router.get('/reservationMngList', async (req, res, next) => {
     let noList = {};
     let yesList = {};
 
-    const list =
-        await models.reservation.findAll({
-            raw: true,
-            order: [
-                ["no", "DESC"]
-            ],
-            limit, offset
-        });
-    const listCount =
-        await models.reservation.findAndCountAll({
-            raw: true,
+    const listAndCounts =
+        await reservation.findAndCountAll({
+            // raw: true,
+            include: [
+                {
+                    model: user,
+                    attributes: ['userid', 'username'],
+                    as: 'userno_user',
+                    nest: true,
+                    raw: true,
+                    paranoid: true,
+                    required: false,
+                },
+                {
+                    model: userpstatus,
+                    attributes: ['no', 'userno', 'pno'],
+                    as: 'userpstatuses',
+                    nest: true,
+                    raw: true,
+                    paranoid: true,
+                    required: false,
+                    include :[{
+                        model: product,
+                        attributes: ['id', 'pname', 'pexpire','pprice'],
+                        as: 'pno_product',
+                        nest: true,
+                        raw: true,
+                        paranoid: true,
+                        required: false,
+                    }
+                    ]
+                }],
+        
             order: [
                 ["no", "DESC"]
             ],
             limit, offset
         });
 
-    const pagingData = getPagingData(listCount, currentPage, limit);
+
+    const {count:totalItems, rows: lists} = listAndCounts;
+    const pagingData = getPagingDataCount(totalItems, currentPage, limit);
+
+    console.log("reservationMngList --->",lists[0].userpstatuses[0].pno_product );
+
+
     let cri = {currentPage};
 
 
-    res.render("manager/reservation/reservationMngList", {Manager, AuthEmp, noList, yesList, list , pagingData, cri});
+    res.render("manager/reservation/reservationMngList", {lists , pagingData, cri});
 
 });
 
@@ -296,7 +332,6 @@ router.get('/reservationMngList', async (req, res, next) => {
 // / ✈️ 항공관리 productfilightMngList----------------------------------------------------
 // 항공 관리 전체 목록
 router.get('/flightMngList', async (req, res, next) => {
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
 
     let {searchType, keyword} = req.query;
 
@@ -310,53 +345,52 @@ router.get('/flightMngList', async (req, res, next) => {
     let dataCountAll = [];
 
     if (searchType == "id") {
-        flightList = await models.airplane.findAll({
+        flightList = await airplane.findAll({
             where: {[Op.or]: [{id: {[Op.like]: keyword}},]}, limit, offset
         })
 
-        dataCountAll = await models.airplane.findAndCountAll({
+        dataCountAll = await airplane.findAndCountAll({
             where: {[Op.or]: [{id: {[Op.like]: keyword}}]}, limit, offset
         })
     } else if (searchType == "ano") {
-        flightList = await models.airplane.findAll({
+        flightList = await airplane.findAll({
             where: {[Op.or]: [{ano: {[Op.like]: "%" + keyword + "%"}},]}, limit, offset
         })
 
-        dataCountAll = await models.airplane.findAndCountAll({
+        dataCountAll = await airplane.findAndCountAll({
             where: {[Op.or]: [{ano: {[Op.like]: "%" + keyword + "%"}}]}, limit, offset
         })
 
     } else if (searchType == "rloca") {
-        flightList = await models.airplane.findAll({
+        flightList = await airplane.findAll({
             where: {[Op.or]: [{rlocation: {[Op.like]: "%" + keyword + "%"}},]}, limit, offset
         })
 
-        dataCountAll = await models.airplane.findAndCountAll({
+        dataCountAll = await airplane.findAndCountAll({
             where: {[Op.or]: [{rlocation: {[Op.like]: "%" + keyword + "%"}}]}, limit, offset
         })
     } else {
-        flightList = await models.airplane.findAll({
+        flightList = await airplane.findAll({
             where: {}, limit, offset
         })
-        dataCountAll = await models.airplane.findAndCountAll({
+        dataCountAll = await airplane.findAndCountAll({
             where: {}, limit, offset
         })
     }
 
-    const pagingData = getPagingData(dataCountAll, currentPage, limit);
+    const {count:totalItems, rows: lists} = dataCountAll;
+    const pagingData = getPagingDataCount(totalItems, currentPage, limit);
 
     let cri = {searchType, keyword};
 
-    res.render("manager/flight/flightMngList2", {cri, flightList, pagingData, Manager, AuthEmp, moment});
+    res.render("manager/flight/flightMngList2", {cri, lists, pagingData});
 })
 
 // 항공 관리 페이지에서 검색 기능(국내)
-router.get('/flightDomList/:currentPage', async (req, res, next) => {
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
-
+router.get('/flightDomList/:id', async (req, res, next) => {
     let {searchType, keyword} = req.query;
+    let { id} = req.params;
 
-    console.log("6666666666->", req.query);
     let {currentPage} = req.params;
 
     const contentSize = Number(10); // 한페이지에 나올 개수
@@ -365,30 +399,28 @@ router.get('/flightDomList/:currentPage', async (req, res, next) => {
 
     keyword = keyword ? keyword : "";
 
-    let flightList = await models.airplane.findAll({
+    let flightList = await airplane.findAll({
+        where: { id },
+        limit, offset
+    })
+
+    let dataCountAll = await airplane.findAndCountAll({
         where: {},
         limit, offset
     })
 
-    let dataCountAll = await models.airplane.findAndCountAll({
-        where: {},
-        limit, offset
-    })
-
-    const pagingData = getPagingData(dataCountAll, currentPage, limit);
+    const {count:totalItems, rows: lists} = dataCountAll;
+    const pagingData = getPagingDataCount(totalItems, currentPage, limit);
 
     let cri = {searchType, keyword};
 
-    res.render("manager/flight/flightMngList2", {cri, flightList, pagingData, Manager, AuthEmp});
+    res.render("manager/flight/flightMngList2", {cri, lists, pagingData});
 });
 // 항공 관리 페이지에서 검색 기능(해외)
 router.get('/flightAbroadList/:currentPage', async (req, res, next) => {
 
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
-
     let {searchType, keyword} = req.query;
 
-    console.log("6666666666->", req.query);
     let {currentPage} = req.params;
 
     const contentSize = Number(10); // 한페이지에 나올 개수
@@ -397,52 +429,42 @@ router.get('/flightAbroadList/:currentPage', async (req, res, next) => {
 
     keyword = keyword ? keyword : "";
 
-    let flightList = await models.airplane.findAll({
+    let flightList = await airplane.findAll({
         where: {},
         limit, offset
     })
 
-    let dataCountAll = await models.airplane.findAndCountAll({
+    let dataCountAll = await airplane.findAndCountAll({
         where: {},
         limit, offset
     })
 
-    const pagingData = getPagingData(dataCountAll, currentPage, limit);
+    const {count:totalItems, rows: lists} = dataCountAll;
+    const pagingData = getPagingDataCount(totalItems, currentPage, limit);
 
     let cri = {searchType, keyword};
 
-    res.render("manager/flight/flightMngList2", {cri, flightList, pagingData, Manager, AuthEmp});
+    res.render("manager/flight/flightMngList2", {cri, lists, pagingData});
 });
 //항공편 추가 페이지
 router.get('/addFlightForm', async (req, res, next) => {
 
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
+    let location = "/manager/hotelMngList";
 
-    let list = await models.airplane.findAll({
-        where: {},
-    });
-    let airTotalCnt = {};
-    let airTotalNextCnt = {};
-
-    res.render("manager/flight/addFlightForm2", {airTotalNextCnt, airTotalCnt, list, Manager, AuthEmp});
+    res.render("manager/flight/addFlightForm2", {location});
 });
 
 router.post('/addFlightForm', async (req, res, next) => {
 
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
-
-    let list = await models.airplane.findAll({
+    let list = await airplane.findAndCountAll({
         where: {},
     });
+    const {count:totalItems, rows: lists} = dataCountAll;
 
-
-    res.render("manager/flight/addFlightForm2", {list, Manager, AuthEmp});
+    res.render("manager/flight/addFlightForm2", {totalItems, lists});
 });
 
 router.get('/flightDetail', async (req, res, next) => {
-// header 공통 !!!
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
-
 
     let {searchType, searchType2, keyword} = req.query;
 
@@ -466,7 +488,7 @@ router.get('/flightDetail', async (req, res, next) => {
         ano: ""
     };
 
-    res.render("manager/flight/flightDetail", {Manager, Auth, cri, noDiv, prevAir, selectedAir})
+    res.render("manager/flight/flightDetail", {cri, noDiv, prevAir, selectedAir})
 });
 
 
@@ -474,7 +496,6 @@ router.get('/flightDetail', async (req, res, next) => {
 // 호텔 관리 전체 목록
 router.get('/hotelMngList', async (req, res, next) => {
 
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
     let {searchType, keyword, keyword2, keyword3} = req.query;
 
     const contentSize = Number(10); // 한페이지에 나올 개수
@@ -483,32 +504,30 @@ router.get('/hotelMngList', async (req, res, next) => {
 
     keyword = keyword ? keyword : "";
 
-    const list = await models.hotel.findAll({
-        // raw : true,
-        nest: true,
+    let dataCountAll = await hotel.findAndCountAll({
         attributes: ['id', 'hname', 'haddr', 'checkin', 'checkout', 'capacity', 'price', 'roomcapacity', 'roomtype', 'ldiv', 'bookedup', 'totalcapacity', 'pdiv'],
         where: {},
         limit, offset
     });
-    let dataCountAll = await models.hotel.findAndCountAll({
-        where: {},
-        limit, offset
-    });
 
 
-    const pagingData = getPagingData(dataCountAll, currentPage, limit);
+    const {count:totalItems, rows: lists} = dataCountAll;
+    const pagingData = getPagingDataCount(totalItems, currentPage, limit);
 
     let cri = {searchType, keyword, keyword2, keyword3};
 
-    res.render("manager/hotel/hotelMngList", {cri, list, pagingData, Manager, AuthEmp, moment});
+    let location = "/manager/hotelMngList";
+
+    res.render("manager/hotel/hotelMngList", {cri, lists, pagingData, location});
 });
+
+
 //호텔 등록
 router.get('/hotelRegister', async (req, res, next) => {
 
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
     let lastNum = "";
 
-    res.render("manager/hotel/hotelRegister", {lastNum, Manager, AuthEmp});
+    res.render("manager/hotel/hotelRegister", {lastNum});
 });
 
 router.post("/hotelRegister", async (req, res, next) => {
@@ -539,12 +558,11 @@ router.post("/hotelRegister", async (req, res, next) => {
 
 //호텔 수정
 router.get('/hotelModify', async (req, res, next) => {
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
     let {searchType, keyword} = req.query;
 
     keyword = keyword ? keyword : "";
 
-    const hotelVo = await models.hotel.findOne({
+    const hotelVo = await hotel.findOne({
         // raw : true,
         nest: true,
         attributes: ['id', 'hname', 'haddr', 'checkin', 'checkout', 'capacity', 'price', 'roomcapacity', 'roomtype', 'ldiv', 'bookedup', 'totalcapacity', 'pdiv'],
@@ -553,18 +571,14 @@ router.get('/hotelModify', async (req, res, next) => {
         },
     });
 
-    // console.log("666666666->", hotelVo);
-
     let cri = {searchType, keyword};
 
-    res.render("manager/hotel/hotelModify", {cri, hotelVo, Manager, AuthEmp});
+    res.render("manager/hotel/hotelModify", {cri, hotelVo});
 });
 
 router.post("/hotelModify", async (req, res, next) => {
     // header 공통 !!!
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
-
-    const update = await models.hotel.update({
+    const update = await hotel.update({
                 hname: req.body.hname,
                 haddr: req.body.haddr,
                 checkin: req.body.checkin,
@@ -591,13 +605,13 @@ router.post("/hotelModify", async (req, res, next) => {
 
 router.get('/hotelDelete', async (req, res, next) => {
 
-    let hotelVO = await models.hotel.findOne({
+    let hotelVO = await hotel.findOne({
         raw: true,
         where: {
             id: req.query.id
         }
     });
-    models.hotel.destroy({
+    hotel.destroy({
         where: {
             id: req.query.id,
         }
@@ -614,7 +628,6 @@ router.get('/hotelDelete', async (req, res, next) => {
 // 🚩 투어 관리 -------------------
 // 현지 투어 관리 전체 목록
 router.get('/tourMngList', async (req, res, next) => {
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
 
     let {searchType, keyword} = req.query;
 
@@ -624,24 +637,25 @@ router.get('/tourMngList', async (req, res, next) => {
 
     keyword = keyword ? keyword : "";
 
-    const list = await models.tour.findAll({
+    const list = await tour.findAll({
         // raw : true,
         nest: true,
-        attributes: ['id', 'tname', 'tlocation', 'startDate', 'endDate', 'taddr', 'etime', 'capacity', 'tprice', 'ldiv'],
+        attributes: ['id', 'tname', 'tlocation', 'startdate', 'enddate', 'taddr', 'etime', 'capacity', 'tprice', 'ldiv'],
         where: {},
         limit, offset
     });
-    let dataCountAll = await models.tour.findAndCountAll({
+    let dataCountAll = await tour.findAndCountAll({
         where: {},
         limit, offset
     });
 
+    const {count:totalItems, rows: lists} = dataCountAll;
+    const pagingData = getPagingDataCount(totalItems, currentPage, limit);
 
-    const pagingData = getPagingData(dataCountAll, currentPage, limit);
 
     let cri = {searchType, keyword};
 
-    res.render("manager/tour/tourMngList", {cri, list, pagingData, Manager, AuthEmp, moment});
+    res.render("manager/tour/tourMngList", {cri, lists, pagingData});
 });
 
 router.get('/tourRegister', async (req, res, next) => {
@@ -654,10 +668,8 @@ router.get('/tourRegister', async (req, res, next) => {
 });
 
 router.post("/tourRegister", async (req, res, next) => {
-    // header 공통 !!!
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
 
-    const register = await models.tour.create({
+    const register = await tour.create({
         raw: true,
         id: req.body.id,
         ldiv: req.body.ldiv,
@@ -675,8 +687,6 @@ router.post("/tourRegister", async (req, res, next) => {
 });
 
 router.get('/tourDetail', async (req, res, next) => {
-// header 공통 !!!
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
 
     let {searchType, keyword} = req.query;
 
@@ -684,7 +694,7 @@ router.get('/tourDetail', async (req, res, next) => {
     let cri = {searchType, keyword};
 
     const tourVO =
-        await models.tour.findOne({
+        await tour.findOne({
             raw: true,
             where: {
                 id: req.query.id
@@ -692,13 +702,11 @@ router.get('/tourDetail', async (req, res, next) => {
         });
 
 
-    res.render("manager/tour/tourDetail", {Manager, AuthEmp,cri,moment, tourVO})
+    res.render("manager/tour/tourDetail", {cri,tourVO})
 
 });
 
 router.get('/tourModify', async (req, res, next) => {
-
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
 
     let {searchType,searchType2, keyword} = req.query;
 
@@ -707,7 +715,7 @@ router.get('/tourModify', async (req, res, next) => {
     let cri = {searchType, searchType2, keyword};
 
     const tourVO =
-        await models.tour.findOne({
+        await tour.findOne({
             raw: true,
             where: {
                 id: req.query.id
@@ -715,28 +723,28 @@ router.get('/tourModify', async (req, res, next) => {
         });
 
 
-    res.render("manager/tour/tourModify", {Manager, AuthEmp, tourVO,cri, moment});
+    res.render("manager/tour/tourModify", {tourVO,cri});
 
 });
 
 router.post("/tourModify", async (req, res, next) => {
-    // header 공통 !!!
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
 
-    const update = await models.hotel.update({
-            id: req.body.id,
-            ldiv: req.body.ldiv,
-            tlocation: req.body.tlocation,
-            tname: req.body.tname,
-            startDate: req.body.startDate,
-            endDate: req.body.endDate,
-            taddr: req.body.taddr,
-            etime: req.body.etime,
-            capacity: req.body.capacity,
-            tprice: req.body.tprice
+    const {id, 
+        ldiv, 
+        tlocation, 
+        tname, 
+        startdate, 
+        enddate, 
+        taddr, 
+        etime, capacity, tprice} = req.body
+
+        console.log("tourModify ---->",req.body);
+
+    const update = await tour.update({
+            id,ldiv,tlocation,tname,startdate,enddate,taddr,etime,capacity,tprice
         },
         {
-            where: {id: req.body.id}
+            where: {id}
         }
     );
 
@@ -751,13 +759,13 @@ router.post("/tourModify", async (req, res, next) => {
 
 router.get('/tourDelete', async (req, res, next) => {
 
-    let tourVO = await models.tour.findOne({
+    let tourVO = await tour.findOne({
         raw: true,
         where: {
             id: req.query.id
         }
     });
-    models.tour.destroy({
+    tour.destroy({
         where: {
             id: req.query.id,
         }

@@ -173,69 +173,69 @@
                     <h3 class="box-title">호텔 상품 등록</h3>
                 </div>
                 <form>
-                    <input type="hidden" value="{%=cri.page%}" name="page">
-                    <input type="hidden" value="{%=cri.searchType%}" name="searchType">
-                    <input type="hidden" value="{%=cri.keyword%}" name="keyword">
+                    <input type="hidden" value="{{cri.page}}" name="page">
+                    <input type="hidden" value="{{cri.searchType}}" name="searchType">
+                    <input type="hidden" value="{{cri.keyword}}" name="keyword">
                     <div class="box-body">
                         <div class="noNameAddr">
                             <label><span class="red">*</span>번호</label>
-                            <input type="text" name="id" class="form-control"  id="hotelid" value="{%=hotelVo.id%}" readonly data-no="{%=hotelVo.id%}">
+                            <input type="text" name="id" class="form-control"  id="hotelid" value="{{hotelVo.id}}" readonly data-no="{{hotelVo.id}}">
                         </div>
                         <div class="noNameAddr">
                             <label><span class="red">*</span>호텔이름</label>
-                            <input type="text" name="hname" class="form-control" required="required" value="{%=hotelVo.hname%}">
+                            <input type="text" name="hname" class="form-control" required="required" value="{{hotelVo.hname}}">
                         </div>
                         <div class="noNameAddr">
                             <label><span class="red">*</span>호텔주소</label>
-                            <input type="text" name="haddr" class="form-control" required="required" value="{%=hotelVo.haddr%}">
+                            <input type="text" name="haddr" class="form-control" required="required" value="{{hotelVo.haddr}}">
                         </div>
                         <div class="form-group">
                             <label><span class="red">*</span>체크인 날짜</label>
-                            <input type="date" name="checkin" class="form-control"  id="checkin" value="{%=hotelVo.checkin%}">
+                            <input type="date" name="checkin" class="form-control"  id="checkin" value="{{hotelVo.checkin}}">
                         </div>
                         <div class="form-group">
                             <label><span class="red">*</span>체크아웃 날짜</label>
-                            <input type="date" name="checkout" class="form-control"  id="checkout" value="{%=hotelVo.checkout%}">
+                            <input type="date" name="checkout" class="form-control"  id="checkout" value="{{hotelVo.checkout}}">
                         </div>
                         <div class="form-group">
                             <label><span class="red">*</span>허용인원수</label>
                             <select name="capacity" class="form-control" id="capacity">
-                                <option value="1" {%=hotelVo.capacity == 1?'selected':'' %}>1</option>
-                                <option value="2" {%=hotelVo.capacity == 2?'selected':'' %}>2</option>
-                                <option value="3" {%=hotelVo.capacity == 3?'selected':'' %}>3</option>
-                                <option value="4" {%=hotelVo.capacity == 4?'selected':'' %}>4</option>
+                                <option value="1" {% if hotelVo.capacity == 1 %} 'selected' {%else %}'' {%endif%}%>1</option>
+                                <option value="2" {% if hotelVo.capacity == 2 %} 'selected' {%else %}'' {%endif%}%>2</option>
+                                <option value="3" {% if hotelVo.capacity == 3 %} 'selected' {%else %}'' {%endif%}%>3</option>
+                                <option value="4" {% if hotelVo.capacity == 4 %} 'selected' {%else %}'' {%endif%}%>4</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label><span class="red">*</span>가격(1박)</label>
-                            <input type="text" name="price" class="form-control" value="{%=hotelVo.price%}" >
+                            <input type="text" name="price" class="form-control" value="{{hotelVo.price}}" >
                             <span class="error">가격은 4자리 이상의 숫자만 적어주세요.</span>
                         </div>
                         <div class="form-group">
                             <label><span class="red">*</span>허용객실수</label>
-                            <input type="text" name="room-capacity" class="form-control" value="{%=hotelVo.roomcapacity%}">
+                            <input type="text" name="room-capacity" class="form-control" value="{{hotelVo.roomcapacity}}">
                             <span class="error">허용객실수에는 4자리이하의 숫자만 적어주세요.</span>
                         </div>
                         <div class="form-group">
                             <label><span class="red">*</span>객실타입</label>
                             <select name="roomtype" class="form-control" id="roomtype">
-                                <option value="N" <%=hotelVo.roomtype == "N"? 'selected':''%}>노말</option>
-                                <option value="D" <%=hotelVo.roomtype == "D"? 'selected':''%}>디럭스</option>
-                                <option value="S" <%=hotelVo.roomtype == "S"? 'selected':''%}>스위트</option>
+                                <option value="N" {% if hotelVo.roomtype == "N" %} 'selected' {% else %}''{%endif%}%>노말</option>
+                                <option value="D" {% if hotelVo.roomtype == "D" %} 'selected' {% else %}''{%endif%}%>디럭스</option>
+                                <option value="S" {% if hotelVo.roomtype == "S" %} 'selected' {% else %}''{%endif%}%>스위트</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>장소구분</label>
                             <select name="ldiv" class="form-control" id="ldiv">
-                                <option value="1" <%=hotelVo.ldiv == 1? 'selected':''%}>국내</option>
-                                <option value="0" <%=hotelVo.ldiv == 0? 'selected':''%}>해외</option>
+                                <option value="1" {% if hotelVo.ldiv == 1 %} 'selected' {%else %}'' {%endif%}>국내</option>
+                                <option value="0" {% if hotelVo.ldiv == 0 %} 'selected' {%else %}'' {%endif%}>해외</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>예약 가능 여부</label>
                             <select name="bookedup" class="form-control" id="bookedup">
-                                <option value="0" <%=hotelVo.bookedup == 0? 'selected':''%}>예약가능</option>
-                                <option value="1" <%=hotelVo.bookedup == 1? 'selected':''%}>예약불가능</option>
+                                <option value="0" {% if hotelVo.bookedup == 0 %} 'selected' {%else%}''{%endif%}>예약가능</option>
+                                <option value="1" {% if hotelVo.bookedup == 1 %} 'selected' {%else%}''{%endif%}>예약불가능</option>
                             </select>
                         </div>
                         <div id="errormsg"></div>

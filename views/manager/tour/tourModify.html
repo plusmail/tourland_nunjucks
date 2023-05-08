@@ -9,7 +9,7 @@
 <script>
     $(function() {
         var makeOption = function() {
-            if ($("#div option:selected").val() == '1') {
+            if ($("#ldiv option:selected").val() == '1') {
                 var option1 = $("<option value='도쿄'>").html("도쿄");
                 var option2 = $("<option vlaue='베이징'>").html("베이징");
                 $("#location").append(option1).append(option2);
@@ -40,13 +40,14 @@
         $("#capacity").on("slide",function(slidEvt){
             $("#miniVal").text(slideEvt.value);
         })
-        $("#div").change(function() {
+        $("#ldiv").change(function() {
             $("#location").empty();
             makeOption();
         })
+        
         makeOption();
         $("div option").each(function(i,obj){
-            var location = "{%=tourVO.tlocation%}";
+            var location = "{{tourVO.tlocation}}";
             if($(obj).val()==location) {
                 $(obj).prop("selected",true);
             }
@@ -55,8 +56,9 @@
         $("#btnModify").click(function () {
             $(".error").css("display", "none");
             var id = $("input[name='id']").val();
+
             var ldiv = $("select[name='ldiv']").val();
-            var tlocation = $("select[name='location']").val();
+            var tlocation = $("select[name='tlocation']").val();
             var tname = $("input[name='tname']").val();
             var startDate = $("input[name='startDate']").val();
             var endDate = $("input[name='endDate']").val();
@@ -70,19 +72,19 @@
                 return false;
             }
 
-            alert("ddddddddddddd");
+            alert($("select[name='tlocation']").val())
 
             let data = {
                 id:id,
                 ldiv:ldiv,
                 tlocation:tlocation,
                 tname:tname,
-                startDate:startDate,
-                endDate:endDate,
+                startdate:startDate,
+                enddate:endDate,
                 taddr:taddr,
                 etime:etime,
                 capacity:capacity,
-                tprice:priceReg
+                tprice:tprice
             }
 
             $.ajax({
@@ -101,7 +103,6 @@
                     else return;
                 },
                 error: function (res) {
-                    alert("1111->" + res);
                     console.log(res);
                     if (res.responseText === "modfail") {
                         alert("수정 실패");
@@ -120,21 +121,21 @@
                     <h3 class="box-title">현지 투어 등록</h3>
                 </div>
                 <form>
-                    <input type="hidden" value="{%=cri.page%}" name="page">
-                    <input type="hidden" value="{%=cri.searchType%}" name="searchType">
-                    <input type="hidden" value="{%=cri.searchType2%}" name="searchType2">
-                    <input type="hidden" value="{%=cri.keyword%}" name="keyword">
+                    <input type="hidden" value="{{cri.page}}" name="page">
+                    <input type="hidden" value="{{cri.searchType}}" name="searchType">
+                    <input type="hidden" value="{{cri.searchType2}}" name="searchType2">
+                    <input type="hidden" value="{{cri.keyword}}" name="keyword">
                     <div class="box-body">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label>번호</label> <input type="text" value="{%=tourVO.id%}" name="id" id="id"
+                                <label>번호</label> <input type="text" value="{{tourVO.id}}" name="id" id="id"
                                                          class="form-control" readonly="readonly">
                             </div>
                             <div class="form-group">
                                 <label>지역구분</label> <select class="form-control" name="ldiv"
                                                             id="ldiv">
-                                    <option value='1' {%=tourVO.ldiv?'selected':''%}>해외</option>
-                                    <option value='0' {%=!tourVO.ldiv?'selected':''%}>국내</option>
+                                    <option value='1' {% if tourVO.ldiv %} 'selected'{%else%}''{%endif%}>해외</option>
+                                    <option value='0' {% if tourVO.ldiv %} 'selected'{%else%}''{%endif%}>국내</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -145,33 +146,33 @@
                             <div class="form-group">
                                 <label>투어 제목</label> <input type="text" name="tname" id="tname"
                                                             class="form-control" placeholder="제목을 입력하세요"
-                                                            required="required" value="{%=tourVO.tname%}">
+                                                            required="required" value="{{tourVO.tname}}">
                             </div>
                             <div class="form-group">
                                 <label>시작일자</label> <input type="text" name="startDate"
-                                                           class="form-control" required="required" id="startDate" value="{%=moment(tourVO.startDate).format('YYYY-MM-DD')%}">
+                                                           class="form-control" required="required" id="startDate" value="{{ tourVO.startDate |date('YYYY-MM-DD')}}">
                             </div>
                             <div class="form-group">
                                 <label>종료일자</label> <input type="text" name="endDate"
-                                                           class="form-control" required="required" id="endDate" value="{%=moment(tourVO.endDate).format('YYYY-MM-DD')%}">
+                                                           class="form-control" required="required" id="endDate" value="{{ tourVO.endDate | date('YYYY-MM-DD')}}">
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>주소</label> <input type="text" name="taddr" id="taddr"
-                                                         class="form-control" required="required" value="{%=tourVO.taddr%}">
+                                                         class="form-control" required="required" value="{{tourVO.taddr}}">
                             </div>
                             <div class="form-group">
                                 <label>소요시간</label> <input type="text" name="etime"
-                                                           class="form-control" required="required" id="etime" value="{%=tourVO.etime%}">
+                                                           class="form-control" required="required" id="etime" value="{{tourVO.etime}}">
                             </div>
                             <div class="form-group">
                                 <label>인원수</label>
-                                <input type="text" name="capacity" id="capacity" class="form-control" required="required" id="capacity" data-slider-min="0" data-slider-max="40" data-slider-step="1" data-slider-value="{%=tourVO.capacity%}">
+                                <input type="text" name="capacity" id="capacity" class="form-control" required="required" id="capacity" data-slider-min="0" data-slider-max="40" data-slider-step="1" data-slider-value="{{tourVO.capacity}}">
                             </div>
                             <div class="form-group">
                                 <label>가격</label> <input type="text" name="tprice"
-                                                         class="form-control" required="required" id="tprice" value="{%=tourVO.tprice%}">
+                                                         class="form-control" required="required" id="tprice" value="{{tourVO.tprice}}">
                             </div>
                         </div>
                     </div>
