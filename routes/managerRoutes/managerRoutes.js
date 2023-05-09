@@ -13,7 +13,12 @@ const {employee,
     airplane,
     hotel,
     tour,
-    rentcar,
+    event,
+    faq,
+    custboard,
+    planboard,
+    rentcar,pairstatus,photelstatus
+
 } = require("../../models");
 
 
@@ -788,14 +793,8 @@ router.get('/rentcarMngList', async (req, res, next) => {
 
     keyword = keyword ? keyword : "";
 
-    const list = await rentcar.findAll({
-        // raw : true,
-        nest: true,
+    let dataCountAll = await rentcar.findAndCountAll({
         attributes: ['id', 'cdiv', 'cno', 'rentddate', 'returndate', 'rentaddr', 'returnaddr', 'price', 'capacity', 'insurance', 'ldiv'],
-        where: {},
-        limit, offset
-    });
-    let dataCountAll = await tour.findAndCountAll({
         where: {},
         limit, offset
     });
@@ -812,65 +811,32 @@ router.get('/rentcarMngList', async (req, res, next) => {
 
 router.get('/rentcarRegister', async (req, res, next) => {
 
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
-    let autoNO = "";
-
-    res.render("manager/rentcar/rentcarRegister", {Manager, AuthEmp, autoNO});
+    res.render("manager/rentcar/rentcarRegister");
 });
 
 router.post("/rentcarRegister", async (req, res, next) => {
-    // header 공통 !!!
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
 
-    const register = await models.rentcar.create({
-        raw: true,
-        cdiv: req.body.cdiv,
-        cno: req.body.cno,
-        rentddate: req.body.rentddate,
-        returndate: req.body.returndate,
-        rentaddr: req.body.rentaddr,
-        returnaddr: req.body.returnaddr,
-        price: req.body.price,
-        capacity: req.body.capacity,
-        insurance: req.body.insurance,
-        ldiv: req.body.ldiv
-    });
+    const register = await rentcar.create(req.body);
 
     res.redirect("/manager/rentcarMngList");
 });
 
 router.get('/rentcarDetailForm', async (req, res, next) => {
-// header 공통 !!!
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
 
     const rentcarVO =
-        await models.rentcar.findOne({
+        await rentcar.findOne({
             raw: true,
             where: {
                 id: req.query.id
             }
         });
 
-    res.render("manager/rentcar/rentcarDetailForm", {Manager, AuthEmp, rentcarVO})
+    res.render("manager/rentcar/rentcarDetailForm", {rentcarVO})
 });
 
 router.post("/rentcarDetailFormUpdate", async (req, res, next) => {
-    // header 공통 !!!
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
 
-    const update = await models.rentcar.update({
-            id: req.body.id,
-            cdiv: req.body.cdiv,
-            cno: req.body.cno,
-            rentddate: req.body.rentddate,
-            returndate: req.body.returndate,
-            rentaddr: req.body.rentaddr,
-            returnaddr: req.body.returnaddr,
-            price: req.body.price,
-            capacity: req.body.capacity,
-            insurance: req.body.insurance,
-            ldiv: req.body.ldiv
-        },
+    const update = await rentcar.update(req.body,
         {
             where: {id: req.body.id}
         }
@@ -886,7 +852,7 @@ router.post("/rentcarDetailFormUpdate", async (req, res, next) => {
 
 router.get('/delRentcar', async (req, res, next) => {
 
-    let rentcarVO = await models.rentcar.findOne({
+    let rentcarVO = await rentcar.findOne({
         raw: true,
         where: {
             id: req.query.id
@@ -910,9 +876,6 @@ router.get('/delRentcar', async (req, res, next) => {
 //상품 전체 목록
 router.get('/productMngList', async (req, res, next) => {
 
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
-    if(Manager == undefined) res.redirect("/customer");
-
     let {searchType, keyword} = req.query;
 
     const contentSize = Number(process.env.CONTENTSIZE); // 한페이지에 나올 개수
@@ -921,7 +884,7 @@ router.get('/productMngList', async (req, res, next) => {
 
     keyword = keyword ? keyword : "";
 
-    const list = await product.findAll({
+    let dataCountAll = await product.findAndCountAll({
         // raw : true,
         nest: true, attributes: ['id', 'pname', 'pcontent', 'pexpire', 'pprice', 'ppic'],
         include: [
@@ -934,7 +897,7 @@ router.get('/productMngList', async (req, res, next) => {
                 required: false,
             },
             {
-                model: models.hotel,
+                model: hotel,
                 attributes: ['checkin', 'checkout', 'price', 'hname'],
                 as: 'hotelId_hotels',
                 nest: true,
@@ -942,15 +905,15 @@ router.get('/productMngList', async (req, res, next) => {
                 required: false,
             },
             {
-                model: models.tour,
-                attributes: ['tprice'],
+                model: tour,
+                attributes: ['tname', 'tprice'],
                 as: 'tourId_tours',
                 nest: true,
                 paranoid: true,
                 required: false,
             },
             {
-                model: models.rentcar,
+                model: rentcar,
                 as: 'rentcarId_rentcars',
                 nest: true,
                 paranoid: true,
@@ -960,26 +923,18 @@ router.get('/productMngList', async (req, res, next) => {
         where: {},
         limit, offset
     });
-    let dataCountAll = await models.product.findAndCountAll({
-        where: {},
-        limit, offset
-    });
 
 
-    const pagingData = getPagingData(dataCountAll, currentPage, limit);
+    const {count:totalItems, rows: lists} = dataCountAll;
+    const pagingData = getPagingDataCount(totalItems, currentPage, limit);
 
     let cri = {searchType, keyword};
 
-
-    console.log("usersecbtt->")
-
-    res.render("manager/product/productMngList", {cri, list, pagingData, Manager, AuthEmp});
+    res.render("manager/product/productMngList", {cri, lists, pagingData});
 });
 
 router.get('/productDetail', async (req, res, next) => {
-// header 공통 !!!
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
-    if(Manager == undefined) res.redirect("/customer");
+
     let {id, searchType, keyword} = req.query;
 
     keyword = keyword ? keyword : "";
@@ -991,7 +946,7 @@ router.get('/productDetail', async (req, res, next) => {
         where : { id : id},
         include: [
             {
-                model: models.airplane,
+                model: airplane,
                 attributes: ['price', 'ano', 'id', 'dlocation', 'rlocation', 'ddate', 'rdate', 'seat', 'ldiv', 'capacity'],
                 as: 'airplaneId_airplanes',
                 nest: true,
@@ -999,7 +954,7 @@ router.get('/productDetail', async (req, res, next) => {
                 required: false,
             },
             {
-                model: models.hotel,
+                model: hotel,
                 attributes: ['checkin', 'checkout', 'price', 'hname', 'id', 'haddr', 'capacity', 'roomcapacity', 'roomtype', 'ldiv', 'bookedup'],
                 as: 'hotelId_hotels',
                 nest: true,
@@ -1007,7 +962,7 @@ router.get('/productDetail', async (req, res, next) => {
                 required: false,
             },
             {
-                model: models.tour,
+                model: tour,
                 attributes: ['tprice', 'id', 'tname', 'tlocation', 'startDate', 'endDate', 'taddr', 'etime', 'capacity', 'tprice', 'ldiv'],
                 as: 'tourId_tours',
                 nest: true,
@@ -1015,7 +970,7 @@ router.get('/productDetail', async (req, res, next) => {
                 required: false,
             },
             {
-                model: models.rentcar,
+                model: rentcar,
                 attributes: ['id', 'cdiv', 'cno', 'rentddate', 'returndate', 'rentaddr', 'returnaddr', 'price', 'capacity', 'insurance', 'ldiv'],
                 as: 'rentcarId_rentcars',
                 nest: true,
@@ -1024,15 +979,14 @@ router.get('/productDetail', async (req, res, next) => {
             },
         ]
     });
-    console.log("ccccccccccccc->", vo);
 
     let cri = {searchType, keyword};
 
-    res.render("manager/product/productDetail", {Manager, AuthEmp,  vo, cri, moment})
+    res.render("manager/product/productDetail", {vo, cri})
 });
 
-router.get('/productModify', async (req, res, next) => {
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
+router.get('/productModify/:id', async (req, res, next) => {
+    const {id} = req.params;
 
     let {searchType, searchType2, keyword, keyword2, keyword3} = req.query;
 
@@ -1041,63 +995,132 @@ router.get('/productModify', async (req, res, next) => {
 
     const vo = await product.findOne({
         // raw : true,
+        where : {id},
         nest: true,
         attributes: ['id', 'pname', 'pcontent', 'pexpire', 'pprice', 'ppic'],
         include: [
             {
-                model: models.airplane,
+                model: airplane,
                 attributes: ['price', 'ano', 'id', 'dlocation', 'rlocation', 'ddate', 'rdate', 'seat', 'ldiv', 'capacity'],
                 as: 'airplaneId_airplanes',
                 nest: true,
                 paranoid: true,
                 required: false,
-            },
-            {
-                model: models.hotel,
-                attributes: ['checkin', 'checkout', 'price', 'hname', 'id', 'haddr', 'capacity', 'roomcapacity', 'roomtype', 'ldiv', 'bookedup'],
-                as: 'hotelId_hotels',
-                nest: true,
-                paranoid: true,
-                required: false,
-            },
-            {
-                model: models.tour,
+            },{
+            model: hotel,
+            attributes: ['checkin', 'checkout', 'price', 'hname', 'id', 'haddr', 'capacity', 'roomcapacity', 'roomtype', 'ldiv', 'bookedup'],
+            as: 'hotelId_hotels',
+            nest: true,
+            paranoid: true,
+            required: false,
+            },{
+                model: tour,
                 attributes: ['tprice', 'id', 'tname', 'tlocation', 'startDate', 'endDate', 'taddr', 'etime', 'capacity', 'tprice', 'ldiv'],
                 as: 'tourId_tours',
                 nest: true,
                 paranoid: true,
                 required: false,
-            },
-            {
-                model: models.rentcar,
+            },{
+                model: rentcar,
                 attributes: ['id', 'cdiv', 'cno', 'rentddate', 'returndate', 'rentaddr', 'returnaddr', 'price', 'capacity', 'insurance', 'ldiv'],
                 as: 'rentcarId_rentcars',
                 nest: true,
                 paranoid: true,
                 required: false,
-            },
-        ]
+                },
+            ]
+
+        });
+
+
+
+    // const voAirPlane = await product.findOne({
+    //     // raw : true,
+    //     where : {id},
+    //     nest: true,
+    //     attributes: ['id', 'pname', 'pcontent', 'pexpire', 'pprice', 'ppic'],
+    //     include: [
+    //         {
+    //             model: airplane,
+    //             attributes: ['price', 'ano', 'id', 'dlocation', 'rlocation', 'ddate', 'rdate', 'seat', 'ldiv', 'capacity'],
+    //             as: 'airplaneId_airplanes',
+    //             nest: true,
+    //             paranoid: true,
+    //             required: false,
+    //         },
+    //     ]
+    //     });
+
+    // const voHotel = await product.findOne({
+    //     // raw : true,
+    //     nest: true,
+    //     attributes: ['id', 'pname', 'pcontent', 'pexpire', 'pprice', 'ppic'],
+        
+    //     include :[ {
+    //             model: hotel,
+    //             attributes: ['checkin', 'checkout', 'price', 'hname', 'id', 'haddr', 'capacity', 'roomcapacity', 'roomtype', 'ldiv', 'bookedup'],
+    //             as: 'hotelId_hotels',
+    //             nest: true,
+    //             paranoid: true,
+    //             required: false,
+    //         },
+    //     ]
+    // });
+
+    // const voTour = await product.findOne({
+    //     // raw : true,
+    //     nest: true,
+    //     attributes: ['id', 'pname', 'pcontent', 'pexpire', 'pprice', 'ppic'],
+
+    //     include : [{
+    //             model: tour,
+    //             attributes: ['tprice', 'id', 'tname', 'tlocation', 'startDate', 'endDate', 'taddr', 'etime', 'capacity', 'tprice', 'ldiv'],
+    //             as: 'tourId_tours',
+    //             nest: true,
+    //             paranoid: true,
+    //             required: false,
+    //         },
+    //     ]
+    // });
+
+    // const voRentCar = await product.findOne({
+    //     // raw : true,
+    //     nest: true,
+    //     attributes: ['id', 'pname', 'pcontent', 'pexpire', 'pprice', 'ppic'],
+
+
+    //     include : [ {
+    //             model: rentcar,
+    //             attributes: ['id', 'cdiv', 'cno', 'rentddate', 'returndate', 'rentaddr', 'returnaddr', 'price', 'capacity', 'insurance', 'ldiv'],
+    //             as: 'rentcarId_rentcars',
+    //             nest: true,
+    //             paranoid: true,
+    //             required: false,
+    //         },
+    //     ]
+    // });
+
+    // const vo = {voAirPlane, voHotel, voTour, voRentCar};
+
+    const flightListDepature = await airplane.findAll({
+        where: {},
+    });
+    const flightListRending = await airplane.findAll({
+        where: {},
+    });
+    const hotelList = await hotel.findAll({
+        where: {},
+    });
+    const tourList = await tour.findAll({
+        where: {},
+    });
+    const rentcarList = await rentcar.findAll({
+        where: {},
     });
 
-    const flightListDepature = await models.airplane.findAll({
-        where: {},
-    });
-    const flightListRending = await models.airplane.findAll({
-        where: {},
-    });
-    const hotelList = await models.hotel.findAll({
-        where: {},
-    });
-    const tourList = await models.tour.findAll({
-        where: {},
-    });
-    const rentcarList = await models.rentcar.findAll({
-        where: {},
-    });
+    // console.log("productModify-------->",vo.airplaneId_airplanes);
 
     res.render("manager/product/productModify", {
-        Manager,
-        Auth,
         vo,
         cri,
         flightListDepature,
@@ -1111,13 +1134,13 @@ router.get('/productModify', async (req, res, next) => {
 
 router.get('/productDelete', async (req, res, next) => {
 
-    let vo = await models.product.findOne({
+    let vo = await product.findOne({
         raw: true,
         where: {
             id: req.query.id
         }
     });
-    models.product.destroy({
+    product.destroy({
         where: {
             id: req.query.id,
         }
@@ -1132,9 +1155,6 @@ router.get('/productDelete', async (req, res, next) => {
 });
 
 router.get("/addProductForm", async (req, res, next) => {
-    // header 공통 !!!
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req, res);
-    if(Manager == undefined) res.redirect("/customer");
 
     let {searchType, keyword} = req.query;
 
@@ -1144,7 +1164,7 @@ router.get("/addProductForm", async (req, res, next) => {
     const airplane_currentPage = Number(req.query.airplane_currentPage) || 1; //현재페이지
     let {limit_airplne, offset_airplne} = getPagination_airplne(airplane_currentPage, contentSize);
 
-    let airplane_count = await models.airplane.findAndCountAll({
+    let airplane_count = await airplane.findAndCountAll({
         nest : true,
         where: {},
         limit, offset
@@ -1155,7 +1175,7 @@ router.get("/addProductForm", async (req, res, next) => {
 
     const hotel_currentPage = Number(req.query.hotel_currentPage) || 1; //현재페이지
     let {limit_hotel, offset_hotel} = getPagination(hotel_currentPage, contentSize);
-    let hotel_count = await models.hotel.findAndCountAll({
+    let hotel_count = await hotel.findAndCountAll({
         where: {},
         limit_hotel, offset_hotel
     });
@@ -1164,7 +1184,7 @@ router.get("/addProductForm", async (req, res, next) => {
 
     const tour_currentPage = Number(req.query.tour_currentPage) || 1; //현재페이지
     const {limit_tour, offset_tour} = getPagination(tour_currentPage, contentSize);
-    let tour_count = await models.tour.findAndCountAll({
+    let tour_count = await tour.findAndCountAll({
         where: {},
         limit_tour, offset_tour
     });
@@ -1173,39 +1193,36 @@ router.get("/addProductForm", async (req, res, next) => {
 
     const rentcar_currentPage = Number(req.query.rentcar_currentPage) || 1; //현재페이지
     const {limit_rentcar, offset_rentcar} = getPagination(rentcar_currentPage, contentSize);
-    let rentcar_count = await models.rentcar.findAndCountAll({
+    let rentcar_count = await rentcar.findAndCountAll({
         where: {},
         limit_rentcar, offset_rentcar
     });
     const pagingData_rentcar = getPagingData(rentcar_count, rentcar_currentPage, limit_rentcar);
 
 
-    const flightListDepature = await models.airplane.findAll({
+    const flightListDepature = await airplane.findAll({
         where: {},
         limit_airplane, offset_airplane
     });
 
-    const flightListRending = await models.airplane.findAll({
+    const flightListRending = await airplane.findAll({
         where: {},
     });
-    const hotelList = await models.hotel.findAll({
+    const hotelList = await hotel.findAll({
         where: {},
         limit_hotel, offset_hotel
     });
-    const tourList = await models.tour.findAll({
+    const tourList = await tour.findAll({
         where: {},
         limit_tour, offset_tour
     });
-    const rentcarList = await models.rentcar.findAll({
+    const rentcarList = await rentcar.findAll({
         where: {},
         limit_rentcar, offset_rentcar
     });
 
 
     res.render("manager/product/addProductForm", {
-        Manager,
-        Auth,
-        AuthEmp,
         cri,
         flightListDepature,
         flightListRending,
@@ -1254,9 +1271,6 @@ router.post('/flightList/:id', async (req, res, next)=>{
 // 🎁️ 이벤트 관리 ----------------------------------------------------------
 // 전체 이벤트 보기
 router.get("/eventMngList", async (req, res, next) => {
-    // header 공통 !!!
-    const { AuthEmp, Manager} = sessionEmpCheck(req ,res);
-    if(Manager == undefined) res.redirect("/customer");
 
     const usersecess = req.params.usersecess;
     let {searchType, keyword} = req.query;
@@ -1267,16 +1281,8 @@ router.get("/eventMngList", async (req, res, next) => {
 
     keyword = keyword ? keyword : "";
 
-    const list = await models.event.findAll({
-        raw: true,
-        order: [
-            ["id", "DESC"]
-        ],
-        limit, offset
-    });
-
-    const listCount =
-        await models.event.findAndCountAll({
+    const dataCountAll =
+        await event.findAndCountAll({
             raw: true,
             order: [
                 ["id", "DESC"]
@@ -1284,43 +1290,38 @@ router.get("/eventMngList", async (req, res, next) => {
             limit, offset
         });
 
-    const pagingData = getPagingData(listCount, currentPage, limit);
+    const {count:totalItems, rows: lists} = dataCountAll;
+    const pagingData = getPagingDataCount(totalItems, currentPage, limit);
+    
 
-    res.render("manager/event/eventMngList", {Manager, AuthEmp, list, pagingData})
+    res.render("manager/event/eventMngList", {lists, pagingData})
 })
 
 // 이벤트 상세보기
 router.get('/eventDetailForm', async (req, res, next) => {
-// header 공통 !!!
-    const { AuthEmp, Manager} = sessionEmpCheck(req ,res);
-    if(Manager == undefined) res.redirect("/customer");
 
     const eventVO =
-        await models.event.findOne({
+        await event.findOne({
             raw: true,
             where: {
                 id: req.query.id
             }
         });
-    console.log('--------이벤트 상세보기--------', eventVO)
 
-    res.render("manager/event/eventDetailForm", {Manager, AuthEmp, eventVO})
+    res.render("manager/event/eventDetailForm", {eventVO})
 })
 
 // 이벤트 등록하기 화면 보이기
 router.get("/eventRegister", async (req, res, next) => {
-    // header 공통 !!!
-    const { AuthEmp, Manager} = sessionEmpCheck(req ,res);
     let url2 = {};
 
-    res.render("manager/event/eventRegister", {Manager, AuthEmp, url2});
+    res.render("manager/event/eventRegister", {url2});
 })
 
 // 이벤트 등록할 게시글 작성하고 전송하기
 router.post("/eventRegister", upload.single("eventPic"), async (req, res, next) => {
-    // header 공통 !!!
-    const { AuthEmp, Manager} = sessionEmpCheck(req ,res);
-    const register = await models.event.create({
+
+    const register = await event.create({
         raw: true,
         title: req.body.title,
         content: req.body.content,
@@ -1337,9 +1338,6 @@ router.post("/eventRegister", upload.single("eventPic"), async (req, res, next) 
 
 // 이벤트 수정하기(전송)
 router.post('/eventUpdate', upload.single("eventPic"), async (req, res, next) => {
-    // header 공통 !!!
-
-    const { Manager} = sessionEmpCheck(req ,res);
 
     let body = {};
     if (req.file != null) {
@@ -1361,31 +1359,29 @@ router.post('/eventUpdate', upload.single("eventPic"), async (req, res, next) =>
         }
     }
 
-    const update = await models.event.update(body,
+    const update = await event.update(body,
         {
             where: {
                 id: req.body.id
             }
         });
-    console.log('매니저매니저', Manager);
     console.log('---------req.body------', req.body);
     console.log('-------수정하기----------', update);
 
     res.redirect("/manager/eventMngList");
-    // res.render("manager/event/eventDetailForm", {Manager, Auth, update, eventVO});
 })
 
 
 // 이벤트 삭제하기
 router.delete('/deleteEvent', async (req, res, next) => {
 
-    let eventVO = await models.event.findOne({
+    let eventVO = await event.findOne({
         raw: true,
         where: {
             id: req.query.id
         }
     });
-    models.event.destroy({
+    await event.destroy({
         where: {
             id: req.query.id,
         }
@@ -1402,9 +1398,6 @@ router.delete('/deleteEvent', async (req, res, next) => {
 // ️------------------------------------------------ 고객센터(게시판) 관리 ------------------------------------------------
 // ️ ️FAQ 게시판 보기
 router.get('/FAQMngList', async (req, res, next) => {
-    // header 공통 !!!
-    const { AuthEmp, Manager} = sessionEmpCheck(req ,res);
-    if(Manager == undefined) res.redirect("/customer");
 
     const usersecess = req.params.usersecess;
     let {searchType, keyword} = req.query;
@@ -1415,16 +1408,8 @@ router.get('/FAQMngList', async (req, res, next) => {
 
     keyword = keyword ? keyword : "";
 
-    const list =
-        await models.faq.findAll({
-            raw: true,
-            order: [
-                ["no", "DESC"]
-            ],
-            limit, offset
-        });
-    const listCount =
-        await models.faq.findAndCountAll({
+    const dataCountAll =
+        await faq.findAndCountAll({
             raw: true,
             order: [
                 ["no", "DESC"]
@@ -1432,27 +1417,26 @@ router.get('/FAQMngList', async (req, res, next) => {
             limit, offset
         });
 
-    const pagingData = getPagingData(listCount, currentPage, limit);
-    let cri = {currentPage};
+
+    const {count:totalItems, rows: lists} = dataCountAll;
+    const pagingData = getPagingDataCount(totalItems, currentPage, limit);
+    let cri = {currentPage, searchType, keyword};
 
 
-    res.render("manager/board/FAQMngList", {Manager, AuthEmp, list , pagingData, cri});
+    res.render("manager/board/FAQMngList", {lists , pagingData, cri});
 
 })
 
 // FAQ 등록하기 입장
 router.get("/FAQRegister", async (req, res, next) => {
-    // header 공통 !!!
-    const { AuthEmp, Manager} = sessionEmpCheck(req ,res);
-    res.render("manager/board/FAQRegister", {Manager, AuthEmp})
+
+    res.render("manager/board/FAQRegister")
 })
 
 // FAQ 등록하기 전송
 router.post("/FAQRegister", async (req, res, next) => {
-    // header 공통 !!!
-    const { AuthEmp, Manager} = sessionEmpCheck(req ,res);
 
-    const faq = await models.faq.create({
+    const faq = await faq.create({
         raw: true,
         title: req.body.title,
         content: req.body.content
@@ -1469,15 +1453,7 @@ router.post("/FAQRegister", async (req, res, next) => {
 
     keyword = keyword ? keyword : "";
 
-    const list =
-        await models.faq.findAll({
-            raw: true,
-            order: [
-                ["no", "DESC"]
-            ],
-            limit, offset
-        });
-    const listCount =
+    const dataCountAll =
         await models.faq.findAndCountAll({
             raw: true,
             order: [
@@ -1486,52 +1462,42 @@ router.post("/FAQRegister", async (req, res, next) => {
             limit, offset
         });
 
-    const pagingData = getPagingData(listCount, currentPage, limit);
-    let cri = {currentPage};
+        const {count:totalItems, rows: lists} = dataCountAll;
+        const pagingData = getPagingDataCount(totalItems, currentPage, limit);
+        let cri = {searchType, keyword};
 
-    res.render("manager/board/FAQMngList", {Manager, AuthEmp, faq, list, listCount, pagingData, cri})
+    res.render("manager/board/FAQMngList", {faq, lists, pagingData, cri})
 })
 
 // FAQ 게시글 읽기
 router.get("/FAQDetail", async (req, res, next) => {
-    // header 공통 !!!
-    const { AuthEmp, Manager} = sessionEmpCheck(req ,res);
-    console.log('-------------query??------------', req.query);
-    let faq = await models.faq.findOne({
+    let list = await faq.findOne({
         raw: true,
         where: {
             no: req.query.no
         }
     });
-    console.log('-----------------FAQ읽기----------------', faq);
+    console.log('-----------------FAQ읽기----------------', list);
 
-    let cri = {};
-
-    res.render("manager/board/FAQDetail", {Manager, AuthEmp, faq, cri});
+    res.render("manager/board/FAQDetail", {list});
 })
 
 // FAQ 게시글 수정
 router.get("/FAQModify", async (req, res, next) => {
-    // header 공통 !!!
-    const { AuthEmp, Manager} = sessionEmpCheck(req ,res);
-    let cri = {};
-    let faq = await models.faq.findOne({
+    let list = await faq.findOne({
         raw: true,
         where: {
             no: req.query.no
         }
     });
-    console.log('-------수정화면입장----------', faq);
+    console.log('-------수정화면입장----------', list);
 
-    res.render("manager/board/FAQModify", {Manager, AuthEmp, faq, cri})
+    res.render("manager/board/FAQModify", {list})
 })
 
 // FAQ 게시글 수정한거 전송하기
 router.post("/FAQModify", async (req, res, next) => {
-    // header 공통 !!!
-    const { AuthEmp, Manager} = sessionEmpCheck(req ,res);
-    let cri = {};
-    const update = await models.faq.update({
+    const update = await faq.update({
         raw: true,
         title: req.body.title,
         content: req.body.content,
@@ -1542,7 +1508,7 @@ router.post("/FAQModify", async (req, res, next) => {
     });
 
     // 수정하고 수정된 페이지 보여줘야 하니까
-    const faq = await models.faq.findOne({
+    const list = await faq.findOne({
         where: {
             no: req.body.no
         }
@@ -1551,15 +1517,12 @@ router.post("/FAQModify", async (req, res, next) => {
     console.log('---------req.body------', req.body);
     console.log('-------수정하기----------', update);
 
-    res.render("manager/board/FAQDetail", {Manager, AuthEmp, cri, update, faq});
+    res.render("manager/board/FAQDetail", {update, list});
 })
 
 // FAQ 게시글 삭제
 router.delete('/removeFAQ', async (req, res, next) => {
-    // header 공통 !!!
-    const { AuthEmp, Manager} = sessionEmpCheck(req ,res);
-    let cri = {};
-    models.faq.destroy({
+    await faq.destroy({
         where: {
             no: req.query.no,
         }
@@ -1570,14 +1533,12 @@ router.delete('/removeFAQ', async (req, res, next) => {
         next(err);
     })
 
-    res.render('manager/notice/FAQMngList', {Manager, AuthEmp, cri})
+    res.render('manager/notice/FAQMngList', {})
 })
 
 // 여행후기 관리 ------------------------------------------------------------------------
 // 여행 후기 관리 게시판
 router.get("/custBoardMngList", async (req, res, next) => {
-    // header 공통 !!!
-    const {Auth, AuthEmp, Manager, login} = sessionEmpCheck(req ,res);
 
     const usersecess = req.params.usersecess;
     let {searchType, keyword} = req.query;
@@ -1587,10 +1548,9 @@ router.get("/custBoardMngList", async (req, res, next) => {
     const {limit, offset} = getPagination(currentPage, contentSize);
 
     keyword = keyword ? keyword : "";
-    console.log("cust----------11111--");
 
-    const list =
-        await models.custboard.findAll({
+    const dataCountAll =
+        await custboard.findAndCountAll({
             raw: true,
             order: [
                 ["id", "DESC"]
@@ -1598,33 +1558,19 @@ router.get("/custBoardMngList", async (req, res, next) => {
             limit, offset
         });
 
-    console.log("cust----------22222--");
+    const {count:totalItems, rows: lists} = dataCountAll;
+    const pagingData = getPagingDataCount(totalItems, currentPage, limit);
 
+    let cri = {searchType, keyword};
 
-    const listCount =
-        await models.custboard.findAndCountAll({
-            raw: true,
-            order: [
-                ["id", "DESC"]
-            ],
-            limit, offset
-        });
-
-    const pagingData = getPagingData(listCount, currentPage, limit);
-    let cri = {currentPage};
-
-    res.render("manager/board/custBoardList", {Manager, Auth, AuthEmp, login, list, pagingData, cri});
+    res.render("manager/board/custBoardList", {lists, pagingData, cri});
 })
 
 // 여행 후기 관리 게시글 읽기
 router.get("/custBoardDetail", async (req, res, next) => {
-    // header 공통 !!!
-    const {AuthEmp, Manager} = sessionEmpCheck(req , res);
-
-
 
     let custBoardVO =
-        await models.custboard.findOne({
+        await custboard.findOne({
             raw: true,
             where: {
                 id: req.query.id
@@ -1632,20 +1578,21 @@ router.get("/custBoardDetail", async (req, res, next) => {
         });
     let cri = {};
 
-    res.render("manager/board/custBoardDetail", {Manager, AuthEmp, custBoardVO, cri});
+    res.render("manager/board/custBoardDetail", {custBoardVO, cri});
 })
 
 // 여행 후기 관리 게시글 삭제
 router.delete("/removeCustBoard", async (req, res, next) => {
 
     let cri = {};
-    let custboardVO = await models.custboard.findOne({
+    let custboardVO = await custboard.findOne({
         raw: true,
         where: {
             id: req.query.id
         }
     });
-    models.custboard.destroy({
+    
+    await custboard.destroy({
         where: {
             id: req.query.id,
         }
@@ -1663,9 +1610,6 @@ router.delete("/removeCustBoard", async (req, res, next) => {
 // --------------------------------------------------------------- 상품 문의사항 관리 ---------------------------------------------------------------
 // 상품 문의 사항 게시판 목록 보기
 router.get('/planBoardList', async (req, res, next) => {
-// header 공통 !!!
-    const { AuthEmp, Manager} = sessionEmpCheck(req ,res);
-    if(Manager == undefined) res.redirect("/customer");
 
     const usersecess = req.params.usersecess;
     let {searchType, keyword} = req.query;
@@ -1676,15 +1620,8 @@ router.get('/planBoardList', async (req, res, next) => {
 
     keyword = keyword ? keyword : "";
 
-    const list = await models.planboard.findAll({
-        raw: true,
-        order: [
-            ["id", "DESC"]
-        ],
-        limit, offset
-    })
-    const listCount =
-        await models.planboard.findAndCountAll({
+    const dataCountAll =
+        await planboard.findAndCountAll({
             raw: true,
             order: [
                 ["id", "DESC"]
@@ -1692,18 +1629,17 @@ router.get('/planBoardList', async (req, res, next) => {
             limit, offset
         });
 
-    const pagingData = getPagingData(listCount, currentPage, limit);
+    const {count:totalItems, rows: lists} = dataCountAll;
+    const pagingData = getPagingDataCount(totalItems, currentPage, limit);
+    
     let cri = {};
 
-    res.render("manager/board/planBoardList", {Manager, AuthEmp, list, pagingData, cri});
+    res.render("manager/board/planBoardList", {lists, pagingData, cri});
 
 })
 
 // 미답변 상품 문의 사항 게시글 읽기
 router.get('/planBoardModify', async (req, res, next) => {
-    // header 공통 !!!
-    const { AuthEmp, Manager} = sessionEmpCheck(req ,res);
-    if(Manager == undefined) res.redirect("/customer");
 
     let plan =
         await models.planboard.findOne({

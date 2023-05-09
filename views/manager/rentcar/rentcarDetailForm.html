@@ -92,6 +92,7 @@
             var capacity = $("select[name='capacity']").val();
             var insurance = $("select[name='insurance']").val();
             var ldiv = $("select[name='ldiv']").val();
+            var pdiv = $("select[name='pdiv']").val();
 
 
             let data = {
@@ -104,7 +105,8 @@
                 price:price,
                 capacity:capacity,
                 insurance:insurance,
-                ldiv:ldiv
+                ldiv:ldiv,
+                pdiv:pdiv
             }
 
             $.ajax({
@@ -123,7 +125,6 @@
                     else return;
                 },
                 error: function (res) {
-                    alert("1111->" + res);
                     console.log(res);
                     if (res.responseText === "loginfail") {
                         alert("로그인 실패");
@@ -145,63 +146,71 @@
                     <div class="box-body">
                         <div class="noNameAddr">
                             <label><span class="red">*</span>번호</label>
-                            <input type="text" name="id" class="form-control" value="{%=rentcarVO.id%}" readonly>
+                            <input type="text" name="id" class="form-control" value="{{rentcarVO.id}}" readonly>
                         </div>
                         <div class="noNameAddr">
                             <label><span class="red">*</span>차 종류</label>
                             <select name="cdiv" class="form-control" required="required" style="width:300px;">
-                                <option value="L" {%=rentcarVO.cdiv=='L'?'selected':''%}>경차</option>
-                                <option value="S" {%=rentcarVO.cdiv=='S'?'selected':''%}>세단</option>
-                                <option value="U" {%=rentcarVO.cdiv=='U'?'selected':''%}>SUV</option>
-                                <option value="V" {%=rentcarVO.cdiv=='V'?'selected':''%}>밴</option>
-                                <option value="B" {%=rentcarVO.cdiv=='B'?'selected':''%}>버스</option>
+                                <option value="L" {% if rentcarVO.cdiv=='L' %}'selected' {%else%}''{%endif%}>경차</option>
+                                <option value="S" {% if rentcarVO.cdiv=='S' %}'selected' {%else%}''{%endif%}>세단</option>
+                                <option value="U" {% if rentcarVO.cdiv=='U' %}'selected' {%else%}''{%endif%}>SUV</option>
+                                <option value="V" {% if rentcarVO.cdiv=='V' %}'selected' {%else%}''{%endif%}>밴</option>
+                                <option value="B" {% if rentcarVO.cdiv=='B' %}'selected' {%else%}''{%endif%}>버스</option>
                             </select>
                         </div>
                         <div class="noNameAddr">
                             <label><span class="red">*</span>차번호</label>
-                            <input type="text" name="cno" class="form-control" required="required" value="{%=rentcarVO.cno%}"/>					<!-- 리스트 불러오도록 할 것  -->
+                            <input type="text" name="cno" class="form-control" required="required" value="{{rentcarVO.cno}}"/>					<!-- 리스트 불러오도록 할 것  -->
                         </div>
                         <div class="form-group">
                             <label><span class="red">*</span>대여 날짜</label>
-                            <input type="date" name="rentddate" class="form-control"  required="required" id="checkin" value="{%=rentcarVO.rentddate%}"/>
+                            <input type="date" name="rentddate" class="form-control"  required="required" id="checkin" value="{{rentcarVO.rentddate}}"/>
                         </div>
                         <div class="form-group">
                             <label><span class="red">*</span>반납 날짜</label>
-                            <input type="date" name="returndate" class="form-control" required="required" id="checkout" value="{%=rentcarVO.returndate%}"/>
+                            <input type="date" name="returndate" class="form-control" required="required" id="checkout" value="{{rentcarVO.returndate}}"/>
                         </div>
                         <div class="form-group">
                             <label><span class="red">*</span>대여장소</label>
-                            <input type="text" name="rentaddr" class="form-control" required="required" value="{%=rentcarVO.rentaddr%}" />
+                            <input type="text" name="rentaddr" class="form-control" required="required" value="{{rentcarVO.rentaddr}}" />
                         </div>
                         <div class="form-group">
                             <label><span class="red">*</span>반납장소</label>
-                            <input type="text" name="returnaddr" class="form-control" required="required" value="{%=rentcarVO.returnaddr%}" />
+                            <input type="text" name="returnaddr" class="form-control" required="required" value="{{rentcarVO.returnaddr}}" />
                         </div>
                         <div class="form-group">
                             <label><span class="red">*</span>가격</label>
-                            <input type="text" name="price" class="form-control" required="required" value="{%=rentcarVO.price%}" />
+                            <input type="text" name="price" class="form-control" required="required" value="{{rentcarVO.price}}" />
                         </div>
                         <div class="form-group">
                             <label><span class="red">*</span>허용인원 수</label>
                             <select name="capacity" class="form-control"  required="required">
-                                <option value="4"  {%=rentcarVO.capacity=='4'?'selected':''%}>4명</option>
-                                <option value="6"  {%=rentcarVO.capacity=='6'?'selected':''%}>6명</option>
-                                <option value="10" {%=rentcarVO.capacity=='10'?'selected':''%}>10명</option>
-                                <option value="30" {%=rentcarVO.capacity=='30'?'selected':''%}>30명</option>
+                                <option value="4"  {%if rentcarVO.capacity=='4' %}'selected'{%else%}''{%endif%}>4명</option>
+                                <option value="6"  {%if rentcarVO.capacity=='6' %}'selected'{%else%}''{%endif%}>6명</option>
+                                <option value="10" {%if rentcarVO.capacity=='10'%}'selected'{%else%}''{%endif%}>10명</option>
+                                <option value="30" {%if rentcarVO.capacity=='30'%}'selected'{%else%}''{%endif%}>30명</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label><span class="red">*</span>보험여부</label>
                             <select name="insurance" class="form-control" id="ldiv" required="required">
-                                <option value="0" {%=rentcarVO.insurance=='0'?'selected':''%}>선택안함</option>
-                                <option value="1" {%=rentcarVO.insurance=='1'?'selected':''%}>포함</option>
+                                <option value="0" {%if rentcarVO.insurance=='0'%}'selected'{%else%}''{%endif%}>선택안함</option>
+                                <option value="1" {%if rentcarVO.insurance=='1'%}'selected'{%else%}''{%endif%}>포함</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>장소구분</label>
                             <select name="ldiv" class="form-control" id="ldiv" required="required">
-                                <option value="0" {%=rentcarVO.ldiv=='0'?'selected':''%}>해외</option>
-                                <option value="1" {%=rentcarVO.ldiv=='0'?'selected':''%}>국내</option>
+                                <option value="0" {%if rentcarVO.ldiv=='0' %}'selected' {%else%}''{%endif%}>해외</option>
+                                <option value="1" {%if rentcarVO.ldiv=='0' %}'selected' {%else%}''{%endif%}>국내</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>상품구분</label>
+                            <select name="ldiv" class="form-control" id="pdiv" required="required">
+                                <option value="0" {%if rentcarVO.pdiv=='0' %}'selected' {%else%}''{%endif%}>패키지여행</option>
+                                <option value="1" {%if rentcarVO.pdiv=='0' %}'selected' {%else%}''{%endif%}>자유여행</option>
                             </select>
                         </div>
 

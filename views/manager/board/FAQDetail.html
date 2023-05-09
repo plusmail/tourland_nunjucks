@@ -9,11 +9,11 @@
 				<div class="box-body">
 					<div class="form-group">
 						<label>제목</label>
-						<input type="text" name="title" class="form-control" value="{%=faq.title%}" readonly="readonly">
+						<input type="text" name="title" class="form-control" value="{{list.title}}" readonly="readonly">
 					</div>
 					<div class="form-group">
 						<label>내용</label>
-						<textarea rows="15" cols="30" placeholder="내용을 입력하세요" name="content" class="form-control" readonly="readonly">{%=faq.content%}</textarea>
+						<textarea rows="15" cols="30" placeholder="내용을 입력하세요" name="content" class="form-control" readonly="readonly">{{list.content}}</textarea>
 					</div>
 				</div>
 				<div class="box-footer">
@@ -28,8 +28,8 @@
 <script>
 	$(function(){
 		$("#mod").click(function(){
-			var no = "{%=faq.no%}";
-			var page =	"{%=cri.page%}";
+			var no = "{{list.no}}";
+			var page =	"{{cri.page}}";
 			location.href = "FAQModify?no="+no+"&page="+page;
 		})
 		$("#del").click(function(){
@@ -37,7 +37,7 @@
 				alert("삭제가 취소되었습니다");
 				return false;
 			}
-			fetch("removeFAQ?no={%=faq.no%}&page={%=cri.page%}", {method : "delete"})
+			fetch("removeFAQ?no={{list.no}}&currentPage={{pagingData.currentPage}}", {method : "delete"})
 					.then((res) => {
 						alert('삭제되었습니다.');
 						location.href = "FAQMngList";
@@ -47,8 +47,8 @@
 		})
 
 		$("#return").click(function() {
-			var page =	"{%=cri.page%}";
-			location.href = "FAQMngList?page="+page;
+			var page =	"{{pagingData.currentPage}}";
+			location.href = "FAQMngList?currentPage="+page;
 		})
 	})
 </script>

@@ -11,11 +11,13 @@
         width: 200px;
         margin: 20px;
         float: left;
+        {# border: red solid 1px; #}
     }
 
     .group {
         width: 100%;
-        height: 100px;
+        height: 10px;
+        {# border: blue solid 1px; #}
     }
 
     #guide {
@@ -80,27 +82,27 @@
 <script>
     $(function () {
         $("#mod").click(function () {
-            var id = "{%= vo.id %}";
-            var page = "{%= cri.page %}";
-            var searchType = "{%= cri.searchType %}";
-            var searchType2 = "{%= cri.searchType2 %}";
-            var keyword = "{%= cri.keyword %}";
-            location.href = "productModify?id="+id;
+            var id = "{{vo.id }}";
+            var page = "{{cri.page }}";
+            var searchType = "{{cri.searchType }}";
+            var searchType2 = "{{cri.searchType2 }}";
+            var keyword = "{{cri.keyword }}";
+            location.href = "productModify/"+id;
         })
         $("#del").click(function () {
             if (!confirm("정말 삭제하시겠습니까?")) {
                 alert("삭제가 취소되었습니다");
                 return false;
             }
-            var id = "{%= vo.id %}";
-            location.href = "productDelete?id="+id;
+            var id = "{{vo.id }}";
+            location.href = "productDelete/"+id;
         })
         $("#return").click(function () {
-            var page = "{%= cri.page %}";
-            var searchType = "{%= cri.searchType %}";
-            var searchType2 = "{%= cri.searchType2 %}";
-            var keyword = "{%= cri.keyword %}";
-            location.href = "productMngList?page=" + page + "&searchType=" + searchType + "&keyword=" + keyword;
+            var page = "{{cri.page }}";
+            var searchType = "{{cri.searchType }}";
+            var searchType2 = "{{cri.searchType2 }}";
+            var keyword = "{{cri.keyword }}";
+            location.href = "productMngList?currentPage=" + page + "&searchType=" + searchType + "&keyword=" + keyword;
         })
         $("#detail").css("border", "1px solid black").css("padding", "20px").css("width", "95%");
         $("#detail").find("img").css("width", "1000px").css("display", "block");
@@ -121,7 +123,7 @@
                         <label><span class="red">*</span>항공</label>
                     </div>
                 </div>
-                <div style="padding:20px;">
+                <div style="padding:2px;">
                     <table class="table table-bordered" style="width : 100%;">
                         <tr>
                             <th>번호</th>
@@ -135,33 +137,33 @@
                             <th>좌석</th>
                             <th>가격</th>
                         </tr>
-                        {% vo.airplaneId_airplanes.forEach( f => { %}
+                        {% for f in vo.airplaneId_airplanes %}
                         <tr>
-                            <td>{%= f.id %}</td>
-                            <td>{%= f.ano %}</td>
-                            <td>{%= f.dlocation %}</td>
-                            <td>{%= f.rlocation %}</td>
-                            <td>{%= moment(f.ddate).format('YYYY-MM-DD') %}</td>
-                            <td>{%= moment(f.rdate).format('YYYY-MM-DD') %}</td>
-                            {% if (f.ldiv == 0) { %}
+                            <td>{{f.id }}</td>
+                            <td>{{f.ano }}</td>
+                            <td>{{f.dlocation }}</td>
+                            <td>{{f.rlocation }}</td>
+                            <td>{{f.ddate | date('YYYY-MM-DD') }}</td>
+                            <td>{{f.rdate | date('YYYY-MM-DD') }}</td>
+                            {% if f.ldiv == 0 %}
                                 <td>해외</td>
-                            {% } %}
-                            {% if (f.ldiv == 1) { %}
+                            {% endif %}
+                            {% if f.ldiv == 1 %}
                                 <td>국내</td>
-                            {% } %}
-                            <td>{%= f.capacity %}</td>
-                            {% if (f.seat == 'F') { %}
+                            {% endif %}
+                            <td>{{f.capacity }}</td>
+                            {% if f.seat == 'F' %}
                                 <td class="first">First-Class</td>
-                            {% } %}
-                            {% if (f.seat == 'B') { %}
+                            {% endif %}
+                            {% if f.seat == 'B' %}
                                 <td class="bus">Business-Class</td>
-                            {% } %}
-                            {% if (f.seat == 'E') { %}
+                            {% endif %}
+                            {% if f.seat == 'E' %}
                                 <td class="eco">Economy-Class</td>
-                            {% } %}
-                            <td>{%= f.price %}</td>
+                            {% endif %}
+                            <td>{{f.price  | numeral }}</td>
                         </tr>
-                        {% }) %}
+                        {% endfor %}
                     </table>
                 </div>
                 <div class="group">
@@ -184,39 +186,40 @@
                             <th>장소구분</th>
                             <th>예약 가능 여부</th>
                         </tr>
-                        {% vo.hotelId_hotels.forEach( hotel => { %}
+                        {% for hotel in vo.hotelId_hotels %}
                         <tr>
-                            <td>{%= hotel.id %}</td>
-                            <td>{%= hotel.hname %}</td>
-                            <td>{%= hotel.haddr %}</td>
-                            <td>{%= moment(hotel.checkin).format('YYYY-MM-DD') %}</td>
-                            <td>{%= moment(hotel.checkout).format('YYYY-MM-DD') %}</td>
-                            <td>{%= hotel.capacity %}<span>인</span></td>
-                            <td>{%= hotel.price %}</td>
-                            <td>{%= hotel.roomcapacity %}<span>실</span></td>
+                            <td>{{hotel.id }}</td>
+                            <td>{{hotel.hname }}</td>
+                            <td>{{hotel.haddr }}</td>
+                            <td>{{hotel.checkin | date('YYYY-MM-DD') }}</td>
+                            <td>{{hotel.checkout | date('YYYY-MM-DD') }}</td>
+                            <td>{{hotel.capacity }}<span>인</span></td>
+                            <td>{{hotel.price  | numeral}}</td>
+                            <td>{{hotel.roomcapacity }}<span>실</span></td>
 
-                            {% if(hotel.roomtype == 'N') { %}
+                            {% if hotel.roomtype == 'N' %}
                                 <td style="color:#5D5D5D;" id="n">노말</td>
-                            {% } else if (hotel.roomtype == 'D') { %}
+                            {% elif hotel.roomtype == 'D' %}
                                 <td style="color:#F29661;" id="d">디럭스</td>
-                            {% } else { %}
+                            {% else %}
                                 <td style="color:#D941C5;" id="s">스위트</td>
-                            {% } %}
+                            {% endif %}
 
-                            {% if (hotel.ldiv == 0) { %}
+                            {% if hotel.ldiv == 0 %}
                                 <td>해외</td>
-                            {% } %}
-                            {% if (hotel.ldiv == 1) { %}
-                                <td>국내</td>
-                            {% } %}
+                            {% endif %}
 
-                            {% if(hotel.bookedup == 0) { %}
+                            {% if hotel.ldiv == 1 %}
+                                <td>국내</td>
+                            {% endif %}
+
+                            {% if hotel.bookedup == 0 %}
                                 <td><span class="badge bg-orange">예약가능</span></td>
-                            {% } else if(hotel.bookedup == 1) { %}
+                            {% elif hotel.bookedup == 1 %}
                                 <td><span class="badge bg-blue">예약불가능</span></td>
-                            {% } %}
+                            {% endif %}
                         </tr>
-                        {% }) %}
+                        {% endfor %}
                     </table>
                 </div>
                 <div class="group">
@@ -238,20 +241,20 @@
                             <th>가격</th>
                             <th>장소구분</th>
                         </tr>
-                        {% vo.tourId_tours.forEach( tour => { %}
+                        {% for tour in vo.tourId_tours %}
                         <tr>
-                            <td>{%= tour.id %}</td>
-                            <td>{%= tour.tname %}</td>
-                            <td>{%= tour.tlocation %}</td>
-                            <td>{%= moment(tour.startDate).format('YYYY-MM-DD') %}</td>
-                            <td>{%= moment(tour.endDate).format('YYYY-MM-DD') %}</td>
-                            <td>{%= tour.taddr %}</td>
-                            <td>{%= tour.etime %}</td>
-                            <td>{%= tour.capacity %}</td>
-                            <td>{%= tour.tprice %}</td>
-                            <td>{%= tour.ldiv?'해외':'국내' %}</td>
+                            <td>{{tour.id }}</td>
+                            <td>{{tour.tname }}</td>
+                            <td>{{tour.tlocation }}</td>
+                            <td>{{tour.startDate |date('YYYY-MM-DD') }}</td>
+                            <td>{{tour.endDate | date('YYYY-MM-DD') }}</td>
+                            <td>{{tour.taddr }}</td>
+                            <td>{{tour.etime }}</td>
+                            <td>{{tour.capacity }}</td>
+                            <td>{{tour.tprice  | numeral}}</td>
+                            <td>{% if tour.ldiv %} 해외 {%else%} 국내 {%endif%}</td>
                         </tr>
-                        {% }) %}
+                        {% endfor %}
                     </table>
                 </div>
                 <div class="group">
@@ -274,69 +277,68 @@
                             <th>보험여부</th>
                             <th>국내/해외</th>
                         </tr>
-                        {% vo.rentcarId_rentcars.forEach( rentcarList => { %}
+                        {% for rentcarList in vo.rentcarId_rentcars %}
                         <tr>
-                            <td>{%= rentcarList.id %}</td>
-                            <td>{%= rentcarList.cdiv %}</td>
-                            <td>{%= rentcarList.cno %}</td>
-                            <td>{%= rentcarList.rentddate %}</td>
-                            <td>{%= rentcarList.returndate %}</td>
-                            <td>{%= rentcarList.rentaddr %}</td>
-                            <td>{%= rentcarList.returnaddr %}</td>
-                            <td>{%= rentcarList.price %}</td>
-                            <td>{%= rentcarList.capacity %}</td>
-                            <td>{%= rentcarList.insurance %}</td>
-                            <td>{%= rentcarList.ldiv == 0?'해외':'국내' %}</td>
+                            <td>{{rentcarList.id }}</td>
+                            <td>{{rentcarList.cdiv }}</td>
+                            <td>{{rentcarList.cno }}</td>
+                            <td>{{rentcarList.rentddate }}</td>
+                            <td>{{rentcarList.returndate }}</td>
+                            <td>{{rentcarList.rentaddr }}</td>
+                            <td>{{rentcarList.returnaddr }}</td>
+                            <td>{{rentcarList.price | numeral}}</td>
+                            <td>{{rentcarList.capacity }}</td>
+                            <td>{{rentcarList.insurance }}</td>
+                            <td>{% if rentcarList.ldiv == 0 %} 해외 {%else%} 국내 {%endif%}</td>
                         </tr>
-                        {% }) %}
+                        {% endfor %}
                     </table>
                 </div>
                 <div class="group">
                     <div class="form-group">
                         <label>상품 번호</label> <input type="text" class="form-control" readonly="readonly"
-                                                    value="{%= vo.id %}">
+                                                    value="{{vo.id }}">
                     </div>
                     <div class="form-group">
                         <label><span class="red">*</span>상품 이름</label> <input
-                                type="text" class="form-control" required="required" value="{%= vo.pname %}"
+                                type="text" class="form-control" required="required" value="{{vo.pname }}"
                                 readonly="readonly">
                     </div>
-                </div>
-                <div class="group">
-                    <div class="form-group">
-                        <label><span class="red">*</span>상품 설명</label>
-                    </div>
-                </div>
-                <div class="group">
-                    <div class="form-group" style="width : 100%;" id="detail">
-                        {%- vo.pcontent %}
-                    </div>
-                </div>
-                <div class="group">
                     <div class="form-group">
                         <label><span class="red">*</span>상품 가격</label> <input
-                                type="text" class="form-control" value="{%=vo.pprice%}" readonly="readonly">
+                                type="text" class="form-control" value="{{vo.pprice}}" readonly="readonly">
                     </div>
                     <div class="form-group">
                         <label><span class="red">*</span>상품 유효기간</label> <input
                                 type="text" class="form-control"
-                                value='{%=vo.pexpire%}'
+                                value='{{vo.pexpire}}'
                                 readonly="readonly">
                     </div>
-                </div>
-                <div class="group">
-                    <div class="form-group" style="width : 100%">
+
+                    <div class="form-group">
                         <label><span class="red">*</span>상품 사진</label>
                     </div>
-                </div>
+                </div>                
                 <div style="width : 100%;">
-                    <img src="/displayFile/product?filename={%=vo.ppic%}" style="width : 90%; margin : 10px;">
+                    <img src="/displayFile/product?filename={{vo.ppic}}" style="width : 90%; margin : 10px;">
                 </div>
                 <div class="box-footer" style="text-align : center;">
                     <button class="btn btn-warning" id="mod">수정</button>
                     <button class="btn btn-danger" id="del">삭제</button>
                     <button class="btn btn-primary" id="return">돌아가기</button>
+                </div>                
+                <div class="group">
+                    <div class="form-group">
+                        <label><span class="red">*</span>상품 설명</label>
+                    </div>
+                    <div class="form-group" style="width : 100%;" id="detail">
+                        {{vo.pcontent | safe}}
+                    </div>
                 </div>
+                <div class="group">
+                </div>
+
+
             </div>
         </div>
     </div>

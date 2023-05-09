@@ -32,34 +32,34 @@
 					<div class="box-body">
 						<div class="form-group">
 							<label>이벤트 번호</label>
-							<input type="hidden" name ="id" value="{%=eventVO.id%}">
-							<input type="hidden" name ="pic" value="{%=eventVO.pic%}">
-							<p>{%=eventVO.id%}</p>
+							<input type="hidden" name ="id" value="{{eventVO.id}}">
+							<input type="hidden" name ="pic" value="{{eventVO.pic}}">
+							<p>{{eventVO.id}}</p>
 						</div>
 						<div class="form-group">
 							<label>이벤트 타이틀</label>
-							<input type="text" name="title" class="form-control" value="{%=eventVO.title%}" style="width:1080px;">
+							<input type="text" name="title" class="form-control" value="{{eventVO.title}}" style="width:1080px;">
 						</div>
 						<div id="container" class="form-group">
 							<label>이벤트 내용</label>
 							<textarea name="content" id="editor">
-								{%=eventVO.content%}
+								{{eventVO.content}}
 							</textarea>
 							<div id="editor">
 							</div>
 						</div>
 						<div class="form-group">
 							<label>시작 날짜</label>
-							<input type="date" name="startdate" class="form-control" style="width:200px;" value="{%=eventVO.startdate%}" required="required">
+							<input type="date" name="startdate" class="form-control" style="width:200px;" value="{{eventVO.startdate}}" required="required">
 						</div>
 						<div class="form-group">
 							<label>종료 날짜</label>
-							<input type="date" name="enddate" class="form-control" style="width:200px;" required="required" value="{%=eventVO.enddate%}">
+							<input type="date" name="enddate" class="form-control" style="width:200px;" required="required" value="{{eventVO.enddate}}">
 						</div>
 						<div class="form-group">
 							<label>저장된 사진(썸네일) </label>
 							<div>
-							    <img src="/displayFile/event?filename={%=eventVO.pic%}" style= "width:400px; height:400px;">
+							    <img src="/displayFile/event?filename={{eventVO.pic}}" style= "width:400px; height:400px;">
 							</div>
 						</div>
 						<br>
@@ -111,7 +111,7 @@
 			   alert("삭제가 취소되었습니다");
 			   return false;
 		   }
-		   fetch("deleteEvent?id={%=eventVO.id%}", {method : "delete"})
+		   fetch("deleteEvent?id={{eventVO.id}}", {method : "delete"})
 				   .then((res) => {
 					   alert('삭제되었습니다.');
 					   location.href = "eventMngList";

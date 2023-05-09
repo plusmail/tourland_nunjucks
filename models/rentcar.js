@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('rentcar', {
     id: {
+      autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
@@ -13,7 +14,7 @@ module.exports = function(sequelize, DataTypes) {
       comment: "차종류"
     },
     cno: {
-      type: DataTypes.CHAR(8),
+      type: DataTypes.CHAR(15),
       allowNull: true,
       comment: "차번호"
     },
