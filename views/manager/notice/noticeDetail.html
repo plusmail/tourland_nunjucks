@@ -15,28 +15,28 @@
 				<div class="box-body">
 					<div class="form-group">
 						<label>번호</label>
-						<input type="text" name="no" class="form-control" value="{%=notice.no%}" readonly="readonly">
+						<input type="text" name="no" class="form-control" value="{{list.no}}" readonly="readonly">
 					</div>
 					<div class="form-group">
 						<label>상단 고정여부</label>
-						{% if(notice.fixed==1) { %}
+						{% if list.fixed ===1 %}
 							<p class="blue">
 								상단 고정됨
 							</p>
-						{% } %}
-						{% if(notice.fixed==0) { %}
+						{% endif %}
+						{% if list.fixed ===0 %}
 							<p class="red">
 								상단 고정 안됨
 							</p>
-						{% } %}
+						{% endif %}
 					</div>
 					<div class="form-group">
 						<label>제목</label>
-						<input type="text" name="title" class="form-control" value="{%=notice.title%}" readonly="readonly">
+						<input type="text" name="title" class="form-control" value="{{list.title}}" readonly="readonly">
 					</div>
 					<div class="form-group">
 						<label>내용</label>
-						<textarea rows="15" cols="30" name="content" class="form-control" readonly="readonly">{%=notice.content%}</textarea>
+						<textarea rows="15" cols="30" name="content" class="form-control" readonly="readonly">{{list.content}}</textarea>
 					</div>
 				<div class="box-footer">
 					<button class="btn btn-warning" id="mod">수정</button>
@@ -51,8 +51,8 @@
 <script>
 	$(function(){
 		$("#mod").click(function(){
-			var no = "{%=notice.no%}";
-			var page =	"{%=cri.page%}";
+			var no = "{{list.no}}";
+			var page =	"{{pagingData.currentPage}}";
 			/* location.href = "editNotice?no="+no+"&page="+page+"&searchType="+searchType+"&searchType2="+searchType2+"&keyword="+keyword; */
 			location.href = "editNotice?no="+no;
 		})
@@ -60,7 +60,7 @@
 			if(!confirm("삭제하시겠습니까?")) {
 				return false;
 			}
-			fetch("removeNotice?no={%=notice.no%}&page={%=cri.page%}", {method : "delete"})
+			fetch("removeNotice?no={{list.no}}&currentPage={{pagingData.currentPage}}", {method : "delete"})
 					.then((res) => {
 						alert('삭제되었습니다.');
 						location.href = "noticeMngList";
@@ -70,8 +70,8 @@
 		});
 
 		$("#return").click(function() {
-			var page =	"{%=cri.page%}";
-			location.href = "noticeMngList?page="+page;
+			var page =	"{{pagingData.currentPage}}";
+			location.href = "noticeMngList?currentPage="+page;
 		})
 	})
 </script>

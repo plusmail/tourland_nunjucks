@@ -1,0 +1,87 @@
+{%- include("../../include/header.html") %}
+<style>
+	table th, td { text-align: center;}
+	.red { color : maroon; font-weight: bold; }
+	.blue { color : steelblue; font-weight: bold;}
+</style>
+<script>
+$(function(){
+
+	$("#addNotice").click(function(){
+		location.href ="/manager/addNoticeForm";
+	})
+})
+</script>
+<div class="content">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="box box-primary">
+				<div class="box-header">
+					<h2 class="box-title">공지사항 관리</h2>
+				</div>
+				<div class="box-body">
+				<!-- 검색 작업에서 유지될 데이터
+					1. 현재 페이지의 번호
+					2. 페이지당 보여지는 데이터의 수
+				 -->
+				</div>
+				<div class="box-body">
+					<button id="addNotice">추가</button>
+				</div>
+				<div class="box-body">
+					<table class="table table-bordered">
+						<tr>
+							<th></th>
+							<th>번호</th>
+							<th>제목</th>
+							<th>작성자</th>
+							<th>작성일자</th>
+							<th>상단 고정 여부</th>
+						</tr>
+						{% for n in lists %}
+							{% if n.fixed === 1 %}
+								<tr>
+								    <td><span class="fixedTop">공지</span></td>
+									<td>{{n.no}}</td>
+									<td><a href="/manager/noticeDetail?no={{n.no}}&currentPage={{pagingData.currentPage}}">{{n.title}}</a></td>
+									<td>{{n.writer}}</td>
+									<td>{{n.regdate}}</td>
+									<td class="blue">상단 고정</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td></td>
+									<td>{{n.no}}</td>
+									<td><a href="/manager/noticeDetail?no={{n.no}}&currentPage={{pagingData.currentPage}}">{{n.title}}</a></td>
+									<td>{{n.writer}}</td>
+									<td>{{n.regdate}}</td>
+									<td class="red">상단 고정 안함</td>
+								</tr>
+								{%endif%}
+						{% endfor %}
+					</table>
+				</div>
+
+
+				<center>
+				<ul class="pagination" id="pagination"></ul>
+				</center>
+
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$("#btnRegister").click(function(){
+		location.href = "register";
+	})
+</script>
+
+{% block Pagination %} {%-
+include("../../include/pagination.html") %}
+{% endblock %} 
+
+
+{%- include("../../include/footer.html") %}
