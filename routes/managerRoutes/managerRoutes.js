@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
+const literal = sequelize.literal;
 
 const {employee,
     user, 
@@ -1787,8 +1788,6 @@ router.get('/addNoticeForm', (req, res, next) => {
 
 //공지사항 추가하기
 router.post('/addNoticeForm', async (req, res, next) => {
-    // header 공통 !!!
-    const { AuthEmp, Manager} = sessionEmpCheck(req ,res);
 
     let {title, content} = req.body;
     console.log('-----------req.body---------', req.body);
@@ -1811,82 +1810,14 @@ router.post('/addNoticeForm', async (req, res, next) => {
             content: content,
         }
     }
-    const noticeRegister = await models.notice.create(body);
-    console.log('전송성공전송성공전송성공전송성공전송성공전송성공');
-    console.log('----------------등록내용-----------------', noticeRegister);
-    if( noticeRegister != null){
-        return res.status(204).json({"responseText":"addSuccess"});
+    const noticeRegister = await notice.create(body);
+    if( noticeRegister !== null){
+        console.log('----------------등록성공 전송-----------------');
+        return res.status(200).json({"responseText":"addSuccess"});
     }else{
-        return res.status(406).json({"responseText":"addFail"});
+        console.log('----------------등록실패 전송-----------------');
+        return res.status(400).json({"responseText":"addFail"});
     }
-
-// // ------------------공지 등록하면 공지사항도 같이 보여줘야함-----------------------------------
-//     const usersecess = req.params.usersecess;
-//     let {searchType, keyword} = req.query;
-//
-//     const contentSize = 5 // 한페이지에 나올 개수
-//     const currentPage = Number(req.query.currentPage) || 1; //현재페이
-//     const {limit, offset} = getPagination(currentPage, contentSize);
-//
-//     keyword = keyword ? keyword : "";
-//
-//     let cri = {currentPage};
-//
-//     let body = {};
-//     let isChecked = req.body.fixed;
-//     if (isChecked != true) {
-//         body = {
-//             raw: true,
-//             fixed: 0,
-//             title: req.body.title,
-//             writer: req.body.writer, //투어랜드 hidden 되어있음
-//             content: req.body.content,
-//         }
-//     } else {
-//         body = {
-//             raw: true,
-//             fixed: 1,
-//             title: req.body.title,
-//             writer: req.body.writer, //투어랜드 hidden 되어있음
-//             content: req.body.content,
-//         }
-//     }
-//     const noticeRegister = await models.notice.create(body);
-//
-//     let noticeFixedList =
-//         await models.notice.findAll({
-//             raw: true,
-//             where: {
-//                 fixed: 1
-//             },
-//             limit, offset
-//         });
-//     console.log('====', noticeFixedList);
-//     let noticeNoFixedList =
-//         await models.notice.findAll({
-//             raw: true,
-//             where: {
-//                 fixed: 0
-//             },
-//             order: [
-//                 ["regdate", "DESC"]
-//             ],
-//             limit, offset
-//         });
-//     let noticeNoFixedCountList =
-//         await models.notice.findAndCountAll({
-//             raw: true,
-//             where: {
-//                 fixed: 0
-//             },
-//             order: [
-//                 ["regdate", "DESC"]
-//             ],
-//             limit, offset
-//         });
-//
-//     const pagingData = getPagingData(noticeNoFixedCountList, currentPage, limit);
-//     console.log('---------', noticeNoFixedList);
 
 })
 
@@ -1963,8 +1894,6 @@ router.delete('/removeNotice', async (req, res, next) => {
 
 // --------------------------------------------------------------- 쿠폰 관리 ---------------------------------------------------------------
 router.get('/couponMngList', async (req, res, next) => {
-    // header 공통 !!!
-    const { AuthEmp, Manager} = sessionEmpCheck(req ,res);
 
     const usersecess = req.params.usersecess;
     let {searchType, keyword} = req.query;
@@ -1976,47 +1905,238 @@ router.get('/couponMngList', async (req, res, next) => {
     keyword = keyword ? keyword : "";
     let cri = {currentPage};
 
-    const available = await models.coupon.findAll({
-        raw: true,
-        order: [
-            ["cno", "DESC"]
-        ],
-    })
-
-    const expired = await models.coupon.findAll({
-        raw: true,
-        where: {
-            edate: {[Op.lt]: new Date()}
-        },
-        order: [
-            ["cno", "DESC"]
-        ],
-    })
-
-    const listCount =
-        await models.coupon.findAndCountAll({
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const day = today.getDate().toString().padStart(2, '0');
+    
+    const formattedDate = `${year}-${month}-${day}`;
+    
+    console.log("today-kr", formattedDate);
+    const dataCountAll =
+        await coupon.findAndCountAll({
+            attributes : [
+                "cno","cname", "ccontent", "pdate", "mrate","edate",
+                [literal('CASE WHEN edate >'+`DATE("${formattedDate}")`+ 'THEN "available" ELSE "expired" END'),'use']
+            ],
+            where : {
+                // [Op.or]:[
+                // {edate: {
+                //     [Op.lt]: literal(`DATE("${formattedDate}")`)
+                //   }
+                // },
+                // {
+                // edate: {
+                //     [Op.gt]: literal(`DATE("${formattedDate}")`)
+                // }}
+                // ]
+            },
             raw: true,
             order: [
                 ["cno", "DESC"]
             ],
+
             limit, offset
         });
 
-    const pagingData = getPagingData(listCount, currentPage, limit);
+    const {count:totalItems, rows: list} = dataCountAll;
+    const pagingData = getPagingDataCount(totalItems, currentPage, limit);
+        
 
-    res.render("manager/coupon/couponMngList", {Manager, AuthEmp, cri, available, expired, pagingData});
+    res.render("manager/coupon/couponMngList", {cri, list, pagingData});
 })
+
+
+
+// --------------------------------------------------------------- 쿠폰 상세 ---------------------------------------------------------------
+router.get('/couponDetail', async (req, res, next) => {
+
+    const usersecess = req.params.usersecess;
+    let {searchType, keyword, currentPage, cno} = req.query;
+
+    keyword = keyword ? keyword : "";
+    let cri = {currentPage};
+
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const day = today.getDate().toString().padStart(2, '0');
+    
+    const formattedDate = `${year}-${month}-${day}`;
+    
+    console.log("today-kr", formattedDate);
+    const list =
+        await coupon.findOne({
+            attributes : [
+                "cno","cname", "ccontent", "pdate", "mrate","edate",
+                [literal('CASE WHEN edate >'+`DATE("${formattedDate}")`+ 'THEN "available" ELSE "expired" END'),'use']
+            ],
+            where : { cno },
+            raw: true,
+            order: [
+                ["cno", "DESC"]
+            ],
+
+        });
+
+    res.render("manager/coupon/couponDetail", {cri, list});
+})
+
+
+// --------------------------------------------------------------- 쿠폰 수정 폼---------------------------------------------------------------
+router.get('/editCoupon', async (req, res, next) => {
+
+    const usersecess = req.params.usersecess;
+    let {searchType, keyword, currentPage, cno} = req.query;
+
+    keyword = keyword ? keyword : "";
+    let cri = {currentPage};
+
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const day = today.getDate().toString().padStart(2, '0');
+    
+    const formattedDate = `${year}-${month}-${day}`;
+    
+    console.log("today-kr", formattedDate);
+    const list =
+        await coupon.findOne({
+            attributes : [
+                "cno","cname", "ccontent", "pdate", "mrate","edate",
+                [literal('CASE WHEN edate >'+`DATE("${formattedDate}")`+ 'THEN "available" ELSE "expired" END'),'use']
+            ],
+            where : { cno },
+            raw: true,
+            order: [
+                ["cno", "DESC"]
+            ],
+
+        });
+
+    res.render("manager/coupon/editCoupon", {cri, list});
+})
+
+
+// --------------------------------------------------------------- 쿠폰 수정 폼---------------------------------------------------------------
+router.post('/editCoupon', async (req, res, next) => {
+
+    const usersecess = req.params.usersecess;
+    let {searchType, keyword, currentPage, cno} = req.query;
+
+    keyword = keyword ? keyword : "";
+    let cri = {currentPage};
+
+    console.log("editCoupoin---->", req.body);
+
+    const update =
+        await coupon.update(req.body,{
+            where : { cno:req.body.cno },
+        });
+
+    if( update !== null){
+        return res.status(200).json({"responseText":"updateSuccess"});
+    }else{
+        return res.status(400).json({"responseText":"updateFail"});
+    }
+})
+
+// --------------------------------------------------------------- 쿠폰 수정 폼---------------------------------------------------------------
+router.post('/removeCoupon', async (req, res, next) => {
+
+    const usersecess = req.params.usersecess;
+    let {searchType, keyword, currentPage, cno} = req.query;
+
+    keyword = keyword ? keyword : "";
+    let cri = {currentPage};
+
+    console.log("removeCoupon---->", req.body);
+
+    const remove =
+        await coupon.destroy({
+            where : { cno:req.body.cno },
+        });
+
+    if( remove !== null){
+        return res.status(200).json({"responseText":"removeSuccess"});
+    }else{
+        return res.status(400).json({"responseText":"removeFail"});
+    }
+})
+
+
+
+router.get("/addCouponForm", async( req, res, next)=>{
+
+
+    res.render("manager/coupon/addCouponForm");
+})
+
+
+router.post('/addCouponForm', async (req, res, next) => {
+
+    const usersecess = req.params.usersecess;
+    let {searchType, keyword, currentPage, cno} = req.query;
+
+    keyword = keyword ? keyword : "";
+    let cri = {currentPage};
+    
+
+    console.log("addCouponForm---->", req.body);
+    delete req.body["cno"];
+    let { cname, pdate, edate , ccontent , mrate } = req.body;
+
+    const create =
+        await coupon.create({
+            cname,
+            pdate,
+            edate,
+            ccontent,
+            mrate
+        });
+
+    if( create !== null){
+        return res.status(200).json({"responseText":"createSuccess"});
+    }else{
+        return res.status(400).json({"responseText":"createFail"});
+    }
+})
+
+
+router.get('/addCouponToUserForm', async (req, res, next) => {
+
+    const usersecess = req.params.usersecess;
+    let {searchType, keyword, currentPage, cno} = req.query;
+
+    keyword = keyword ? keyword : "";
+    let cri = {currentPage};
+    
+
+    console.log("addCouponForm---->", req.body);
+    delete req.body["cno"];
+    let { cname, pdate, edate , ccontent , mrate } = req.body;
+
+    const create =
+        await coupon.create({
+            cname,
+            pdate,
+            edate,
+            ccontent,
+            mrate
+        });
+
+    res.render("manager/coupon/addCouponToUserForm");
+})
+
+
+
 
 // --------------------------------------------------------------- 결제 관리 ---------------------------------------------------------------
 router.get('/paymentList', async (req, res, next) => {
-    // header 공통 !!!
-    const { AuthEmp, Manager} = sessionEmpCheck(req ,res);
-
 
     let cri = {};
 
-
-    res.render("manager/payment/paymentList", {Manager, AuthEmp, cri});
+    res.render("manager/payment/paymentList", {cri});
 })
 
 
@@ -2028,16 +2148,10 @@ router.get('/loginForm', async (req, res, next) => {
 
     let EmpStay = {};
     let error = "";
-    let Auth = {};
-    let login = "";
-    let Manager = {};
     let searchkeyword = "";
 
 
     res.render("user/tourlandLoginForm", {
-        Auth,
-        login,
-        Manager,
         searchkeyword,
         registerSuccess,
         UserStay,
@@ -2056,7 +2170,7 @@ router.post('/loginForm', async (req, res, next) => {
 
     if (id !== null && pass != null) {
         // ID,PASS가 입력된 경우
-        let userVO = models.user.findOne({
+        let userVO = user.findOne({
             raw: true,
             attributes: ['userpass', 'usersecess'],
             where: {
@@ -2080,22 +2194,13 @@ router.post('/loginForm', async (req, res, next) => {
 
     }
 
-    let empVO = {};
-    let session = {};
-
     let registerSuccess = {};
     let UserStay = {};
     let EmpStay = {};
     let error = "";
-    let Auth = {};
-    let login = "";
-    let Manager = {};
     let searchkeyword = "";
 
     res.render("user/tourlandLoginForm", {
-        Auth,
-        login,
-        Manager,
         searchkeyword,
         registerSuccess,
         UserStay,
@@ -2104,63 +2209,11 @@ router.post('/loginForm', async (req, res, next) => {
     });
 });
 
-//
-// router.post('/loginForm', async (req, res, next) => {
-//     let {registerSuccess, id} = req.query;
-//     let EmpStay = {};
-//     let error = "";
-//     let Auth = {};
-//     let login = "";
-//     let Manager = {};
-//     let searchkeyword = "";
-//
-//
-//     res.render("user/tourlandLoginForm", {
-//         Auth,
-//         login,
-//         Manager,
-//         searchkeyword,
-//         registerSuccess,
-//         UserStay,
-//         EmpStay,
-//         error
-//     });
-// });
-
-
-router.get('/employee/idCheck/:userid', async (req, res, next) => {
-
-    const userid = req.params.userid;
-
-    try {
-        let checkUserid = await models.employee.findOne({
-            raw: true,
-            attributes: ['empid'],
-            where: {
-                userid: userid
-            }
-        })
-
-        if (checkUserid != null) {
-            console.log("check->", checkUserid.empid);
-            if (checkUserid.empid != null) {
-                res.status(200).send("exist");
-            }
-        } else {
-            res.status(200).send("notexist");
-        }
-    } catch (e) {
-        console.error(e);
-        next(e);
-    }
-
-});
 
 
 router.get('/tourlandRegister', async (req, res, next) => {
-    let autoNo = "";
 
-    res.render("user/tourlandRegisterForm", {autoNo});
+    res.render("user/tourlandRegisterForm");
 
 });
 

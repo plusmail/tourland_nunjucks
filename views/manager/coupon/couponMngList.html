@@ -33,9 +33,9 @@ $(function(){
 					4. 검색의 키워드
 				 -->
 					<select name="searchType" id="searchType">
-						<option value="n" {%=cri.searchType ==null?'selected':''%}>-----</option>
-						<option value="cno" {%=cri.searchType =='cno'?'selected':''%}>번호</option>
-						<option value="cncc" {%=cri.searchType =='cncc'?'selected':''%}>이름/내용<option>
+						<option value="n" {% if cri.searchType === null %} 'selected' {%else%} '' {%endif%}>=====</option>
+						<option value="cno" {% if cri.searchType === 'cno' %} 'selected' {%else%} ''{%endif%}>번호</option>
+						<option value="cncc" {% if cri.searchType === 'cncc' %} 'selected' {%else%} '' {%endif%}>이름/내용<option>
 					</select>
 					<input type="text" name="keyword" id="keywordInput">
 					<button id="btnSearch">Search</button>
@@ -56,59 +56,26 @@ $(function(){
 							<th>할인율</th>
 							<th>만료 여부</th>
 						</tr>
-						{% available.forEach( c => { %}
+						{% for c in list %}
 						<tr>
-							<td>{%=c.cno%}</td>
-							<td><a href="/manager/couponDetail?cno={%=c.cno%}&page={%=cri.page%}">{%=c.cname%} </a></td>
-							<td>{%=c.pdate%}</td>
-							<td>{%=c.edate%}</td>
-							<td>{%=c.ccontent%}</td>
-							<td>{%=c.mrate%}</td>
-							<td class="blue">사용 가능</td>
+							<td>{{c.cno}}</td>
+							<td><a href="/manager/couponDetail?cno={{c.cno}}&currentPage={{pagingData.currentPage}}">{{c.cname}} </a></td>
+							<td>{{c.pdate}}</td>
+							<td>{{c.edate}}</td>
+							<td>{{c.ccontent}}</td>
+							<td>{{c.mrate}}</td>
+							<td class="{% if c.use === "available" %} blue {%else%} red {%endif%}">{{c.use}}</td>
 						</tr>
-
-						<% }) %}
-						<% expired.forEach( c => { %}
-						<tr class="expired">
-							<td><%=c.cno%}</td>
-							<td><a href="/manager/couponDetail?cno=<%=c.cno%}&page=<%=cri.page%>&expired=exp"><%=c.cname%> </a></td>
-							<td><%=c.pdate%></td>
-							<td><%=c.edate%></td>
-							<td><%=c.ccontent%></td>
-							<td><%=c.mrate%></td>
-							<td class="red">만료</td>
-						</tr>
-						<% }) %>
+						{% endfor %}
 					
 					</table>  
 				</div>
-				<!--  부트 스트랩으로 사용  -->
-				<div class='text-center'>
-					<ul class="pagination">
-						<% if (pagingData.totalPages != 0) { %>
-						<div class="" style="text-align:center;">
-							<ul class="pagination">
-								<li <%if(pagingData.currentPage == 1){%> class="disabled" <%}else{%>class="waves-effect" <%}%> >
-									<a <%if(pagingData.currentPage > 1){%> href="?currentPage=<%=pagingData.currentPage-1%>" <%}%>>
-										<i class="material-icons">prev</i>
-									</a>
-								</li>
-								<% for(var i=pagingData.pnStart; i<=pagingData.pnEnd; i++){ %>
-								<li <%if(i===pagingData.currentPage){%> class="active"
-										<%}%>>
-									<a href="?currentPage=<%=i%>"><%=i%></a>
-								</li>
-								<% } %>
-								<li <%if(pagingData.currentPage == pagingData.totalPages){%> class="disabled" <%}else{%> class="waves-effect" <%}%>>
-									<a <%if(pagingData.currentPage < pagingData.totalPages){%> href="?currentPage=<%=pagingData.currentPage+1%>" <%}%> class="waves-effect">
-										<i class="material-icons">next</i>
-									</a>
-								</li>
-							</ul>
-						</div>
-						<% } %>
-					</ul>
-				</div>
+
+				<center>
+				<ul class="pagination" id="pagination"></ul>
+				</center>
+
+
 			</div>         
 		</div>
 	</div>
@@ -128,4 +95,9 @@ $(function(){
 	})
 </script>
 
-<%- include("../../include/footer.html")%>
+{% block Pagination %} {%-
+include("../../include/pagination.html") %}
+{% endblock %} 
+
+
+{%- include("../../include/footer.html") %}
