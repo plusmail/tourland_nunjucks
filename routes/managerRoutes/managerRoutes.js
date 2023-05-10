@@ -4,10 +4,23 @@ const sequelize = require("sequelize");
 const Op = sequelize.Op;
 const literal = sequelize.literal;
 
+const cookieParser = require("cookie-parser");
+const fs = require('fs');
+const querystring = require('querystring');
+const crypto = require('crypto'); //추가됐음
+const {getPagingData, getPagination,getPagingDataCount} = require('../../controller/pagination');
+const {makePassword, comparePassword} = require('../../controller/passwordCheckUtil');
+const moment = require("moment");
+const bodyParser = require('body-parser');
+const parser = bodyParser.urlencoded({extended: false});
+const {upload} = require("../../controller/fileupload");
+const {sessionEmpCheck} = require('../../controller/sessionCtl');
+
+
 const {employee,
-    user, 
+    user,
     coupon,
-    usercoupon, 
+    usercoupon,
     reservation,
     userpstatus,
     product,
@@ -23,20 +36,14 @@ const {employee,
 
 } = require("../../models");
 
+const userMngRouter = require("./userMng");
+router.use("/userMng", userMngRouter);
 
-const cookieParser = require("cookie-parser");
-const fs = require('fs');
-const querystring = require('querystring');
-const crypto = require('crypto'); //추가됐음
-const {getPagingData, getPagination,getPagingDataCount} = require('../../controller/pagination');
-const {makePassword, comparePassword} = require('../../controller/passwordCheckUtil');
-const moment = require("moment");
-const bodyParser = require('body-parser');
-const parser = bodyParser.urlencoded({extended: false});
-const {upload} = require("../../controller/fileupload");
-const {sessionEmpCheck} = require('../../controller/sessionCtl');
+
 
 const { isNotLoggedIn, isLoggedIn } = require('../../middlewares')
+
+
 router.use((req, res, next)=>{
     res.locals.user = req.user;
     next();
@@ -56,95 +63,6 @@ router.get('/statistics', (req, res, next) => {
 
     console.log('-----관리자페이지메인------',);
     res.render("manager/main/statistics",{Manager});
-});
-
-router.get('/userlist', (req, res, next) => {
-
-    let cri = {};
-    let btnName = "";
-    let list = {};
-
-    res.render("userMngList", {cri, btnName, list});
-});
-
-
-//----------------------------- 고객관리 ---------------------------------------
-// 고객 관리 전체 목록
-router.get('/userMngList', async (req, res, next) => {
-
-    let {usersecess, searchType, keyword} = req.query;
-
-    const contentSize = Number(process.env.CONTENTSIZE); // 한페이지에 나올 개수
-    const currentPage = Number(req.query.currentPage) || 1; //현재페이
-    const {limit, offset} = getPagination(currentPage, contentSize);
-
-    keyword = keyword ? keyword : "";
-
-    let listAndCounts = await user.findAndCountAll({
-        where: {
-            [Op.and]: [
-                {
-                    // usersecess: usersecess
-                }
-            ],
-            [Op.or]: [
-                {
-                    userid: {[Op.like]: "%" + keyword + "%"}
-                },
-                {
-                    username: {[Op.like]: "%" + keyword + "%"}
-                }
-            ]
-        },
-        limit, offset
-    })
-
-    const {count:totalItems, rows: lists} = listAndCounts;
-    const pagingData = getPagingDataCount(totalItems, currentPage, limit);
-
-    let cri = {searchType, keyword};
-
-    let btnName = (Boolean(Number(usersecess)) ? "회원 리스트" : "탈퇴회원 조회");
-
-    console.log("usersecbtt->", btnName)
-
-    res.render("manager/user/userMngList", {cri, lists, btnName, pagingData, usersecess});
-});
-
-// 고객 정보 상세 보기
-router.get('/userDetailForm/:id', async (req, res, next) => {
-    const id = req.params.id;
-    let {currentPage, searchType, keyword} = req.query;
-    console.log("userDetailForm--->", req.params.id);
-
-    let userVO = await user.findOne({
-        raw: true,
-
-        where: {id: id}
-    })
-
-    let couponLists = await user.findOne({
-        raw: true,
-        nest : true,
-        attributes: ['id', 'username', 'usersecess'],
-        include: [
-            {
-                model: coupon,
-                attributes: ['cno', 'cname', 'pdate', 'edate','ccontent','mrate'],
-                as: 'cno_coupons',
-                nest: true,
-                paranoid: true,
-                required: false,
-            }],
-        where: {id: id}
-    })
-
-    console.log("userDetailForm-1>", userVO);
-    console.log("userDetailForm-2>", couponLists);
-
-    let cri = {};
-
-    res.render("manager/user/userDetailForm", {userVO, cri});
 });
 
 

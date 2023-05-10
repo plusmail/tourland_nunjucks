@@ -181,7 +181,7 @@
 
 		//리스트로 버튼 눌렀을 때 리스트로 돌아가기
 		$("#btnReturnToList").click(function(){
-			location.href="/manager/userMngList?usersecess={{userVO.usersecess}}&searchType="+searchType+"&keyword="+keyword;
+			location.href="{{basedir}}/userMngList?usersecess={{userVO.usersecess}}&searchType="+searchType+"&keyword="+keyword;
 		})
 	})
 
