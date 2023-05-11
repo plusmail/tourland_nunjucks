@@ -25,7 +25,11 @@
 		    
 		    onPageClick: function (event, page) {
             // refreshPostList(page);
-            location.href="{{location}}?currentPage="+page;
+			{% if alllist === null %}
+            location.href=`"{{location}}?currentPage=${page}"`;
+			{%else%}
+            location.href=`{{location}}?currentPage=${page}&alllist={{alllist}}`;
+			{%endif%}
 
 				console.log("클릭");
 		    }
