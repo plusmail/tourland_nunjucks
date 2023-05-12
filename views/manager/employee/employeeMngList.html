@@ -23,37 +23,24 @@
                         3. 검색의 종류
                         4. 검색의 키워드s
                      -->
-                    <form id="searchform">
+                    <input type="checkbox" class="form-check-input" id="alllist"/> 전체직원
                     <select name="searchType" id="searchType" style="width:200px; height: 25px;">
                         {% if cri.searchType === null %}
                         {% set selected="selected" %}
                         {%else %}
                         {% set selected = '' %}
                         {% endif %}
-                        <option value="n" {{selected}}>-&#45;&#45;&#45;&#45;</option>
-                        {% if cri.searchType === 'empno' %} {% set selected="selected" %} {%else %} {% set selected = '' %} {% endif %}
-                        <option value="empno" {{selected}}>사원번호</option>
-                        {% if cri.searchType === 'username' %} {% set selected="selected" %} {%else %} {% set selected = '' %} {% endif %}
-                        <option value="username" {{selected}}>사원명</option>
+                        <option value="n" {{selected}}>========</option>
+                        <option value="empno" {% if cri.searchType === 'empno' %} selected {%else %} '' {% endif %}>사원번호</option>
+                        <option value="username" {% if cri.searchType === 'username' %} selected {%else %} '' {% endif %}>사원명</option>
 
                     </select>
                     <input type="text" name="keyword" id="keywordInput">
                     <button id="btnSearch">Search</button>
                     <button id="btnReset">리셋</button>
-                    </form>
                 </div>
                 <div class="box-body">
-                    <button id="twowayBtn">
-                        {% if lists.empretired === true %}
-                        {% set btnName = "직원 리스트" %}
-                        {% set btnNameVisibilty = "visibility:visible" %}
-                        {% else %}
-                        퇴사사원 조회
-                        {% set btnName = "visibility:hidden" %}
-                        {% endif %}
-                    </button>
                     <button id="btnRegister" style="background:mistyrose; margin-left:10px; {{btnNameVisibilty}}" >추가</button>
-
                 </div>
 
                 <div class="box-body">
@@ -104,47 +91,39 @@
 
 
 <script>
+    // 조건에 따라 체크박스의 상태를 변경합니다.
+    let alllist = {{alllist | safe}};
+    if (alllist === true) {
+        $('#alllist').prop('checked', true)
+    } else {
+        $('#alllist').prop('checked', false)
+    }
+
+    $("#btnSearch").click(function(){
+        let searchType = $("#searchType").val();
+        let keyword = $("#keywordInput").val();
+        let list = $("#alllist").prop('checked')
+        alert(list)
+
+        location.href = `{{basedir}}/employeeMngList?keyword=${keyword}&alllist=${list}&searchType=${searchType}`;
+    })
+
+
+
 
     let btnSearch = document.getElementById('btnSearch');
     let formSearch = document.getElementById('searchform');
     let btnReset = document.getElementById('btnReset');
     let btnRegister = document.getElementById('btnRegister');
     let twowayBtn = document.getElementById('twowayBtn');
-    let empList = document.getElementsByClassName('empList');
 
-    btnSearch.addEventListener("click", (e)=>{
-        let searchType = document.getElementById('#searchType').value;
-        let keyword = document.getElementById('#keyworkInput').value;
-        let btnName = "{{btnName}}";
-        if( btnName == "퇴사사원 조회"){
-            location.href = "/manager/empMngList/0?searchType="+searchType+"&keyword="+keyword;
-        }else{
-            location.href = "/manager/empMngList/1?searchType="+searchType+"&keyword="+keyword;
-        }
-
-
-    });
+    // btnSearch.addEventListener("click", (e)=>{
+    //     let searchType = document.getElementById('#searchType').value;
+    //     let keyword = document.getElementById('#keyworkInput').value;
+    // });
 
     btnRegister.addEventListener("click", (e)=>{
         location.href = "/manager/employeeRegister";
-    })
-
-    //퇴사 사원 혹은 근무사원 리스트 클릭
-    twowayBtn.addEventListener("click", (e)=>{
-        //버튼 이름이 퇴사사원 조회인 경우 = 지금 페이지는 현직 직원 리스트
-        let btnName = "{{btnName}}";
-        if(btnName == "퇴사사원 조회"){
-            location.href ="/manager/employeeMngList/1";
-        }else{
-            location.href ="/manager/employeeMngList/0";
-        }
-    })
-
-    empList.addEventListener("click", (e)=>{
-        let no = $(this).attr("data-click");
-        let searchType = "{{cri.searchType}}";
-        let keyword = "{{cri.keyword}}";
-        location.href = "/manager/employeeDetailForm/"+no+"?currentPage={{pagingData.currentPage}}&searchType="+searchType+"&keyword="+keyword;
     })
 
 

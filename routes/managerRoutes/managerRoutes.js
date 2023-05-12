@@ -16,6 +16,12 @@ const parser = bodyParser.urlencoded({extended: false});
 const {upload} = require("../../controller/fileupload");
 const {sessionEmpCheck} = require('../../controller/sessionCtl');
 
+router.use((req, res, next)=>{
+    res.locals.basedir = "/manager";
+    next();
+});
+
+
 
 const {employee,
     user,
@@ -89,15 +95,75 @@ router.post("/employeeRegister", async (req, res, next) => {
 // ------------------------------------------------ 직원관리 --------------------------------------------------------
 // 직원 관리 전체 목록
 router.get('/employeeMngList', async (req, res, next) => {
-    //empretired 정상사원, 퇴사사원 구분
-    // const empretired = req.params.empretired;
-    let {searchType, keyword} = req.query;
+    let {alllist, empretired, searchType, keyword} = req.query;
+
+    console.log("employeeMngList----2>", req.query);
 
     const contentSize = Number(process.env.CONTENTSIZE); // 한페이지에 나올 개수
     const currentPage = Number(req.query.currentPage) || 1; //현재페이지
     const {limit, offset} = getPagination(currentPage, contentSize);
 
     keyword = keyword ? keyword : "";
+
+    console.log("employeeMngList----1>", alllist)
+
+
+    if( alllist === undefined) alllist = "false";
+
+    let seno = null;
+    let susername = null;
+
+    if( alllist === "true"){
+        if(searchType ==="empno"){
+            seno = {
+                    [Op.or]: [
+                        {
+                            empno: {[Op.like]: "%" + keyword + "%"}
+                        }
+                    ]
+                };
+            susername = {};
+        }else if(searchType ==="username") {
+            seno = {};
+            susername = {
+                    [Op.or]: [
+                        {
+                            username: {[Op.like]: "%" + keyword + "%"}
+                        }
+                    ]
+            }
+        }
+    }else{
+        if(searchType ==="empno"){
+            seno = {
+                    [Op.and]: [
+                        {
+                            empretired:1
+                        }
+                    ],
+                    [Op.or]: [
+                        {
+                            empno: {[Op.like]: "%" + keyword + "%"}
+                        }
+                    ]
+                }
+            susername = {};
+        }else if(searchType ==="username") {
+            seno = {
+                    [Op.and]: [
+                        {
+                            empretired:1
+                        }
+                    ],};
+            susername = {
+                    [Op.or]: [
+                        {
+                            username: {[Op.like]: "%" + keyword + "%"}
+                        }
+                    ]
+                }
+        }
+    }
 
     let listAndCounts = await employee.findAndCountAll({
         raw: true,
@@ -111,20 +177,11 @@ router.get('/employeeMngList', async (req, res, next) => {
                 nest: true,
                 paranoid: true,
                 required: false,
+                where : susername
             }],
-        where: {
-            // [Op.and]: [
-            //     {
-            //         empretired: empretired
-            //     }
-            // ],
-            [Op.or]: [
-                {
-                    empno: {[Op.like]: "%" + keyword + "%"}
-                }
-            ]
-        },
+        where : seno,
         limit, offset
+
     })
 
     const {count:totalItems, rows: lists} = listAndCounts;
@@ -134,9 +191,8 @@ router.get('/employeeMngList', async (req, res, next) => {
 
     // let btnName = (Boolean(Number(empretired)) ? "직원 리스트" : "퇴사사원 조회");
 
-    console.log("employeeMngList---->", lists)
 
-    res.render("manager/employee/employeeMngList", {cri, lists,pagingData});
+    res.render("manager/employee/employeeMngList", {alllist, cri, lists,pagingData});
 });
 
 
